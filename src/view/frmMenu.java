@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.awt.event.ActionEvent;
 
 public class frmMenu extends JFrame implements ActionListener{
@@ -21,6 +22,13 @@ public class frmMenu extends JFrame implements ActionListener{
 	private JDesktopPane dskPrincipal;
 	private JMenuBar mnbPrincipal;
 	private JMenuItem mntmAlunos;
+	private JMenuItem mntmFuncionarios;
+	private JMenuItem mntmCargos;
+	private JMenuItem mntmUsuario;
+	private JMenuItem mntmMatricula;
+	private JMenuItem mntmResponsveis;
+	private JMenuItem mntmMensalidades;
+	private JMenuItem mntmDisciplina;
 
 	public frmMenu() {
 		setTitle("Menu Principal");
@@ -35,27 +43,38 @@ public class frmMenu extends JFrame implements ActionListener{
 		JMenu mnCadastro = new JMenu("Cadastro");
 		mnbPrincipal.add(mnCadastro);
 		
-		JMenuItem mntmUsurio = new JMenuItem("Usu\u00E1rio");
-		mnCadastro.add(mntmUsurio);
+		mntmUsuario = new JMenuItem("Usu\u00E1rio");
+		mntmUsuario.addActionListener(this);
+		mnCadastro.add(mntmUsuario);
 		
-		JMenuItem mntmFuncionarios = new JMenuItem("Funcionarios");
+		
+		mntmFuncionarios= new JMenuItem("Funcionario");
+		mntmFuncionarios.addActionListener(this);
 		mnCadastro.add(mntmFuncionarios);
 		
-		JMenuItem mntmCargos = new JMenuItem("Cargos");
+		mntmCargos = new JMenuItem("Cargo");
+		mntmCargos.addActionListener(this);
 		mnCadastro.add(mntmCargos);
 		
-		mntmAlunos = new JMenuItem("Alunos");
+		mntmAlunos = new JMenuItem("Aluno");
 		mntmAlunos.addActionListener(this);
 		mnCadastro.add(mntmAlunos);
 		
-		JMenuItem mntmResponsveis = new JMenuItem("Respons\u00E1veis");
+		mntmResponsveis = new JMenuItem("Respons\u00E1vel");
+		mntmResponsveis.addActionListener(this);
 		mnCadastro.add(mntmResponsveis);
 		
-		JMenuItem mntmMatrcula = new JMenuItem("Matr\u00EDcula");
-		mnCadastro.add(mntmMatrcula);
+		mntmMatricula = new JMenuItem("Matr\u00EDcula");
+		mntmMatricula.addActionListener(this);
+		mnCadastro.add(mntmMatricula);
 		
-		JMenuItem mntmMensalidades = new JMenuItem("Mensalidades");
+		mntmMensalidades = new JMenuItem("Mensalidade");
+		mntmMensalidades.addActionListener(this);
 		mnCadastro.add(mntmMensalidades);
+		
+		mntmDisciplina = new JMenuItem("Disciplina");
+		mntmDisciplina.addActionListener(this);
+		mnCadastro.add(mntmDisciplina);
 		
 		JMenuBar menuBar = new JMenuBar();
 		mnCadastro.add(menuBar);
@@ -78,8 +97,82 @@ public class frmMenu extends JFrame implements ActionListener{
 	}
 	
 	private void mntmAlunos_click() {
+		
+			frmCadastroAluno form;
+			try {
+				form = frmCadastroAluno.getFrmCadastroAluno();
+				form.setVisible(true);
+				dskPrincipal.add(form);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+	}
+	
+	private void mntmFuncionarios_click() throws ParseException {
 		try {
-			frmCadastroAluno form = frmCadastroAluno.getFrmCadastroAluno();
+			frmCadastroFuncionario form = new frmCadastroFuncionario();
+			form.setVisible(true);
+			dskPrincipal.add(form);
+		}catch(java.lang.IllegalArgumentException ex) {
+			System.out.println("Cadastro de aluno já está aberto!");
+		}
+	}
+	
+	private void mntmCargo_click() {
+		try {
+			frmCadastroCargo form = new frmCadastroCargo();
+			form.setVisible(true);
+			dskPrincipal.add(form);
+		}catch(java.lang.IllegalArgumentException ex) {
+			System.out.println("Cadastro de aluno já está aberto!");
+		}
+	}
+	
+	private void mntmUsuario_click() {
+		try {
+			frmCadastroUsuario form = new frmCadastroUsuario();
+			form.setVisible(true);
+			dskPrincipal.add(form);
+		}catch(java.lang.IllegalArgumentException ex) {
+			System.out.println("Cadastro de aluno já está aberto!");
+		}
+	}
+	
+	private void mntmMatricula_click() throws ParseException{
+		try {
+			frmCadastroMatricula form = new frmCadastroMatricula();
+			form.setVisible(true);
+			dskPrincipal.add(form);
+		}catch(java.lang.IllegalArgumentException ex) {
+			System.out.println("Cadastro de aluno já está aberto!");
+		}
+	}
+	
+	private void mntmResponsavel_click() throws ParseException{
+		try {
+			frmCadastroResponsaveis form = new frmCadastroResponsaveis();
+			form.setVisible(true);
+			dskPrincipal.add(form);
+		}catch(java.lang.IllegalArgumentException ex) {
+			System.out.println("Cadastro de aluno já está aberto!");
+		}
+	}
+	
+	private void mntmMenssalidade_click() throws ParseException{
+		try {
+			frmCadastroMenssalidade form = new frmCadastroMenssalidade();
+			form.setVisible(true);
+			dskPrincipal.add(form);
+		}catch(java.lang.IllegalArgumentException ex) {
+			System.out.println("Cadastro de aluno já está aberto!");
+		}
+	}
+	
+	private void mntmDisciplina_click(){
+		try {
+			frmCadastroDisciplina form = new frmCadastroDisciplina();
 			form.setVisible(true);
 			dskPrincipal.add(form);
 		}catch(java.lang.IllegalArgumentException ex) {
@@ -90,6 +183,47 @@ public class frmMenu extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == mntmAlunos) {
 			mntmAlunos_click();
+			
+		}else if(e.getSource() == mntmFuncionarios ) {
+			
+			try {
+				mntmFuncionarios_click();
+			} catch (ParseException e1) {
+				e1.printStackTrace();
+			}
+		}
+		else if(e.getSource()== mntmCargos) {
+			
+			mntmCargo_click();
+			
+		}else if(e.getSource()== mntmUsuario) {
+			
+			mntmUsuario_click();
+			
+		}else if(e.getSource()== mntmMatricula) {
+			
+			try {
+				mntmMatricula_click();
+			} catch (ParseException ex) {
+				ex.printStackTrace();
+			}
+		}else if(e.getSource()== mntmResponsveis) {
+			
+			try {
+				mntmResponsavel_click();
+			} catch (ParseException ex) {
+				ex.printStackTrace();
+			}
+		}else if(e.getSource()== mntmMensalidades) {
+			
+			try {
+				mntmMenssalidade_click();
+			} catch (ParseException ex) {
+				ex.printStackTrace();
+			}
+		}else if(e.getSource()== mntmDisciplina) {
+			
+			mntmDisciplina_click();
 		}
 	}
 }

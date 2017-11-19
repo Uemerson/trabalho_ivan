@@ -7,12 +7,14 @@ import javax.swing.border.EmptyBorder;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class frmLogin extends JFrame implements ActionListener{
 
@@ -56,6 +58,7 @@ public class frmLogin extends JFrame implements ActionListener{
 		contentPane.add(lblCadeado);
 		
 		cbLogin = new JComboBox();
+		cbLogin.setModel(new DefaultComboBoxModel(new String[] {"Taynan", "Uemerson", "Tercio"}));
 		cbLogin.setBounds(10, 172, 205, 28);
 		AutoCompleteDecorator.decorate(cbLogin);
 			
@@ -63,6 +66,21 @@ public class frmLogin extends JFrame implements ActionListener{
 	}
 	
 	private void btnEntrar_click(){
+		
+		if(cbLogin.getSelectedIndex() == 0 && txtSenha.getText().equals("frutal123"))
+	       {
+	           JOptionPane.showMessageDialog(null,"Login realizado com sucesso");
+	           
+	           frmMenu form = new frmMenu();
+	           
+	           form.setVisible(true);
+	           
+	           dispose();
+	       }
+	       else
+	       {
+	           JOptionPane.showMessageDialog(null,"Acesso Negado!!!");
+	       }
 	}
 	
 	public void actionPerformed(ActionEvent e){

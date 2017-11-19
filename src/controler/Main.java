@@ -3,6 +3,7 @@ package controler;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import view.frmLogin;
 import view.frmMenu;
 
 public class Main {
@@ -22,6 +23,8 @@ public class Main {
 		}
 		
 		//Chama o menu principal
-		new frmMenu().setVisible(true);
+		new frmLogin().setVisible(true);
+		
+		
 	}
 }
