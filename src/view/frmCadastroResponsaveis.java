@@ -63,7 +63,16 @@ public class frmCadastroResponsaveis extends JInternalFrame {
 	private JLabel lblHorario;
 	private JFormattedTextField txtHorario;
 	private JComboBox cbHorario;
-
+	
+	private static frmCadastroResponsaveis singleton = null;
+	
+	public static frmCadastroResponsaveis getFrmCadastroResponsaveis() throws ParseException {
+		if (singleton == null) {
+			singleton = new frmCadastroResponsaveis();
+		}
+		
+		return singleton;
+	}
 	
 	public frmCadastroResponsaveis() throws ParseException {
 		setBounds(100, 100, 840, 533);

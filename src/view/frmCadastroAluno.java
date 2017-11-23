@@ -7,9 +7,13 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
+
+import controler.FuncoesGlobais;
+
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import java.awt.Font;
@@ -20,25 +24,25 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JEditorPane;
 import javax.swing.JFormattedTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.JTextArea;
 
 
-public class frmCadastroAluno extends JInternalFrame {
-	
-	private static frmCadastroAluno singleton = null;
-	
+public class frmCadastroAluno extends JInternalFrame implements ActionListener {
 	private JButton btnNovo;
 	private JButton btnExcluir;
 	private JButton btnAlterar;
 	private JButton btnSalvar;
 	private JButton btnCancelar;
 	private JButton btnPesquisar;
-	private JTextField txtRegistro;
+	private JTextField txtNome;
 	private JLabel lblRegistro;
 	private JLabel lblNome;
 	private JLabel lblRg;
 	private JLabel lblOrgaoEmissor;
 	private JLabel lblCpf;
-	private JTextField txtNome;
+	private JTextField txtRegistro;
 	private JTextField txtRG;
 	private JTextField txtOrgaoEmissor;
 	private JComboBox cbSexo;
@@ -62,7 +66,7 @@ public class frmCadastroAluno extends JInternalFrame {
 	private JTextField txtLocalOrigem;
 	private JTextField txtRedeEstabelecimentoDeOrdemDoAluno;
 	private JTextField txtSituacaoAnoAnterior;
-	private JEditorPane editorPane;
+	private JEditorPane edpObservacoesAluno;
 	private JFormattedTextField txtTelefoneResidencial;
 	private JLabel lblLogradouro;
 	private JComboBox cbLogradouro;
@@ -73,47 +77,62 @@ public class frmCadastroAluno extends JInternalFrame {
 	private JFormattedTextField txtDataDeNascimento;
 	private JFormattedTextField txtCPF;
 	
+	private static frmCadastroAluno singleton = null;
+	private JPanel pnlInformacoesPessoaisDoAluno;
+	private JPanel pnlInformacoesAluno;
+	private JPanel pnlBotoes;
+	
+	public static frmCadastroAluno getFrmCadastroAluno() throws ParseException {
+		if (singleton == null) {
+			singleton = new frmCadastroAluno();
+		}
+		
+		return singleton;
+	}
+	
 	public frmCadastroAluno() throws ParseException {
 		setClosable(true);
 		setTitle("Cadastro de aluno");
 		setBounds(100, 100, 840, 622);
 		getContentPane().setLayout(null);
 		
-		JPanel pnlOpcoes = new JPanel();
-		pnlOpcoes.setBounds(10, 11, 555, 64);
-		getContentPane().add(pnlOpcoes);
-		pnlOpcoes.setLayout(null);
+		pnlBotoes = new JPanel();
+		pnlBotoes.setBounds(10, 11, 555, 64);
+		getContentPane().add(pnlBotoes);
+		pnlBotoes.setLayout(null);
 		
 		btnNovo = new JButton("Novo");
+		btnNovo.addActionListener(this);
 		btnNovo.setBounds(10, 11, 80, 44);
-		pnlOpcoes.add(btnNovo);
+		pnlBotoes.add(btnNovo);
 		
 		btnExcluir = new JButton("Excluir");
 		btnExcluir.setBounds(100, 11, 80, 44);
-		pnlOpcoes.add(btnExcluir);
+		pnlBotoes.add(btnExcluir);
 		btnExcluir.setEnabled(false);
 		
 		btnAlterar = new JButton("Alterar");
 		btnAlterar.setBounds(190, 11, 80, 44);
-		pnlOpcoes.add(btnAlterar);
+		pnlBotoes.add(btnAlterar);
 		btnAlterar.setEnabled(false);
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(this);
 		btnSalvar.setBounds(280, 11, 80, 44);
-		pnlOpcoes.add(btnSalvar);
+		pnlBotoes.add(btnSalvar);
 		btnSalvar.setEnabled(false);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(this);
 		btnCancelar.setBounds(370, 11, 80, 44);
-		pnlOpcoes.add(btnCancelar);
+		pnlBotoes.add(btnCancelar);
 		btnCancelar.setEnabled(false);
 		
 		btnPesquisar = new JButton("Pesquisar");
-		btnPesquisar.setEnabled(false);
 		btnPesquisar.setBounds(460, 11, 85, 44);
-		pnlOpcoes.add(btnPesquisar);
+		pnlBotoes.add(btnPesquisar);
 		
-		JPanel pnlInformacoesAluno = new JPanel();
+		pnlInformacoesAluno = new JPanel();
 		pnlInformacoesAluno.setBorder(new TitledBorder(null, "Informa\u00E7\u00F5es do aluno", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnlInformacoesAluno.setBounds(10, 86, 799, 264);
 		getContentPane().add(pnlInformacoesAluno);
@@ -125,23 +144,23 @@ public class frmCadastroAluno extends JInternalFrame {
 		lblRegistro.setBounds(10, 17, 80, 28);
 		pnlInformacoesAluno.add(lblRegistro);
 		
-		txtRegistro = new JTextField();
-		txtRegistro.setEnabled(false);
-		txtRegistro.setBounds(100, 58, 338, 28);
-		pnlInformacoesAluno.add(txtRegistro);
-		txtRegistro.setColumns(10);
+		txtNome = new JTextField();
+		txtNome.setEnabled(false);
+		txtNome.setBounds(100, 58, 338, 28);
+		pnlInformacoesAluno.add(txtNome);
+		txtNome.setColumns(10);
 		
 		lblNome = new JLabel("Nome");
 		lblNome.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNome.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNome.setBounds(10, 56, 80, 28);
+		lblNome.setBounds(10, 58, 80, 28);
 		pnlInformacoesAluno.add(lblNome);
 		
-		txtNome = new JTextField();
-		txtNome.setEnabled(false);
-		txtNome.setColumns(10);
-		txtNome.setBounds(100, 19, 338, 28);
-		pnlInformacoesAluno.add(txtNome);
+		txtRegistro = new JTextField();
+		txtRegistro.setEnabled(false);
+		txtRegistro.setColumns(10);
+		txtRegistro.setBounds(100, 19, 338, 28);
+		pnlInformacoesAluno.add(txtRegistro);
 		
 		lblRg = new JLabel("RG");
 		lblRg.setHorizontalAlignment(SwingConstants.LEFT);
@@ -176,7 +195,7 @@ public class frmCadastroAluno extends JInternalFrame {
 		cbSexo = new JComboBox();
 		cbSexo.setEnabled(false);
 		cbSexo.setModel(new DefaultComboBoxModel(new String[] {"Masculino", "Feminino"}));
-		cbSexo.setToolTipText("");
+		cbSexo.setSelectedItem(null);
 		cbSexo.setBounds(697, 177, 92, 28);
 		pnlInformacoesAluno.add(cbSexo);
 		
@@ -195,8 +214,8 @@ public class frmCadastroAluno extends JInternalFrame {
 		cbCor = new JComboBox();
 		cbCor.setEnabled(false);
 		cbCor.setModel(new DefaultComboBoxModel(new String[] {"Branco", "Moreno", "Negro", "Pardo"}));
-		cbCor.setToolTipText("");
 		cbCor.setBounds(697, 136, 92, 28);
+		cbCor.setSelectedItem(null);
 		pnlInformacoesAluno.add(cbCor);
 		
 		lblRaca = new JLabel("Ra\u00E7a");
@@ -207,8 +226,8 @@ public class frmCadastroAluno extends JInternalFrame {
 		
 		cbRaça = new JComboBox();
 		cbRaça.setEnabled(false);
-		cbRaça.setToolTipText("");
 		cbRaça.setBounds(515, 177, 90, 28);
+		cbRaça.setSelectedItem(null);
 		pnlInformacoesAluno.add(cbRaça);
 		
 		lblEndereco = new JLabel("Endere\u00E7o");
@@ -273,8 +292,9 @@ public class frmCadastroAluno extends JInternalFrame {
 		
 		cbLogradouro = new JComboBox();
 		cbLogradouro.setEnabled(false);
-		cbLogradouro.setModel(new DefaultComboBoxModel(new String[] {"Avenida", "Rua", "Pra\u00E7a", "Aeroporto", "Correio"}));
+		cbLogradouro.setModel(new DefaultComboBoxModel(new String[] {"Avenida", "Rua", "Pra\u00E7a", "Zona Rural"}));
 		cbLogradouro.setBounds(100, 136, 69, 28);
+		cbLogradouro.setSelectedItem(null);
 		pnlInformacoesAluno.add(cbLogradouro);
 		
 		lblNumero = new JLabel(",");
@@ -309,7 +329,7 @@ public class frmCadastroAluno extends JInternalFrame {
 		txtCPF.setBounds(555, 19, 234, 30);
 		pnlInformacoesAluno.add(txtCPF);
 		
-		JPanel pnlInformacoesPessoaisDoAluno = new JPanel();
+		pnlInformacoesPessoaisDoAluno = new JPanel();
 		pnlInformacoesPessoaisDoAluno.setBorder(new TitledBorder(null, "Informa\u00E7\u00F5es Pessoais do Aluno", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnlInformacoesPessoaisDoAluno.setBounds(10, 362, 799, 220);
 		getContentPane().add(pnlInformacoesPessoaisDoAluno);
@@ -357,17 +377,82 @@ public class frmCadastroAluno extends JInternalFrame {
 		txtSituacaoAnoAnterior.setBounds(303, 103, 486, 28);
 		pnlInformacoesPessoaisDoAluno.add(txtSituacaoAnoAnterior);
 		
-		editorPane = new JEditorPane();
-		editorPane.setBounds(303, 142, 486, 67);
-		pnlInformacoesPessoaisDoAluno.add(editorPane);
+		edpObservacoesAluno = new JEditorPane();
+		edpObservacoesAluno.setEnabled(false);
+		edpObservacoesAluno.setBounds(303, 142, 486, 67);
+		pnlInformacoesPessoaisDoAluno.add(edpObservacoesAluno);
 		
 	}
 	
-	public static frmCadastroAluno getFrmCadastroAluno() throws ParseException {
-		if (singleton == null) {
-			singleton = new frmCadastroAluno();
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnNovo) {
+			btnNovo_click();
+		}else if (e.getSource() == btnCancelar) {
+			btnCancelar_click();
+		}else if (e.getSource() == btnSalvar) {
+			btnSalvar_click();
 		}
+	}
+	
+	private void btnNovo_click() {
+		FuncoesGlobais.limpaCampos(pnlInformacoesAluno);
+		FuncoesGlobais.limpaCampos(pnlInformacoesPessoaisDoAluno);
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+		FuncoesGlobais.ativaCampos(pnlInformacoesAluno);
+		FuncoesGlobais.ativaCampos(pnlInformacoesPessoaisDoAluno);
 		
-		return singleton;
+		btnSalvar.setEnabled(true);
+		btnCancelar.setEnabled(true);
+		txtRegistro.setText("NOVO");
+		txtRegistro.setEnabled(false);
+		txtCPF.requestFocus();
+	}
+	
+	private void btnCancelar_click() {
+		if(JOptionPane.showConfirmDialog(this, 
+				"Deseja realmente cancelar o novo cadastrado?", 
+				"Sistema", 
+				JOptionPane.YES_NO_OPTION, 
+				JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
+			
+		
+			FuncoesGlobais.limpaCampos(pnlInformacoesAluno);
+			FuncoesGlobais.limpaCampos(pnlInformacoesPessoaisDoAluno);
+			FuncoesGlobais.desativaCampos(pnlInformacoesAluno);
+			FuncoesGlobais.desativaCampos(pnlInformacoesPessoaisDoAluno);
+			FuncoesGlobais.desativaCampos(pnlBotoes);
+			FuncoesGlobais.resetaBordaPadrao(pnlInformacoesAluno);
+			FuncoesGlobais.resetaBordaPadrao(pnlInformacoesPessoaisDoAluno);
+			btnNovo.setEnabled(true);
+			btnPesquisar.setEnabled(true);
+			
+			JOptionPane.showMessageDialog(this, "Cancelado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
+	private void btnSalvar_click() {
+		if (FuncoesGlobais.verificaCampos(pnlInformacoesAluno) == true | FuncoesGlobais.verificaCampos(pnlInformacoesPessoaisDoAluno)){
+			
+			JOptionPane.showMessageDialog(this, "Erro - Os campos em vermelho devem ser preenchidos!", "Sistema", JOptionPane.ERROR_MESSAGE);
+		
+		}else {
+			
+			if(JOptionPane.showConfirmDialog(this, 
+											"Deseja realmente salvar o novo cadastrado?", 
+											"Sistema", 
+											JOptionPane.YES_NO_OPTION, 
+											JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
+				
+				FuncoesGlobais.limpaCampos(pnlInformacoesAluno);
+				FuncoesGlobais.limpaCampos(pnlInformacoesPessoaisDoAluno);
+				FuncoesGlobais.desativaCampos(pnlBotoes);
+				
+				btnNovo.setEnabled(true);
+				btnPesquisar.setEnabled(true);
+				
+				JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
 	}
 }

@@ -1,13 +1,16 @@
 package controler;
 
+import java.sql.SQLException;
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import dao.DAOConexaoMySQL;
 import view.frmLogin;
 import view.frmMenu;
 
 public class Main {
-	public static void main(String Args[]) {
+	public static void main(String Args[]) throws SQLException {
 		
 		//Muda o look and feels padrão do java
 		try {
@@ -24,7 +27,6 @@ public class Main {
 		
 		//Chama o menu principal
 		new frmLogin().setVisible(true);
-		
 		
 	}
 }

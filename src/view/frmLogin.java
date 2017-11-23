@@ -6,24 +6,35 @@ import javax.swing.border.EmptyBorder;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
+import dao.DAOConexaoMySQL;
+import dao.DAOUsuario;
+import model.Usuario;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import java.awt.event.KeyListener;
+import java.sql.SQLException;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowListener;
+import java.awt.event.WindowEvent;
 
-public class frmLogin extends JFrame implements ActionListener{
+public class frmLogin extends JFrame implements ActionListener, KeyListener, WindowListener{
 
 	private JPanel contentPane;
 	private JPasswordField txtSenha;
 	private JButton btnEntrar;
 	private JComboBox cbLogin;
 	
-	public frmLogin(){
+	public frmLogin() throws SQLException{
+		addWindowListener(this);
 		setTitle("Login");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,6 +59,7 @@ public class frmLogin extends JFrame implements ActionListener{
 		contentPane.add(txtSenha);
 		
 		btnEntrar = new JButton("Entrar");
+		btnEntrar.addKeyListener(this);
 		btnEntrar.addActionListener(this);
 		btnEntrar.setBounds(126, 281, 89, 23);
 		contentPane.add(btnEntrar);
@@ -57,35 +69,91 @@ public class frmLogin extends JFrame implements ActionListener{
 		lblCadeado.setBounds(47, 9, 142, 127);
 		contentPane.add(lblCadeado);
 		
+		/*
+		 * Carrega combobox com dados cadastrados no banco de dados
+		 * */
 		cbLogin = new JComboBox();
-		cbLogin.setModel(new DefaultComboBoxModel(new String[] {"Taynan", "Uemerson", "Tercio"}));
+		DAOUsuario dao = new DAOUsuario();
+		
+		for (int i = 0; i < dao.listaUsuarios().size(); i++) {
+			cbLogin.addItem(dao.listaUsuarios().get(i).getLogin());
+		}
+		
 		cbLogin.setBounds(10, 172, 205, 28);
 		AutoCompleteDecorator.decorate(cbLogin);
 			
 		contentPane.add(cbLogin);
+		DAOConexaoMySQL.getInstance();
 	}
 	
-	private void btnEntrar_click(){
+	private void btnEntrar_click() throws SQLException{
 		
-		if(cbLogin.getSelectedIndex() == 0 && txtSenha.getText().equals("frutal123"))
-	       {
-	           JOptionPane.showMessageDialog(null,"Login realizado com sucesso");
-	           
-	           frmMenu form = new frmMenu();
-	           
-	           form.setVisible(true);
-	           
-	           dispose();
-	       }
-	       else
-	       {
-	           JOptionPane.showMessageDialog(null,"Acesso Negado!!!");
-	       }
+		DAOUsuario dao = new DAOUsuario();
+		
+		if (dao.verificaLogin(new Usuario(cbLogin.getSelectedIndex(), cbLogin.getSelectedItem().toString(), txtSenha.getText())) != null) {
+           JOptionPane.showMessageDialog(null,"Login realizado com sucesso", "Sistema", JOptionPane.INFORMATION_MESSAGE);
+           
+           dispose();
+           frmMenu form = new frmMenu(dao.verificaLogin(new Usuario(cbLogin.getSelectedIndex(), cbLogin.getSelectedItem().toString(), txtSenha.getText())));
+           form.setVisible(true);
+           
+		}else {
+			JOptionPane.showMessageDialog(null,"Acesso Negado!", "Sistema", JOptionPane.ERROR_MESSAGE);
+			txtSenha.setText(null);
+			txtSenha.requestFocus();
+		}
+	
 	}
 	
 	public void actionPerformed(ActionEvent e){
 		if(e.getSource() == btnEntrar) {
+			try {
+				btnEntrar_click();
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+	
+	public void keyPressed(KeyEvent e) {
+		if (e.getSource() == btnEntrar) {
+			try {
+				btnEntrar_keyPressed(e);
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+	
+	public void keyReleased(KeyEvent e) {}
+	public void keyTyped(KeyEvent e) {}
+	
+	private void btnEntrar_keyPressed(KeyEvent e) throws SQLException {
+		if (e.getKeyCode() == e.VK_ENTER) {
 			btnEntrar_click();
 		}
+	}
+	
+	public void windowActivated(WindowEvent e) {
+	}
+	
+	public void windowClosed(WindowEvent e) {
+	}
+	
+	public void windowClosing(WindowEvent e) {
+		try {
+			DAOConexaoMySQL.closeInstance();
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	public void windowDeactivated(WindowEvent e) {
+	}
+	public void windowDeiconified(WindowEvent e) {
+	}
+	public void windowIconified(WindowEvent e) {
+	}
+	public void windowOpened(WindowEvent e) {
 	}
 }

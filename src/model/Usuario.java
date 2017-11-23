@@ -5,6 +5,13 @@ public class Usuario {
 	private int Registro;
 	private String Login, Senha;
 	
+	public Usuario() {}
+	
+	public Usuario(int Registro, String Login, String Senha) {
+		this.Registro = Registro;
+		this.Login = Login;
+		this.Senha = Senha;
+	}
 	
 	public int getRegistro() {
 		return Registro;

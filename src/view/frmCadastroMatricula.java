@@ -42,8 +42,18 @@ public class frmCadastroMatricula extends JInternalFrame {
 	private JComboBox cbPaiOuResponsavel;
 	private JLabel lblSecretrio;
 	private JComboBox cbSecretario;
-
-	 frmCadastroMatricula() throws ParseException {
+	
+	private static frmCadastroMatricula singleton = null;
+	
+	public static frmCadastroMatricula getFrmCadastroMatricula() throws ParseException {
+		if (singleton == null) {
+			singleton = new frmCadastroMatricula();
+		}
+		
+		return singleton;
+	}
+ 
+	frmCadastroMatricula() throws ParseException {
 		setBounds(100, 100, 721, 300);
 		setClosable(true);
 		setTitle("Cadastro de Matr\u00EDcula");

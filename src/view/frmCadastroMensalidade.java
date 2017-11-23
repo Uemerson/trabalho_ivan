@@ -8,12 +8,14 @@ import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.text.ParseException;
+
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
-public class frmCadastroMenssalidade extends JInternalFrame {
+public class frmCadastroMensalidade extends JInternalFrame {
 	private JPanel pnlBotoes;
 	private JButton btnExcluir;
 	private JButton btnNovo;
@@ -31,8 +33,17 @@ public class frmCadastroMenssalidade extends JInternalFrame {
 	private JLabel lblFormaDePagamento;
 	private JComboBox comboBox;
 
+	private static frmCadastroMensalidade singleton = null;
 	
-	public frmCadastroMenssalidade() {
+	public static frmCadastroMensalidade getFrmCadastroMensalidade() throws ParseException {
+		if (singleton == null) {
+			singleton = new frmCadastroMensalidade();
+		}
+		
+		return singleton;
+	}
+	
+	public frmCadastroMensalidade() {
 		setBounds(100, 100, 591, 300);
 		setClosable(true);
 		setTitle("Cadastro de Menssalidade");

@@ -6,6 +6,18 @@ public class Cargo {
 	
 	private String Nome, Descricao;
 
+	public Cargo() {}
+	
+	public Cargo(int Registro, String Nome, String Descricao) {
+		this.Registro = Registro;
+		this.Nome = Nome;
+		this.Descricao = Descricao;
+	}
+	
+	public String toString() {
+		return this.Nome;
+	}
+	
 	public int getRegistro() {
 		return Registro;
 	}

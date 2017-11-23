@@ -1,15 +1,15 @@
 package view;
 
-import java.awt.EventQueue;
-
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.border.TitledBorder;
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.SwingConstants;
+import java.text.ParseException;
+
+import javax.swing.JButton;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
 
 public class frmCadastroDisciplina extends JInternalFrame {
 	private JPanel pnlBotoes;
@@ -24,7 +24,16 @@ public class frmCadastroDisciplina extends JInternalFrame {
 	private JTextField txtNome;
 	private JLabel lblRegistro;
 	private JLabel lblNome;
-
+	
+	private static frmCadastroDisciplina singleton = null;
+	
+	public static frmCadastroDisciplina getFrmCadastroDisciplina() throws ParseException {
+		if (singleton == null) {
+			singleton = new frmCadastroDisciplina();
+		}
+		
+		return singleton;
+	}
 	
 	public frmCadastroDisciplina() {
 		setBounds(100, 100, 599, 237);

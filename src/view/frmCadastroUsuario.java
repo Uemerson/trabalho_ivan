@@ -6,12 +6,26 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
+
+import controler.FuncoesGlobais;
+import model.Cargo;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import javax.swing.JComboBox;
+import javax.swing.ImageIcon;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
+import javax.swing.UIManager;
+import java.awt.Color;
 
-public class frmCadastroUsuario extends JInternalFrame {
+public class frmCadastroUsuario extends JInternalFrame implements ActionListener {
 	private JPanel pnlBotoes;
 	private JButton btnNovo;
 	private JButton btnExcluir;
@@ -25,7 +39,19 @@ public class frmCadastroUsuario extends JInternalFrame {
 	private JLabel lblRegistro;
 	private JLabel lblLogin;
 	private JLabel lblSenha;
-
+	private JButton btnPesquisarFuncionario;
+	private JPanel pnlCadastroDeUsuario;
+	private JComboBox cbFuncionario;
+	
+	private static frmCadastroUsuario singleton = null;
+	
+	public static frmCadastroUsuario getFrmCadastroUsuario() throws ParseException {
+		if (singleton == null) {
+			singleton = new frmCadastroUsuario();
+		}
+		
+		return singleton;
+	}
 	
 	public frmCadastroUsuario() {
 		setBounds(100, 100, 591, 300);
@@ -39,6 +65,7 @@ public class frmCadastroUsuario extends JInternalFrame {
 		getContentPane().add(pnlBotoes);
 		
 		btnNovo = new JButton("Novo");
+		btnNovo.addActionListener(this);
 		btnNovo.setBounds(10, 11, 80, 44);
 		pnlBotoes.add(btnNovo);
 		
@@ -53,22 +80,23 @@ public class frmCadastroUsuario extends JInternalFrame {
 		pnlBotoes.add(btnAlterar);
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(this);
 		btnSalvar.setEnabled(false);
 		btnSalvar.setBounds(280, 11, 80, 44);
 		pnlBotoes.add(btnSalvar);
 		
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(this);
 		btnCancelar.setEnabled(false);
 		btnCancelar.setBounds(370, 11, 80, 44);
 		pnlBotoes.add(btnCancelar);
 		
 		btnPesquisar = new JButton("Pesquisar");
-		btnPesquisar.setEnabled(false);
 		btnPesquisar.setBounds(460, 11, 85, 44);
 		pnlBotoes.add(btnPesquisar);
 		
-		JPanel pnlCadastroDeUsuario = new JPanel();
-		pnlCadastroDeUsuario.setBorder(new TitledBorder(null, "Cad\u00E1stro de Usu\u00E1rio", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pnlCadastroDeUsuario = new JPanel();
+		pnlCadastroDeUsuario.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Cadastro de Usu\u00E1rio", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		pnlCadastroDeUsuario.setBounds(10, 86, 555, 174);
 		getContentPane().add(pnlCadastroDeUsuario);
 		pnlCadastroDeUsuario.setLayout(null);
@@ -82,13 +110,13 @@ public class frmCadastroUsuario extends JInternalFrame {
 		lblLogin = new JLabel("Login");
 		lblLogin.setHorizontalAlignment(SwingConstants.LEFT);
 		lblLogin.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblLogin.setBounds(10, 60, 90, 28);
+		lblLogin.setBounds(10, 96, 90, 28);
 		pnlCadastroDeUsuario.add(lblLogin);
 		
 		lblSenha = new JLabel("Senha");
 		lblSenha.setHorizontalAlignment(SwingConstants.LEFT);
 		lblSenha.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblSenha.setBounds(10, 99, 90, 28);
+		lblSenha.setBounds(10, 135, 90, 28);
 		pnlCadastroDeUsuario.add(lblSenha);
 		
 		txtRegistro = new JTextField();
@@ -100,15 +128,102 @@ public class frmCadastroUsuario extends JInternalFrame {
 		txtLogin = new JTextField();
 		txtLogin.setEnabled(false);
 		txtLogin.setColumns(10);
-		txtLogin.setBounds(110, 60, 338, 28);
+		txtLogin.setBounds(110, 96, 338, 28);
 		pnlCadastroDeUsuario.add(txtLogin);
 		
 		TxtSenha = new JTextField();
 		TxtSenha.setEnabled(false);
 		TxtSenha.setColumns(10);
-		TxtSenha.setBounds(110, 99, 338, 28);
+		TxtSenha.setBounds(110, 135, 338, 28);
 		pnlCadastroDeUsuario.add(TxtSenha);
+		
+		JLabel lblFuncionrio = new JLabel("Funcion\u00E1rio");
+		lblFuncionrio.setHorizontalAlignment(SwingConstants.LEFT);
+		lblFuncionrio.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblFuncionrio.setBounds(10, 57, 90, 28);
+		pnlCadastroDeUsuario.add(lblFuncionrio);
+		
+		cbFuncionario = new JComboBox();
+		
+		cbFuncionario.addItem("Administrador");
+		cbFuncionario.addItem("Uemerson");
+		cbFuncionario.addItem("Teste");
+		
+		cbFuncionario.setSelectedItem(null);
+		cbFuncionario.setEnabled(false);
+		cbFuncionario.setBounds(110, 57, 338, 28);
+		pnlCadastroDeUsuario.add(cbFuncionario);
+		
+		btnPesquisarFuncionario = new JButton("");
+		btnPesquisarFuncionario.setEnabled(false);
+		btnPesquisarFuncionario.setIcon(new ImageIcon(frmCadastroUsuario.class.getResource("/imagens/pesquisar.png")));
+		btnPesquisarFuncionario.setBounds(458, 57, 28, 28);
+		pnlCadastroDeUsuario.add(btnPesquisarFuncionario);
 
 	}
-
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnNovo) {
+			btnNovo_click();
+		}else if (e.getSource() == btnSalvar) {
+			btnSalvar_click();
+		}else if (e.getSource() == btnCancelar) {
+			btnCancelar_click();
+		}
+	}
+	
+	private void btnNovo_click() {
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+		FuncoesGlobais.ativaCampos(pnlCadastroDeUsuario);
+		
+		txtRegistro.setEnabled(false);
+		txtRegistro.setText("NOVO");
+		cbFuncionario.requestFocus();
+		
+		btnCancelar.setEnabled(true);
+		btnSalvar.setEnabled(true);
+	}
+	
+	private void btnSalvar_click() {
+		if (FuncoesGlobais.verificaCampos(pnlCadastroDeUsuario)) {
+			JOptionPane.showMessageDialog(this, "Erro - Os campos em vermelho devem ser preenchidos!", "Sistema", JOptionPane.ERROR_MESSAGE);
+		}else {
+				
+				if(JOptionPane.showConfirmDialog(this, 
+												"Deseja realmente salvar o novo cadastrado?", 
+												"Sistema", 
+												JOptionPane.YES_NO_OPTION, 
+												JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
+					
+					FuncoesGlobais.limpaCampos(pnlCadastroDeUsuario);
+					FuncoesGlobais.desativaCampos(pnlCadastroDeUsuario);
+					FuncoesGlobais.desativaCampos(pnlBotoes);
+					
+					btnNovo.setEnabled(true);
+					btnPesquisar.setEnabled(true);
+					
+					JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+	}
+	
+	private void btnCancelar_click() {
+		if(JOptionPane.showConfirmDialog(this, 
+				"Deseja realmente cancelar o novo cadastrado?", 
+				"Sistema", 
+				JOptionPane.YES_NO_OPTION, 
+				JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
+			
+		
+			FuncoesGlobais.limpaCampos(pnlCadastroDeUsuario);
+			FuncoesGlobais.desativaCampos(pnlCadastroDeUsuario);
+			FuncoesGlobais.desativaCampos(pnlBotoes);
+			FuncoesGlobais.resetaBordaPadrao(pnlCadastroDeUsuario);
+			
+			btnNovo.setEnabled(true);
+			btnPesquisar.setEnabled(true);
+			
+			JOptionPane.showMessageDialog(this, "Cancelado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
 }
