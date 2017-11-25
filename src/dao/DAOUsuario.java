@@ -20,7 +20,7 @@ public class DAOUsuario {
 		ArrayList<Usuario> lista = new ArrayList<>();
 		
 		while(rs.next()) {
-			lista.add(new Usuario(rs.getInt("REGISTRO"), rs.getString("LOGIN"), rs.getString("SENHA")));
+			lista.add(new Usuario(rs.getInt("ID"), rs.getString("LOGIN"), rs.getString("SENHA")));
 		}
 		
 		return lista;
@@ -37,7 +37,7 @@ public class DAOUsuario {
 		ResultSet rs = preparedStatement.executeQuery();
 		
 		if (rs.next())
-			return new Usuario(rs.getInt("REGISTRO"), rs.getString("Login"), rs.getString("Senha"));
+			return new Usuario(rs.getInt("ID"), rs.getString("Login"), rs.getString("Senha"));
 		
 		return null;
 	}

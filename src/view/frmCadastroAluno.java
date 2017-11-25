@@ -384,7 +384,6 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener {
 		
 	}
 	
-	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnNovo) {
 			btnNovo_click();

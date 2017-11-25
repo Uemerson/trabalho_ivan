@@ -1,30 +1,36 @@
 package model;
 
+import java.util.Date;
+
 public class Funcionario {
 
-	private int Registro;
-	private long Numero_de_Autorizacao_da_SER, Numero_do_Registro_do_Diploma;
+	private int Registro, Numero_da_Casa, Numero_de_Autorizacao_da_SER, Numero_do_Registro_do_Diploma;
 	private double Salario;
-	private String Nome, Data_de_Nascimento, CPF, RG, Logradouro,
-	Endereco, Numero_da_Casa, Bairro, Cidade, Estado, Tel_Residencial, Tel_Comercial,
-	Celular, Email, Formacao_Academica, Cargo, Data_de_Autorizacao, Data_de_Demissao;
+	private String Nome, CPF, RG, Logradouro, Endereco, Bairro, Cidade, Estado, Tel_Residencial, Tel_Comercial, Celular, Email, Formacao_Academica, Cargo;
+	private Date Data_de_Autorizacao, Data_de_Admissao, Data_de_Demissao, Data_de_Nascimento;
 	
+	public Date getData_de_Admissao() {
+		return Data_de_Admissao;
+	}
+	public void setData_de_Admissao(Date data_de_Admissao) {
+		Data_de_Admissao = data_de_Admissao;
+	}
 	public int getRegistro() {
 		return Registro;
 	}
 	public void setRegistro(int registro) {
 		Registro = registro;
 	}
-	public long getNumero_de_Autorizacao_da_SER() {
+	public int getNumero_de_Autorizacao_da_SER() {
 		return Numero_de_Autorizacao_da_SER;
 	}
-	public void setNumero_de_Autorizacao_da_SER(long numero_de_Autorizacao_da_SER) {
+	public void setNumero_de_Autorizacao_da_SER(int numero_de_Autorizacao_da_SER) {
 		Numero_de_Autorizacao_da_SER = numero_de_Autorizacao_da_SER;
 	}
-	public long getNumero_do_Registro_do_Diploma() {
+	public int getNumero_do_Registro_do_Diploma() {
 		return Numero_do_Registro_do_Diploma;
 	}
-	public void setNumero_do_Registro_do_Diploma(long numero_do_Registro_do_Diploma) {
+	public void setNumero_do_Registro_do_Diploma(int numero_do_Registro_do_Diploma) {
 		Numero_do_Registro_do_Diploma = numero_do_Registro_do_Diploma;
 	}
 	public double getSalario() {
@@ -39,10 +45,10 @@ public class Funcionario {
 	public void setNome(String nome) {
 		Nome = nome;
 	}
-	public String getData_de_Nascimento() {
+	public Date getData_de_Nascimento() {
 		return Data_de_Nascimento;
 	}
-	public void setData_de_Nascimento(String data_de_Nascimento) {
+	public void setData_de_Nascimento(Date data_de_Nascimento) {
 		Data_de_Nascimento = data_de_Nascimento;
 	}
 	public String getCPF() {
@@ -69,10 +75,10 @@ public class Funcionario {
 	public void setEndereco(String endereco) {
 		Endereco = endereco;
 	}
-	public String getNumero_da_Casa() {
+	public int getNumero_da_Casa() {
 		return Numero_da_Casa;
 	}
-	public void setNumero_da_Casa(String numero_da_Casa) {
+	public void setNumero_da_Casa(int numero_da_Casa) {
 		Numero_da_Casa = numero_da_Casa;
 	}
 	public String getBairro() {
@@ -129,16 +135,16 @@ public class Funcionario {
 	public void setCargo(String cargo) {
 		Cargo = cargo;
 	}
-	public String getData_de_Autorizacao() {
+	public Date getData_de_Autorizacao() {
 		return Data_de_Autorizacao;
 	}
-	public void setData_de_Autorizacao(String data_de_Autorizacao) {
+	public void setData_de_Autorizacao(Date data_de_Autorizacao) {
 		Data_de_Autorizacao = data_de_Autorizacao;
 	}
-	public String getData_de_Demissao() {
+	public Date getData_de_Demissao() {
 		return Data_de_Demissao;
 	}
-	public void setData_de_Demissao(String data_de_Demissao) {
+	public void setData_de_Demissao(Date data_de_Demissao) {
 		Data_de_Demissao = data_de_Demissao;
 	} 
 	
