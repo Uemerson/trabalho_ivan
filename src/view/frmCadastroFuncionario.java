@@ -8,6 +8,7 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,6 +32,7 @@ import javax.swing.text.MaskFormatter;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import controler.FuncoesGlobais;
+import dao.DAOCargo;
 import dao.DAOFuncionario;
 import model.Cargo;
 import model.Funcionario;
@@ -89,7 +91,7 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 	private JPanel pnlBotoes;
 	private static frmCadastroFuncionario singleton = null;
 	
-	public static frmCadastroFuncionario getFrmCadastroFuncionario() throws ParseException {
+	public static frmCadastroFuncionario getFrmCadastroFuncionario() throws ParseException, SQLException {
 		if (singleton == null) {
 			singleton = new frmCadastroFuncionario();
 		}
@@ -97,7 +99,7 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		return singleton;
 	}
 	
-	public frmCadastroFuncionario() throws ParseException {
+	public frmCadastroFuncionario() throws ParseException, SQLException {
 		getContentPane().setLayout(null);
 		
 		pnlBotoes = new JPanel();
@@ -133,6 +135,7 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		pnlBotoes.add(btnCancelar);
 		
 		btnPesquisar = new JButton("Pesquisar");
+		btnPesquisar.addActionListener(this);
 		btnPesquisar.setBounds(460, 11, 85, 44);
 		pnlBotoes.add(btnPesquisar);
 		
@@ -155,9 +158,7 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		cbCargo = new JComboBox();
 		
 		listaCargo = new ArrayList<>();
-		listaCargo.add(new Cargo(1, "Professor", "Cargo para professores"));
-		listaCargo.add(new Cargo(2, "Zelador", "Cargo para professores"));
-		listaCargo.add(new Cargo(3, "Secretaria", "Cargo para professores"));
+		listaCargo = new DAOCargo().listaCargo();
 		
 		for (int i = 0; i < listaCargo.size(); i++) {
 			cbCargo.addItem(listaCargo.get(i).getNome());
@@ -467,6 +468,33 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 				ex.printStackTrace();
 			}
 		}
+		
+		else if (e.getSource() == btnPesquisar) {
+			try {
+				btnPesquisar_click();
+			} catch (ParseException | SQLException | PropertyVetoException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+	
+	private void btnPesquisar_click() throws ParseException, SQLException, PropertyVetoException {
+
+		frmPesquisaFuncionario.getFrmPesquisaFuncionario();
+		
+		if (frmPesquisaFuncionario.getFrmPesquisaFuncionario().isVisible()) {
+			frmPesquisaFuncionario.getFrmPesquisaFuncionario().getBtnConfirma().setVisible(true);
+			frmPesquisaFuncionario.getFrmPesquisaFuncionario().getBtnConfirma().setText("Volta ao cadastro de funcionario");
+			
+			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setSelected(true);
+		} else {
+			frmPesquisaFuncionario.getFrmPesquisaFuncionario().getBtnConfirma().setVisible(true);
+			frmPesquisaFuncionario.getFrmPesquisaFuncionario().getBtnConfirma().setText("Volta ao cadastro de funcionario");
+			
+			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setVisible(true);
+			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaFuncionario.getFrmPesquisaFuncionario());
+			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setSelected(true);
+		}
 	}
 	
 	private void btnNovo_click() {
@@ -594,6 +622,10 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 				JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
+		
+	}
+
+	public void preencheCadastro(Funcionario funcionario) {
 		
 	}
 }

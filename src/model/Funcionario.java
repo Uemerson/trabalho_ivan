@@ -9,6 +9,15 @@ public class Funcionario {
 	private String Nome, CPF, RG, Logradouro, Endereco, Bairro, Cidade, Estado, Tel_Residencial, Tel_Comercial, Celular, Email, Formacao_Academica, Cargo;
 	private Date Data_de_Autorizacao, Data_de_Admissao, Data_de_Demissao, Data_de_Nascimento;
 	
+	public Funcionario() {};
+	
+	public Funcionario(int Registro, String Nome, String CPF, String Cargo) {
+		this.Registro = Registro;
+		this.Nome = Nome;
+		this.CPF = CPF;
+		this.Cargo = Cargo;
+	}
+	
 	public Date getData_de_Admissao() {
 		return Data_de_Admissao;
 	}

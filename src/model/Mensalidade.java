@@ -1,6 +1,6 @@
 package model;
 
-public class Menssalidade {
+public class Mensalidade {
 
 	private int Registro;
 	

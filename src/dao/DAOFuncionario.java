@@ -2,7 +2,9 @@ package dao;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import model.Funcionario;
 
@@ -15,9 +17,6 @@ public class DAOFuncionario {
 			"TELEFONE_RESIDENCIAL, TELEFONE_COMERCIAL, CELULAR, EMAIL, CARGO, DATA_ADMISSAO, DATA_DEMISSAO, SALARIO, " + 
 			" FORMACAO, NUM_AUTORIZACAO_SER, DATA_AUTORIZACAO_SER, NUM_REGISTRO_DIPLOMA) VALUES (?, ?, ?, ?, ? , ? , ?, ?, " + 
 			"?, ?, ?, ?, ?, ?, ? , ? , ?, ?, ?, ?, ?, ?)";
-		
-		//System.out.println(funcionario.getData_de_Nascimento());
-		//System.out.println(data);
 		
 		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
 		preparedStatement.setString(1, funcionario.getNome());
@@ -45,29 +44,53 @@ public class DAOFuncionario {
 		
 		preparedStatement.execute();
 		System.out.println("Cadastro de funcionario com sucesso!");
-		/*
-		 * NOME VARCHAR(50) NOT NULL,
-			DATA_NASCIMENTO DATE,
-			RG VARCHAR(20),
-			CPF VARCHAR(10),
-			LOGRADOURO VARCHAR(15),
-			ENDERECO VARCHAR(20),
-			NUMERO INT(10),
-			BAIRRO VARCHAR(20),
-			CIDADE VARCHAR(25),
-			ESTADO VARCHAR(2),
-			TELEFONE_RESIDENCIAL VARCHAR(15),
-			TELEFONE_COMERCIAL VARCHAR(15),
-			CELULAR VARCHAR(15),
-			EMAIL VARCHAR(25),
-			CARGO VARCHAR(15),
-			DATA_ADMISSAO DATE,
-			DATA_DEMISSAO DATE,
-			SALARIO DOUBLE,
-			FORMACAO CHAR(50),
-			NUM_AUTORIZACAO_SER INT,
-			DATA_AUTORIZACAO_SER DATE,
-			NUM_REGISTRO_DIPLOMA INT,
-		 * */
+		
 	}
+
+	public ArrayList<Funcionario> listaFuncionario() throws SQLException{
+		SQL = "SELECT * FROM FUNCIONARIO";
+		
+		ArrayList<Funcionario> lista = new ArrayList<>();
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		
+		while(rs.next()) {
+			lista.add(new Funcionario(rs.getInt("ID"), rs.getString("Nome"), rs.getString("CPF"), rs.getString("Cargo")));
+		}
+		
+		return lista;
+	}
+	
+	public ArrayList<Funcionario> listaFuncionario(int ID) throws SQLException {
+		SQL = "SELECT * FROM FUNCIONARIO WHERE ID = ?";
+		ArrayList<Funcionario> lista = new ArrayList<>();
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setInt(1, ID);
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		
+		while(rs.next()) {
+			lista.add(new Funcionario(rs.getInt("ID"), rs.getString("Nome"), rs.getString("CPF"), rs.getString("Cargo")));
+		}
+		
+		return lista;
+	}
+
+	public ArrayList<Funcionario> listaFuncionario(String nome) throws SQLException {
+		SQL = "SELECT * FROM FUNCIONARIO WHERE nome like ?";
+		
+		ArrayList<Funcionario> lista = new ArrayList<>();
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setString(1, "%" + nome + "%");
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		
+		while(rs.next()) {
+			lista.add(new Funcionario(rs.getInt("ID"), rs.getString("Nome"), rs.getString("CPF"), rs.getString("Cargo")));
+		}
+		
+		return lista;
+	}
+	
 }

@@ -34,7 +34,21 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 	private JMenuItem mntmCadastroResponsavel;
 	private JMenuItem mntmCadastroMensalidade;
 	private JMenuItem mntmPesquisarFuncionario;
-
+	
+	private static frmMenu singleton = null;
+	
+	public static frmMenu getFrmMenu(Usuario usuario){
+		if (singleton == null) {
+			singleton = new frmMenu(usuario);
+		}
+		
+		return singleton;
+	}
+	
+	public static frmMenu getFrmMenu() {
+		return singleton;
+	}
+	
 	public frmMenu(Usuario usuario) {
 		addWindowListener(this);
 		setTitle("Menu Principal");
@@ -98,7 +112,11 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 		pnlPrincipal.add(dskPrincipal);
 
 	}
-
+	
+	public JDesktopPane getDskPrincipal() {
+		return dskPrincipal;
+	}
+	
 	public void actionPerformed(ActionEvent e) {
 
 		if (e.getSource() == mntmCadastroUsuario) {
@@ -110,7 +128,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 		} else if (e.getSource() == mntmCadastroFuncionario) {
 			try {
 				mntmCadastroFuncionarios_click();
-			} catch (ParseException | PropertyVetoException ex) {
+			} catch (ParseException | PropertyVetoException | SQLException ex) {
 				ex.printStackTrace();
 			}
 		} else if (e.getSource() == mntmCadastroCargo) {
@@ -143,6 +161,12 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			} catch (ParseException | PropertyVetoException ex) {
 				ex.printStackTrace();
 			}
+		} else if (e.getSource() == mntmPesquisarFuncionario) {
+			try {
+				mntmPesquisarFuncionario_click();
+			} catch (ParseException | PropertyVetoException | SQLException ex) {
+				ex.printStackTrace();
+			}
 		}
 
 	}
@@ -159,7 +183,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 		}
 	}
 
-	private void mntmCadastroFuncionarios_click() throws ParseException, PropertyVetoException {
+	private void mntmCadastroFuncionarios_click() throws ParseException, PropertyVetoException, SQLException {
 		frmCadastroFuncionario.getFrmCadastroFuncionario();
 
 		if (frmCadastroFuncionario.getFrmCadastroFuncionario().isVisible()) {
@@ -236,7 +260,19 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			frmCadastroMensalidade.getFrmCadastroMensalidade().setSelected(true);
 		}
 	}
-
+	
+	private void mntmPesquisarFuncionario_click() throws ParseException, PropertyVetoException, SQLException {
+		frmPesquisaFuncionario.getFrmPesquisaFuncionario();
+		
+		if (frmPesquisaFuncionario.getFrmPesquisaFuncionario().isVisible()) {
+			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setSelected(true);
+		} else {
+			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setVisible(true);
+			dskPrincipal.add(frmPesquisaFuncionario.getFrmPesquisaFuncionario());
+			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setSelected(true);
+		}
+	}
+	
 	public void windowActivated(WindowEvent e) {
 	}
 

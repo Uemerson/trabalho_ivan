@@ -94,8 +94,8 @@ public class frmLogin extends JFrame implements ActionListener, KeyListener, Win
            JOptionPane.showMessageDialog(null,"Login realizado com sucesso", "Sistema", JOptionPane.INFORMATION_MESSAGE);
            
            dispose();
-           frmMenu form = new frmMenu(dao.verificaLogin(new Usuario(cbLogin.getSelectedIndex(), cbLogin.getSelectedItem().toString(), txtSenha.getText())));
-           form.setVisible(true);
+           
+           frmMenu.getFrmMenu(new Usuario(cbLogin.getSelectedIndex(), cbLogin.getSelectedItem().toString(), txtSenha.getText())).setVisible(true);;
            
 		}else {
 			JOptionPane.showMessageDialog(null,"Acesso Negado!", "Sistema", JOptionPane.ERROR_MESSAGE);
@@ -126,6 +126,7 @@ public class frmLogin extends JFrame implements ActionListener, KeyListener, Win
 	}
 	
 	public void keyReleased(KeyEvent e) {}
+	
 	public void keyTyped(KeyEvent e) {}
 	
 	private void btnEntrar_keyPressed(KeyEvent e) throws SQLException {
