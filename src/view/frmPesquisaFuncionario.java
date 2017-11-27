@@ -3,28 +3,39 @@ package view;
 import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListDataListener;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
+import controler.ComboKeyHandler;
+import controler.FuncoesGlobais;
 import dao.DAOCargo;
 import dao.DAOConexaoMySQL;
 import dao.DAOFuncionario;
+import javafx.scene.control.ComboBox;
 import model.Funcionario;
 import tableModel.FuncionarioTableModel;
 import java.awt.event.ActionListener;
@@ -33,7 +44,7 @@ import java.awt.event.ActionEvent;
 public class frmPesquisaFuncionario extends JInternalFrame implements FocusListener, DocumentListener, ActionListener {
 	private JTextField txtNome;
 	private JTable tbTabelaFuncionario;
-	private JButton btnConfirma;
+	private JButton btnAbrirCadastroFuncionario;
 	private JFormattedTextField txtCPF;
 	private JComboBox cbCargo;
 	private JButton btnLimparFiltros;
@@ -48,6 +59,7 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 	private JScrollPane srpPainelTabela;
 
 	public static frmPesquisaFuncionario getFrmPesquisaFuncionario() throws ParseException, SQLException {
+
 		if (singleton == null) {
 			singleton = new frmPesquisaFuncionario();
 		}
@@ -100,15 +112,68 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 		txtCPF.setBounds(486, 23, 98, 28);
 		pnlFiltros.add(txtCPF);
 
+		cbRegistro = new JComboBox();
+		cbRegistro.setBounds(69, 23, 72, 28);
+		
+		// Preenche a comboBox com os registros
+		DefaultComboBoxModel<String> modelCbRegistro = new DefaultComboBoxModel<>();
+		
+		for (int i = 0; i < daoFuncionario.listaFuncionario().size(); i++) {
+			modelCbRegistro.addElement(Integer.toString(daoFuncionario.listaFuncionario().get(i).getRegistro()));
+		}
+		
+		cbRegistro.setModel(modelCbRegistro);
+		cbRegistro.setSelectedItem(null);
+		cbRegistro.setEditable(true);
+		JTextField edtCbRegistro = (JTextField) cbRegistro.getEditor().getEditorComponent();
+		edtCbRegistro.addKeyListener(new ComboKeyHandler(cbRegistro));
+		edtCbRegistro.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+				
+			}
+			
+			@Override
+			public void focusGained(FocusEvent arg0) {
+				txtNome.setText(null);
+				txtCPF.setText(null);
+				cbCargo.setSelectedItem(null);
+			}
+		});
+
+		cbRegistro.addActionListener(this);
+		pnlFiltros.add(cbRegistro);
+		
 		cbCargo = new JComboBox();
 		cbCargo.setBounds(640, 23, 122, 28);
-
+		
+		// Preenche a comboBox com os cargos
+		DefaultComboBoxModel<String> modelCbCargo = new DefaultComboBoxModel<>();
+		
 		for (int i = 0; i < daoCargo.listaCargo().size(); i++) {
-			cbCargo.addItem(daoCargo.listaCargo().get(i).getNome());
+			modelCbCargo.addElement(daoCargo.listaCargo().get(i).getNome());
 		}
-
-		AutoCompleteDecorator.decorate(cbCargo);
+		
+		cbCargo.setModel(modelCbCargo);
 		cbCargo.setSelectedItem(null);
+		cbCargo.setEditable(true);
+		JTextField edtCbCargo = (JTextField) cbCargo.getEditor().getEditorComponent();
+		edtCbCargo.addKeyListener(new ComboKeyHandler(cbCargo));
+		edtCbCargo.addFocusListener(new FocusListener() {
+			
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				txtNome.setText(null);
+				txtCPF.setText(null);
+				cbRegistro.setSelectedItem(null);
+			}
+		});
+		
 		pnlFiltros.add(cbCargo);
 
 		lblCargo = new JLabel("Cargo");
@@ -121,25 +186,12 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 		btnLimparFiltros.setBounds(640, 62, 122, 28);
 		pnlFiltros.add(btnLimparFiltros);
 
-		cbRegistro = new JComboBox();
-		cbRegistro.setBounds(69, 23, 72, 28);
-
-		// Preenche a comboBox com os registros
-		for (int i = 0; i < daoFuncionario.listaFuncionario().size(); i++) {
-			cbRegistro.addItem(daoFuncionario.listaFuncionario().get(i).getRegistro());
-		}
-
-		AutoCompleteDecorator.decorate(cbRegistro);
-		cbRegistro.setSelectedItem(null);
-		cbRegistro.addActionListener(this);
-
-		pnlFiltros.add(cbRegistro);
-
 		srpPainelTabela = new JScrollPane();
 		srpPainelTabela.setBounds(10, 125, 772, 316);
 		getContentPane().add(srpPainelTabela);
 
 		tbTabelaFuncionario = new JTable();
+		tbTabelaFuncionario.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		FuncionarioTableModel model = new FuncionarioTableModel();
 		tbTabelaFuncionario.setModel(model);
 
@@ -149,15 +201,18 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 		tbTabelaFuncionario.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		srpPainelTabela.setViewportView(tbTabelaFuncionario);
 
-		btnConfirma = new JButton("Voltar ao cadastro de funcionario");
-		btnConfirma.addActionListener(this);
-		btnConfirma.setBounds(562, 446, 220, 28);
-		btnConfirma.setVisible(false);
-		getContentPane().add(btnConfirma);
+		btnAbrirCadastroFuncionario = new JButton("Abrir cadastro de funcionario");
+		btnAbrirCadastroFuncionario.addActionListener(this);
+		btnAbrirCadastroFuncionario.setBounds(594, 446, 188, 28);
+		getContentPane().add(btnAbrirCadastroFuncionario);
 
+		JButton btnAbrirCadastroDeUsuario = new JButton("Abrir cadastro de usuario");
+		btnAbrirCadastroDeUsuario.setBounds(404, 446, 180, 28);
+		getContentPane().add(btnAbrirCadastroDeUsuario);
 	}
 
 	public void focusGained(FocusEvent e) {
+		System.out.println("teste");
 		try {
 
 			if (e.getSource() == txtNome) {
@@ -236,10 +291,12 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 		try {
 			if (e.getSource() == cbRegistro) {
 				cbRegistro_click();
-			} else if (e.getSource() == btnConfirma) {
-				btnConfirma_click();
+			} else if (e.getSource() == btnAbrirCadastroFuncionario) {
+				btnAbrirCadastroFuncionario_click();
+			} else if (e.getSource() == cbCargo) {
+				cbCargo_click();
 			}
-		} catch (NumberFormatException | SQLException | ParseException ex) {
+		} catch (NumberFormatException | SQLException | ParseException | PropertyVetoException ex) {
 			ex.printStackTrace();
 		}
 	}
@@ -252,19 +309,70 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 		if (cbRegistro.getSelectedIndex() > -1) {
 			DAOFuncionario dao = new DAOFuncionario();
 			FuncionarioTableModel model = new FuncionarioTableModel();
-			model.addListaDeFuncionario(
-					dao.listaFuncionario(Integer.parseInt(cbRegistro.getSelectedItem().toString())));
+			model.addListaDeFuncionario(dao.listaFuncionario(Integer.parseInt(cbRegistro.getSelectedItem().toString())));
 			tbTabelaFuncionario.setModel(model);
 		}
 	}
+	
+	private void cbCargo_click() throws NumberFormatException, SQLException {
+		txtNome.setText(null);
+		txtCPF.setText(null);	
+		cbRegistro.setSelectedItem(null);
+		
+		if (cbCargo.getSelectedIndex() > -1) {
+			DAOFuncionario dao = new DAOFuncionario();
+			FuncionarioTableModel model = new FuncionarioTableModel();
+			model.addListaDeFuncionario(dao.listaFuncionarioCargo(cbCargo.getSelectedItem().toString()));
+			tbTabelaFuncionario.setModel(model);
+		}
+	}
+	
+	private void btnAbrirCadastroFuncionario_click() throws ParseException, SQLException, PropertyVetoException {
+		// frmCadastroFuncionario.getFrmCadastroFuncionario().preencheCadastro();
+		if (tbTabelaFuncionario.getSelectedRow() > -1) {
+			FuncionarioTableModel model = new FuncionarioTableModel();
+			model = (FuncionarioTableModel) tbTabelaFuncionario.getModel();
 
-	private void btnConfirma_click() throws ParseException, SQLException {
-		if (btnConfirma.getText().equals("Volta ao cadastro de funcionario")) {
-			frmCadastroFuncionario.getFrmCadastroFuncionario().preencheCadastro(new Funcionario());
+			frmCadastroFuncionario.getFrmCadastroFuncionario();
+
+			if (frmCadastroFuncionario.getFrmCadastroFuncionario().isVisible()) {
+				frmCadastroFuncionario.getFrmCadastroFuncionario().preencheCadastro(new DAOFuncionario().buscaFuncionario(model.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
+				frmCadastroFuncionario.getFrmCadastroFuncionario().setSelected(true);
+			}else {
+				
+				frmCadastroFuncionario.getFrmCadastroFuncionario().setVisible(true);
+				frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroFuncionario.getFrmCadastroFuncionario());
+				frmCadastroFuncionario.getFrmCadastroFuncionario().setSelected(true);
+				frmCadastroFuncionario.getFrmCadastroFuncionario().preencheCadastro(new DAOFuncionario().buscaFuncionario(model.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
+				
+			}
+			
+		}else {
+			JOptionPane.showMessageDialog(this, "Selecione um registro para abrir o cadastro de funcionario!", "Sistema", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
-	public JButton getBtnConfirma() {
-		return btnConfirma;
+	public void resetaFormulario() throws SQLException {
+		cbRegistro.removeAllItems();
+		cbCargo.removeAllItems();
+		
+		DAOCargo daoCargo = new DAOCargo();
+		DAOFuncionario daoFuncionario = new DAOFuncionario();
+
+		for (int i = 0; i < daoCargo.listaCargo().size(); i++) {
+			cbCargo.addItem(daoCargo.listaCargo().get(i).getNome());
+		}
+
+		for (int i = 0; i < daoFuncionario.listaFuncionario().size(); i++) {
+			cbRegistro.addItem(daoFuncionario.listaFuncionario().get(i).getRegistro());
+		}
+
+		FuncionarioTableModel model = new FuncionarioTableModel();
+		model.addListaDeFuncionario(daoFuncionario.listaFuncionario());
+
+		tbTabelaFuncionario.setModel(model);
+		FuncoesGlobais.limpaCampos(pnlFiltros);
+
 	}
+
 }

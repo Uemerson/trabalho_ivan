@@ -189,6 +189,8 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 		if (frmCadastroFuncionario.getFrmCadastroFuncionario().isVisible()) {
 			frmCadastroFuncionario.getFrmCadastroFuncionario().setSelected(true);
 		} else {
+			//Reseta as configurações do formulario, por que nesse caso a pessoa está abrindo novamente
+			frmCadastroFuncionario.getFrmCadastroFuncionario().resetaFormulario();
 			frmCadastroFuncionario.getFrmCadastroFuncionario().setVisible(true);
 			dskPrincipal.add(frmCadastroFuncionario.getFrmCadastroFuncionario());
 			frmCadastroFuncionario.getFrmCadastroFuncionario().setSelected(true);

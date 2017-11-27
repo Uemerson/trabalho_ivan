@@ -18,6 +18,37 @@ public class Funcionario {
 		this.Cargo = Cargo;
 	}
 	
+	public Funcionario(int registro, int numero_da_Casa, int numero_de_Autorizacao_da_SER,
+			int numero_do_Registro_do_Diploma, double salario, String nome, String cPF, String rG, String logradouro,
+			String endereco, String bairro, String cidade, String estado, String tel_Residencial, String tel_Comercial,
+			String celular, String email, String formacao_Academica, String cargo, Date data_de_Autorizacao,
+			Date data_de_Admissao, Date data_de_Demissao, Date data_de_Nascimento) {
+		super();
+		Registro = registro;
+		Numero_da_Casa = numero_da_Casa;
+		Numero_de_Autorizacao_da_SER = numero_de_Autorizacao_da_SER;
+		Numero_do_Registro_do_Diploma = numero_do_Registro_do_Diploma;
+		Salario = salario;
+		Nome = nome;
+		CPF = cPF;
+		RG = rG;
+		Logradouro = logradouro;
+		Endereco = endereco;
+		Bairro = bairro;
+		Cidade = cidade;
+		Estado = estado;
+		Tel_Residencial = tel_Residencial;
+		Tel_Comercial = tel_Comercial;
+		Celular = celular;
+		Email = email;
+		Formacao_Academica = formacao_Academica;
+		Cargo = cargo;
+		Data_de_Autorizacao = data_de_Autorizacao;
+		Data_de_Admissao = data_de_Admissao;
+		Data_de_Demissao = data_de_Demissao;
+		Data_de_Nascimento = data_de_Nascimento;
+	}
+
 	public Date getData_de_Admissao() {
 		return Data_de_Admissao;
 	}

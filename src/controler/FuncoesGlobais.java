@@ -67,10 +67,10 @@ public class FuncoesGlobais {
 
 	// Verifica todos os campos em branco
 	public static boolean verificaCampos(JPanel painel) {
-		boolean vazio = false;
+		boolean vazio = false, moveu_foco = false;
 
 		for (int i = 0; i < painel.getComponentCount(); i++) {
-			// varre todos os componentes
+			// Varre todos os componentes
 			Component c = painel.getComponent(i);
 
 			// JTextField
@@ -124,6 +124,12 @@ public class FuncoesGlobais {
 					field.setBorder(bordaPadrao.getBorder());
 				}
 			}
+			
+			if (vazio && !moveu_foco) {
+				c.requestFocus();
+				moveu_foco = true;
+				System.out.println("entrou aki");
+			}
 		}
 
 		return vazio;
@@ -131,7 +137,7 @@ public class FuncoesGlobais {
 
 	// Verifica os campos em branco
 	public static boolean verificaCampos(JPanel painel, ArrayList<Component> comp) {
-		boolean vazio = false;
+		boolean vazio = false, moveu_foco = false;
 
 		for (int i = 0; i < painel.getComponentCount(); i++) {
 
@@ -195,6 +201,11 @@ public class FuncoesGlobais {
 						JComboBox bordaPadrao = new JComboBox();
 						field.setBorder(bordaPadrao.getBorder());
 					}
+				}
+				
+				if (vazio && !moveu_foco) {
+					c.requestFocus();
+					moveu_foco = true;
 				}
 			}
 		}

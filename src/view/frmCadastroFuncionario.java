@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.logging.SimpleFormatter;
 
 import javax.swing.DefaultComboBoxModel;
@@ -118,6 +119,7 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		pnlBotoes.add(btnExcluir);
 		
 		btnAlterar = new JButton("Alterar");
+		btnAlterar.addActionListener(this);
 		btnAlterar.setEnabled(false);
 		btnAlterar.setBounds(190, 11, 80, 44);
 		pnlBotoes.add(btnAlterar);
@@ -446,6 +448,7 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		AutoCompleteDecorator.decorate(cbCargo);
 		AutoCompleteDecorator.decorate(cbEstado);
 		AutoCompleteDecorator.decorate(cbLogradouro);
+		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -469,6 +472,10 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 			}
 		}
 		
+		else if (e.getSource() == btnAlterar) {
+			btnAlterar_click();
+		}
+		
 		else if (e.getSource() == btnPesquisar) {
 			try {
 				btnPesquisar_click();
@@ -483,14 +490,10 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		frmPesquisaFuncionario.getFrmPesquisaFuncionario();
 		
 		if (frmPesquisaFuncionario.getFrmPesquisaFuncionario().isVisible()) {
-			frmPesquisaFuncionario.getFrmPesquisaFuncionario().getBtnConfirma().setVisible(true);
-			frmPesquisaFuncionario.getFrmPesquisaFuncionario().getBtnConfirma().setText("Volta ao cadastro de funcionario");
+			frmPesquisaFuncionario.getFrmPesquisaFuncionario().resetaFormulario();
 			
 			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setSelected(true);
 		} else {
-			frmPesquisaFuncionario.getFrmPesquisaFuncionario().getBtnConfirma().setVisible(true);
-			frmPesquisaFuncionario.getFrmPesquisaFuncionario().getBtnConfirma().setText("Volta ao cadastro de funcionario");
-			
 			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setVisible(true);
 			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaFuncionario.getFrmPesquisaFuncionario());
 			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setSelected(true);
@@ -510,12 +513,22 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		cbCargo.requestFocus();
 	}
 	
+	private void btnAlterar_click() {
+		FuncoesGlobais.ativaCampos(pnlInformacaoFuncionario);
+		
+		if (cbCargo.getSelectedItem().toString() == "Professor") {
+			FuncoesGlobais.ativaCampos(pnlInformacaoDeProfessores);
+		}
+		
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+		
+		btnSalvar.setEnabled(true);
+		btnCancelar.setEnabled(true);
+		txtRegistro.setEnabled(false);
+		cbCargo.requestFocus();
+	}
+	
 	private void cbCargo_click() {
-		/*System.out.println(cbCargo.getSelectedItem());
-		System.out.println(cbCargo.getSelectedIndex());
-		System.out.println(listaCargo.get(cbCargo.getSelectedIndex()).getRegistro());
-		System.out.println(listaCargo.get(cbCargo.getSelectedIndex()).getNome());
-		*/
 		
 		if (cbCargo.getSelectedIndex() > -1) {
 			if (listaCargo.get(cbCargo.getSelectedIndex()).getNome().equals("Professor")) {
@@ -568,64 +581,138 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 				 {
 			
 			JOptionPane.showMessageDialog(this, "Erro - Os campos em vermelho devem ser preenchidos!", "Sistema", JOptionPane.ERROR_MESSAGE);
-		
+			
 		}else {
 			
-			if(JOptionPane.showConfirmDialog(this, 
-											"Deseja realmente salvar o novo cadastrado?", 
-											"Sistema", 
-											JOptionPane.YES_NO_OPTION, 
-											JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
-				//Salvando o registro
-				Funcionario funcionario = new Funcionario();
-				
-				funcionario.setCargo(cbCargo.getSelectedItem().toString());
-				funcionario.setData_de_Admissao(new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeAdimissao.getText()));
-				funcionario.setData_de_Demissao(txtDataDeDemissao.getValue() == null ? null : new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeDemissao.getText()));
-				funcionario.setCPF(txtCPF.getText().replace(".", ""));
-				funcionario.setNome(txtNome.getText());
-				funcionario.setData_de_Nascimento(new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeNascimento.getText()));
-				funcionario.setRG(txtRG.getText());
-				funcionario.setEstado(cbEstado.getSelectedItem().toString());
-				funcionario.setEmail(txtEmail.getText().equals(null) || txtEmail.getText().equals("") ? null : txtEmail.getText());
-				funcionario.setCidade(txtCidade.getText());
-				funcionario.setLogradouro(cbLogradouro.getSelectedItem().toString());
-				funcionario.setEndereco(txtEndereco.getText());
-				funcionario.setNumero_da_Casa(txtNumero.getText().equals("") || txtNumero.getText().equals(null) ? 0 : Integer.parseInt(txtNumero.getText()));
-				funcionario.setBairro(txtBairro.getText().equals(null) || txtBairro.getText().equals("") ? null : txtBairro.getText());
-				funcionario.setTel_Residencial(txtTelResidencial.getValue() == null ? null : txtTelResidencial.getText().replace("(", "").replace(")", "").replace("-", ""));
-				funcionario.setTel_Comercial(txtTelComercial.getValue() == null ? null : txtTelComercial.getText().replace("(", "").replace(")", "").replaceAll("-", ""));
-				funcionario.setCelular(txtCelular.getText().replace("(", "").replace(")", "").replace("-", ""));
-				funcionario.setSalario(Double.parseDouble(txtSalario.getText()));
-				
-				if (cbCargo.getSelectedIndex() > -1 && cbCargo.getSelectedItem().toString().equals("Professor")) {
-					/*Num autorizao ou Num de diploma*/
+			if (txtRegistro.getText().equals("NOVO")) {
+				if(JOptionPane.showConfirmDialog(this, 
+												"Deseja realmente salvar o novo cadastrado?", 
+												"Sistema", 
+												JOptionPane.YES_NO_OPTION, 
+												JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
+					//Salvando o registro
+					Funcionario funcionario = new Funcionario();
 					
-					funcionario.setFormacao_Academica(txtFormacaoAcademica.getText());
-					funcionario.setNumero_de_Autorizacao_da_SER(Integer.parseInt(txtNumerodeAutorizacao.getText()));
-					funcionario.setData_de_Autorizacao(new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeAutorizacaoDaSER.getText()));
-					funcionario.setNumero_do_Registro_do_Diploma(Integer.parseInt(txtNumeroDoRegistroDoDiploma.getText()));
+					funcionario.setCargo(cbCargo.getSelectedItem().toString());
+					funcionario.setData_de_Admissao(new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeAdimissao.getText()));
+					funcionario.setData_de_Demissao(txtDataDeDemissao.getValue() == null ? null : new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeDemissao.getText()));
+					funcionario.setCPF(txtCPF.getText().replace(".", ""));
+					funcionario.setNome(txtNome.getText());
+					funcionario.setData_de_Nascimento(new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeNascimento.getText()));
+					funcionario.setRG(txtRG.getText());
+					funcionario.setEstado(cbEstado.getSelectedItem().toString());
+					funcionario.setEmail(txtEmail.getText().equals(null) || txtEmail.getText().equals("") ? null : txtEmail.getText());
+					funcionario.setCidade(txtCidade.getText());
+					funcionario.setLogradouro(cbLogradouro.getSelectedItem().toString());
+					funcionario.setEndereco(txtEndereco.getText());
+					funcionario.setNumero_da_Casa(txtNumero.getText().equals("") || txtNumero.getText().equals(null) ? 0 : Integer.parseInt(txtNumero.getText()));
+					funcionario.setBairro(txtBairro.getText().equals(null) || txtBairro.getText().equals("") ? null : txtBairro.getText());
+					funcionario.setTel_Residencial(txtTelResidencial.getValue() == null ? null : txtTelResidencial.getText().replace("(", "").replace(")", "").replace("-", ""));
+					funcionario.setTel_Comercial(txtTelComercial.getValue() == null ? null : txtTelComercial.getText().replace("(", "").replace(")", "").replaceAll("-", ""));
+					funcionario.setCelular(txtCelular.getText().replace("(", "").replace(")", "").replace("-", ""));
+					funcionario.setSalario(Double.parseDouble(txtSalario.getText()));
+					
+					if (cbCargo.getSelectedIndex() > -1 && cbCargo.getSelectedItem().toString().equals("Professor")) {
+						/*Num autorizao ou Num de diploma*/
+						
+						funcionario.setFormacao_Academica(txtFormacaoAcademica.getText());
+						funcionario.setNumero_de_Autorizacao_da_SER(Integer.parseInt(txtNumerodeAutorizacao.getText()));
+						funcionario.setData_de_Autorizacao(new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeAutorizacaoDaSER.getText()));
+						funcionario.setNumero_do_Registro_do_Diploma(Integer.parseInt(txtNumeroDoRegistroDoDiploma.getText()));
+					}
+					
+					DAOFuncionario dao = new DAOFuncionario();
+					dao.novoFuncionario(funcionario);
+				
+					FuncoesGlobais.limpaCampos(pnlInformacaoFuncionario);
+					FuncoesGlobais.limpaCampos(pnlInformacaoDeProfessores);
+					FuncoesGlobais.desativaCampos(pnlInformacaoFuncionario);
+					FuncoesGlobais.desativaCampos(pnlInformacaoDeProfessores);
+					FuncoesGlobais.desativaCampos(pnlBotoes);
+					
+					btnNovo.setEnabled(true);
+					btnPesquisar.setEnabled(true);
+					btnNovo.requestFocus();
+					
+					JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
 				}
-				
-				DAOFuncionario dao = new DAOFuncionario();
-				dao.novoFuncionario(funcionario);
-			
-				FuncoesGlobais.limpaCampos(pnlInformacaoFuncionario);
-				FuncoesGlobais.limpaCampos(pnlInformacaoDeProfessores);
-				FuncoesGlobais.desativaCampos(pnlInformacaoFuncionario);
-				FuncoesGlobais.desativaCampos(pnlInformacaoDeProfessores);
-				FuncoesGlobais.desativaCampos(pnlBotoes);
-				
-				btnNovo.setEnabled(true);
-				btnPesquisar.setEnabled(true);
-				
-				JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
 		
 	}
 
-	public void preencheCadastro(Funcionario funcionario) {
+	public void preencheCadastro(Funcionario funcionario) throws ParseException {
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+		FuncoesGlobais.limpaCampos(pnlInformacaoDeProfessores);
+		FuncoesGlobais.limpaCampos(pnlInformacaoFuncionario);
+		FuncoesGlobais.resetaBordaPadrao(pnlInformacaoDeProfessores);
+		FuncoesGlobais.resetaBordaPadrao(pnlInformacaoFuncionario);
+		FuncoesGlobais.desativaCampos(pnlInformacaoFuncionario);
 		
+		pnlBotoes.requestFocusInWindow();
+		
+		btnNovo.setEnabled(true);
+		btnAlterar.setEnabled(true);
+		btnExcluir.setEnabled(true);
+		btnPesquisar.setEnabled(true);
+		
+		
+		cbCargo.setSelectedItem(funcionario.getCargo());
+		
+		txtDataDeAdimissao.setValue(new SimpleDateFormat("dd/MM/yyyy").format(funcionario.getData_de_Admissao()));
+		txtDataDeDemissao.setValue(funcionario.getData_de_Demissao() == null ? null : new SimpleDateFormat("dd/MM/yyyy").format(funcionario.getData_de_Demissao()));
+		txtRegistro.setText(Integer.toString(funcionario.getRegistro()));
+		
+		MaskFormatter mask = new MaskFormatter("###.###.###.##");
+		mask.setValueContainsLiteralCharacters(false);
+		String funcionarioCPF = mask.valueToString(funcionario.getCPF());
+		txtCPF.setValue(funcionarioCPF);
+		
+		txtNome.setText(funcionario.getNome());
+		txtDataDeNascimento.setValue(funcionario.getData_de_Nascimento() == null ? null : new SimpleDateFormat("dd/MM/yyyy").format(funcionario.getData_de_Nascimento()));
+		txtRG.setText(funcionario.getRG());
+		cbEstado.setSelectedItem(funcionario.getEstado());
+		txtEmail.setText(funcionario.getEmail());
+		txtCidade.setText(funcionario.getCidade());
+		cbLogradouro.setSelectedItem(funcionario.getLogradouro());
+		txtEndereco.setText(funcionario.getEndereco());
+		txtNumero.setText(funcionario.getNumero_da_Casa() == 0 ? null : Integer.toString(funcionario.getNumero_da_Casa()));
+		txtBairro.setText(funcionario.getBairro());
+		txtTelResidencial.setText(funcionario.getTel_Residencial());
+		txtCelular.setText(funcionario.getCelular());
+		txtTelComercial.setText(funcionario.getTel_Comercial());
+		txtSalario.setText(Double.toString(funcionario.getSalario()));
+		txtFormacaoAcademica.setText(funcionario.getFormacao_Academica());
+		txtDataDeAutorizacaoDaSER.setValue(funcionario.getData_de_Autorizacao() == null ? null : new SimpleDateFormat("dd/MM/yyyy").format(funcionario.getData_de_Autorizacao()));
+		txtNumerodeAutorizacao.setText(funcionario.getNumero_de_Autorizacao_da_SER() == 0 ? null : Integer.toString(funcionario.getNumero_de_Autorizacao_da_SER()));
+		txtNumeroDoRegistroDoDiploma.setText(funcionario.getNumero_do_Registro_do_Diploma() == 0 ? null : Integer.toString(funcionario.getNumero_do_Registro_do_Diploma()));
+	
+		FuncoesGlobais.desativaCampos(pnlInformacaoDeProfessores);
+		
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				btnNovo.requestFocusInWindow();
+			}
+		});
+		
+	}
+
+	public void resetaFormulario() {
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+		FuncoesGlobais.limpaCampos(pnlInformacaoDeProfessores);
+		FuncoesGlobais.limpaCampos(pnlInformacaoFuncionario);
+		FuncoesGlobais.resetaBordaPadrao(pnlInformacaoDeProfessores);
+		FuncoesGlobais.resetaBordaPadrao(pnlInformacaoFuncionario);
+		FuncoesGlobais.desativaCampos(pnlInformacaoDeProfessores);
+		FuncoesGlobais.desativaCampos(pnlInformacaoFuncionario);
+		
+		btnNovo.setEnabled(true);
+		btnPesquisar.setEnabled(true);
+		
+		javax.swing.SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				btnNovo.requestFocusInWindow();
+			}
+		});
 	}
 }

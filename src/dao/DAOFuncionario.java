@@ -93,4 +93,35 @@ public class DAOFuncionario {
 		return lista;
 	}
 	
+	public ArrayList<Funcionario> listaFuncionarioCargo(String cargo) throws SQLException {
+		SQL = "SELECT * FROM FUNCIONARIO WHERE cargo like ?";
+		
+		ArrayList<Funcionario> lista = new ArrayList<>();
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setString(1, "%" + cargo + "%");
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		
+		while(rs.next()) {
+			lista.add(new Funcionario(rs.getInt("ID"), rs.getString("Nome"), rs.getString("CPF"), rs.getString("Cargo")));
+		}
+		
+		return lista;
+	}
+	
+	public Funcionario buscaFuncionario(int ID) throws SQLException {
+		SQL = "SELECT * FROM FUNCIONARIO WHERE ID = ?";
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setInt(1, ID);
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		
+		rs.next();
+		
+		return new Funcionario(rs.getInt("ID"), rs.getInt("Numero"), rs.getInt("NUM_AUTORIZACAO_SER"), rs.getInt("NUM_REGISTRO_DIPLOMA"), 
+				rs.getDouble("Salario"), rs.getString("Nome"), rs.getString("CPF"), rs.getString("RG"), rs.getString("LOGRADOURO"), rs.getString("Endereco"), rs.getString("Bairro"),
+				rs.getString("Cidade"), rs.getString("Estado"), rs.getString("TELEFONE_RESIDENCIAL"), rs.getString("TELEFONE_COMERCIAL"), rs.getString("CELULAR"), rs.getString("Email"), 
+				rs.getString("Formacao"), rs.getString("Cargo"), rs.getDate("DATA_AUTORIZACAO_SER"), rs.getDate("DATA_ADMISSAO"), rs.getDate("DATA_DEMISSAO"), rs.getDate("DATA_NASCIMENTO"));
+		
+	}
 }
