@@ -42,12 +42,12 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 	private JMenuItem mntmPesquisarResponsavel;
 	private JMenuItem mntmPesquisarMatricula;
 	private JMenuItem mntmPesquisarMensalidade;
-
+	//Nao esquecer de limapr buffer 
 	public static frmMenu getFrmMenu(Usuario usuario) {
 		if (singleton == null) {
 			singleton = new frmMenu(usuario);
 		}
-
+		
 		return singleton;
 	}
 
