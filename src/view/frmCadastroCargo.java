@@ -87,7 +87,6 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 		pnlBotoes.add(btnCancelar);
 		
 		btnPesquisar = new JButton("Pesquisar");
-		btnPesquisar.setEnabled(false);
 		btnPesquisar.setBounds(460, 11, 85, 44);
 		pnlBotoes.add(btnPesquisar);
 		

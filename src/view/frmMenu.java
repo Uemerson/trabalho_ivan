@@ -37,6 +37,11 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 
 	private static frmMenu singleton = null;
 	private JMenuItem mntmPesquisaUsuario;
+	private JMenuItem mntmPesquisarAluno;
+	private JMenuItem mntmPesquisarCargo;
+	private JMenuItem mntmPesquisarResponsavel;
+	private JMenuItem mntmPesquisarMatricula;
+	private JMenuItem mntmPesquisarMensalidade;
 
 	public static frmMenu getFrmMenu(Usuario usuario) {
 		if (singleton == null) {
@@ -102,6 +107,26 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 		mntmPesquisaUsuario.addActionListener(this);
 		mnPesquisar.add(mntmPesquisaUsuario);
 		mnPesquisar.add(mntmPesquisarFuncionario);
+		
+		mntmPesquisarAluno = new JMenuItem("Aluno");
+		mntmPesquisarAluno.addActionListener(this);
+		
+		mntmPesquisarCargo = new JMenuItem("Cargo");
+		mntmPesquisarCargo.addActionListener(this);
+		mnPesquisar.add(mntmPesquisarCargo);
+		mnPesquisar.add(mntmPesquisarAluno);
+		
+		mntmPesquisarResponsavel = new JMenuItem("Respons\u00E1vel");
+		mntmPesquisarResponsavel.addActionListener(this);
+		mnPesquisar.add(mntmPesquisarResponsavel);
+		
+		mntmPesquisarMatricula = new JMenuItem("Matr\u00EDcula");
+		mntmPesquisarMatricula.addActionListener(this);
+		mnPesquisar.add(mntmPesquisarMatricula);
+		
+		mntmPesquisarMensalidade = new JMenuItem("Mensalidade");
+		mntmPesquisarMensalidade.addActionListener(this);
+		mnPesquisar.add(mntmPesquisarMensalidade);
 		// setUndecorated(true);
 
 		pnlPrincipal = new JPanel();
@@ -142,6 +167,16 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 				mntmPesquisarFuncionario_click();
 			} else if (e.getSource() == mntmPesquisaUsuario) {
 				mntmPesquisarUsuario_click();
+			} else if (e.getSource() == mntmPesquisarAluno) {
+				mntmPesquisarAluno_click();
+			} else if (e.getSource() == mntmPesquisarCargo) {
+				mntmPesquisarCargo_click();
+			}  else if (e.getSource() == mntmPesquisarResponsavel) {
+				mntmPesquisarResponsavel_click();
+			} else if (e.getSource() == mntmPesquisarMatricula) {
+				mntmPesquisarMatricula_click();
+			} else if (e.getSource() == mntmPesquisarMensalidade) {
+				mntmPesquisarMensalidade_click();
 			}
 		} catch (ParseException | PropertyVetoException | SQLException ex) {
 			ex.printStackTrace();
@@ -230,6 +265,16 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 		}
 	}
 	
+	private void mntmPesquisarAluno_click() throws ParseException, SQLException, PropertyVetoException {
+		if (frmPesquisaAluno.getInstance().isVisible()) {
+			frmPesquisaAluno.getInstance().setSelected(true);
+		} else {
+			dskPrincipal.add(frmPesquisaAluno.getInstance());
+			frmPesquisaAluno.getInstance().setVisible(true);
+			frmPesquisaAluno.getInstance().setSelected(true);
+		}
+	}
+	
 	private void mntmPesquisarUsuario_click() throws ParseException, PropertyVetoException, SQLException {
 		if (frmPesquisaUsuario.getInstance().isVisible()) {
 			frmPesquisaUsuario.getInstance().setSelected(true);
@@ -237,6 +282,46 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			dskPrincipal.add(frmPesquisaUsuario.getInstance());
 			frmPesquisaUsuario.getInstance().setVisible(true);
 			frmPesquisaUsuario.getInstance().setSelected(true);
+		}
+	}
+	
+	private void mntmPesquisarCargo_click() throws ParseException, SQLException, PropertyVetoException {
+		if (frmPesquisaCargo.getInstance().isVisible()) {
+			frmPesquisaCargo.getInstance().setSelected(true);
+		} else {
+			dskPrincipal.add(frmPesquisaCargo.getInstance());
+			frmPesquisaCargo.getInstance().setVisible(true);
+			frmPesquisaCargo.getInstance().setSelected(true);
+		}
+	}
+	
+	private void mntmPesquisarResponsavel_click() throws ParseException, SQLException, PropertyVetoException {
+		if (frmPesquisaResponsavel.getInstance().isVisible()) {
+			frmPesquisaResponsavel.getInstance().setSelected(true);
+		} else {
+			dskPrincipal.add(frmPesquisaResponsavel.getInstance());
+			frmPesquisaResponsavel.getInstance().setVisible(true);
+			frmPesquisaResponsavel.getInstance().setSelected(true);
+		}
+	}
+	
+	private void mntmPesquisarMatricula_click() throws ParseException, SQLException, PropertyVetoException {
+		if (frmPesquisaMatricula.getInstance().isVisible()) {
+			frmPesquisaMatricula.getInstance().setSelected(true);
+		} else {
+			dskPrincipal.add(frmPesquisaMatricula.getInstance());
+			frmPesquisaMatricula.getInstance().setVisible(true);
+			frmPesquisaMatricula.getInstance().setSelected(true);
+		}
+	}
+	
+	private void mntmPesquisarMensalidade_click() throws ParseException, SQLException, PropertyVetoException {
+		if (frmPesquisaMensalidade.getInstance().isVisible()) {
+			frmPesquisaMensalidade.getInstance().setSelected(true);
+		} else {
+			dskPrincipal.add(frmPesquisaMensalidade.getInstance());
+			frmPesquisaMensalidade.getInstance().setVisible(true);
+			frmPesquisaMensalidade.getInstance().setSelected(true);
 		}
 	}
 	
@@ -303,5 +388,4 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 
 	public void windowOpened(WindowEvent e) {
 	}
-
 }

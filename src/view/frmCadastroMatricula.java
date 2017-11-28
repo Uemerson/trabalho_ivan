@@ -57,8 +57,6 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 	private JPanel pnlCadastroDeMatricula;
 	private JComboBox cbAluno;
 	private JButton btnAluno;
-	private JTextField txtAluno;
-	private JLabel lblAno;
 
 	public static frmCadastroMatricula getInstance() throws ParseException {
 		if (singleton == null) {
@@ -226,18 +224,6 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		btnAluno.setEnabled(false);
 		btnAluno.setBounds(489, 23, 28, 28);
 		pnlCadastroDeMatricula.add(btnAluno);
-		
-		txtAluno = new JTextField();
-		txtAluno.setEnabled(false);
-		txtAluno.setColumns(10);
-		txtAluno.setBounds(596, 23, 79, 28);
-		pnlCadastroDeMatricula.add(txtAluno);
-		
-		lblAno = new JLabel("Aluno");
-		lblAno.setHorizontalAlignment(SwingConstants.LEFT);
-		lblAno.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblAno.setBounds(551, 23, 55, 28);
-		pnlCadastroDeMatricula.add(lblAno);
 
 	}
 
