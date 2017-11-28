@@ -13,8 +13,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Formatter;
-import java.util.logging.SimpleFormatter;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -29,8 +27,6 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
-
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import controler.FuncoesGlobais;
 import dao.DAOCargo;
@@ -362,6 +358,9 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		txtTelResidencial.setBounds(393, 258, 149, 28);
 		pnlInformacaoFuncionario.add(txtTelResidencial);
 		
+		//MaskFormatter mascaraCelular = new MaskFormatter("(##)*####-####");
+		//mascaraCelular.setValidCharacters("0123456789 ");
+		
 		txtCelular = new JFormattedTextField(new MaskFormatter("(##)#####-####"));
 		txtCelular.setEnabled(false);
 		txtCelular.setBounds(619, 258, 149, 28);
@@ -442,13 +441,6 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		setBounds(100, 100, 821, 597);
 		setClosable(true);
 		setTitle("Cadastro de Funcionario");
-		
-		
-		//Auto complete jcombobox
-		AutoCompleteDecorator.decorate(cbCargo);
-		AutoCompleteDecorator.decorate(cbEstado);
-		AutoCompleteDecorator.decorate(cbLogradouro);
-		
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -516,8 +508,9 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 	private void btnAlterar_click() {
 		FuncoesGlobais.ativaCampos(pnlInformacaoFuncionario);
 		
-		if (cbCargo.getSelectedItem().toString() == "Professor") {
+		if (cbCargo.getSelectedItem().toString().equals("Professor")) {
 			FuncoesGlobais.ativaCampos(pnlInformacaoDeProfessores);
+			System.out.println("teste");
 		}
 		
 		FuncoesGlobais.desativaCampos(pnlBotoes);
@@ -568,23 +561,35 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 	private void btnSalvar_click() throws SQLException, ParseException {
 		
 		//Adiciona a lista de campos que serão ignorados campos nulos
-		ArrayList<Component> listaComp = new ArrayList<>();
-		listaComp.add(txtDataDeDemissao);
-		listaComp.add(txtEmail);
-		listaComp.add(txtTelResidencial);
-		listaComp.add(txtTelComercial);
-		listaComp.add(txtNumero);
-		listaComp.add(txtBairro);
+		ArrayList<Component> listaCompInformacoesFuncionario = new ArrayList<>();
+		listaCompInformacoesFuncionario.add(txtDataDeDemissao);
+		listaCompInformacoesFuncionario.add(txtEmail);
+		listaCompInformacoesFuncionario.add(txtTelResidencial);
+		listaCompInformacoesFuncionario.add(txtTelComercial);
+		listaCompInformacoesFuncionario.add(txtNumero);
+		listaCompInformacoesFuncionario.add(txtBairro);
 		
-		if (FuncoesGlobais.verificaCampos(pnlInformacaoFuncionario, listaComp) == true | 
-				(cbCargo.getSelectedIndex() > -1 && cbCargo.getSelectedItem().toString().equals("Professor") && FuncoesGlobais.verificaCampos(pnlInformacaoDeProfessores) == true))
-				 {
+		ArrayList<Component> listaCompInformacoesProfessor = new ArrayList<>();
+		/*Num autorizao ou Num de diploma*/
+		/*Resetar borda dos comp que estao na lista*/
+		if (!txtNumerodeAutorizacao.getText().isEmpty()) {
+			listaCompInformacoesProfessor.add(txtNumeroDoRegistroDoDiploma);
+			JTextField bordaPadrao = new JTextField();
+			txtNumeroDoRegistroDoDiploma.setBorder(bordaPadrao.getBorder());
+		}else if (!txtNumeroDoRegistroDoDiploma.getText().isEmpty()) {
+			listaCompInformacoesProfessor.add(txtNumerodeAutorizacao);
+			JTextField bordaPadrao = new JTextField();
+			txtNumerodeAutorizacao.setBorder(bordaPadrao.getBorder());
+		}
+		
+		if (FuncoesGlobais.verificaCampos(pnlInformacaoFuncionario, listaCompInformacoesFuncionario) == true | 
+			(cbCargo.getSelectedIndex() > -1 && cbCargo.getSelectedItem().toString().equals("Professor") && 
+			FuncoesGlobais.verificaCampos(pnlInformacaoDeProfessores, listaCompInformacoesProfessor) == true)){
 			
 			JOptionPane.showMessageDialog(this, "Erro - Os campos em vermelho devem ser preenchidos!", "Sistema", JOptionPane.ERROR_MESSAGE);
 			
 		}else {
 			
-			if (txtRegistro.getText().equals("NOVO")) {
 				if(JOptionPane.showConfirmDialog(this, 
 												"Deseja realmente salvar o novo cadastrado?", 
 												"Sistema", 
@@ -613,17 +618,24 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 					funcionario.setSalario(Double.parseDouble(txtSalario.getText()));
 					
 					if (cbCargo.getSelectedIndex() > -1 && cbCargo.getSelectedItem().toString().equals("Professor")) {
-						/*Num autorizao ou Num de diploma*/
-						
 						funcionario.setFormacao_Academica(txtFormacaoAcademica.getText());
 						funcionario.setNumero_de_Autorizacao_da_SER(Integer.parseInt(txtNumerodeAutorizacao.getText()));
 						funcionario.setData_de_Autorizacao(new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeAutorizacaoDaSER.getText()));
 						funcionario.setNumero_do_Registro_do_Diploma(Integer.parseInt(txtNumeroDoRegistroDoDiploma.getText()));
 					}
 					
-					DAOFuncionario dao = new DAOFuncionario();
-					dao.novoFuncionario(funcionario);
-				
+					
+					//Novo registro
+					if (txtRegistro.getText().equals("NOVO")) {
+						DAOFuncionario dao = new DAOFuncionario();
+						dao.novoFuncionario(funcionario);
+					}
+					
+					//Atualiza o registro
+					else {
+						
+					}
+					
 					FuncoesGlobais.limpaCampos(pnlInformacaoFuncionario);
 					FuncoesGlobais.limpaCampos(pnlInformacaoDeProfessores);
 					FuncoesGlobais.desativaCampos(pnlInformacaoFuncionario);
@@ -634,8 +646,10 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 					btnPesquisar.setEnabled(true);
 					btnNovo.requestFocus();
 					
-					JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
-				}
+					//Novo Registro
+					if (txtRegistro.getText().equals("NOVO")) {
+						JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
+					}
 			}
 		}
 		
@@ -665,9 +679,8 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		
 		MaskFormatter mask = new MaskFormatter("###.###.###.##");
 		mask.setValueContainsLiteralCharacters(false);
-		String funcionarioCPF = mask.valueToString(funcionario.getCPF());
-		txtCPF.setValue(funcionarioCPF);
-		
+
+		txtCPF.setValue(mask.valueToString(funcionario.getCPF()));
 		txtNome.setText(funcionario.getNome());
 		txtDataDeNascimento.setValue(funcionario.getData_de_Nascimento() == null ? null : new SimpleDateFormat("dd/MM/yyyy").format(funcionario.getData_de_Nascimento()));
 		txtRG.setText(funcionario.getRG());
@@ -678,9 +691,14 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		txtEndereco.setText(funcionario.getEndereco());
 		txtNumero.setText(funcionario.getNumero_da_Casa() == 0 ? null : Integer.toString(funcionario.getNumero_da_Casa()));
 		txtBairro.setText(funcionario.getBairro());
-		txtTelResidencial.setText(funcionario.getTel_Residencial());
-		txtCelular.setText(funcionario.getCelular());
-		txtTelComercial.setText(funcionario.getTel_Comercial());
+		
+		mask.setMask("(##)#####-####");
+		txtCelular.setValue(mask.valueToString(funcionario.getCelular()));
+		
+		mask.setMask("(##)####-####");
+		txtTelComercial.setValue(mask.valueToString(funcionario.getTel_Comercial()));
+		txtTelResidencial.setValue(mask.valueToString(funcionario.getTel_Residencial()));
+		
 		txtSalario.setText(Double.toString(funcionario.getSalario()));
 		txtFormacaoAcademica.setText(funcionario.getFormacao_Academica());
 		txtDataDeAutorizacaoDaSER.setValue(funcionario.getData_de_Autorizacao() == null ? null : new SimpleDateFormat("dd/MM/yyyy").format(funcionario.getData_de_Autorizacao()));

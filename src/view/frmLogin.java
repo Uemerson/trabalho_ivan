@@ -1,30 +1,29 @@
 package view;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.sql.SQLException;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-
+import controler.ComboKeyHandler;
 import dao.DAOConexaoMySQL;
 import dao.DAOUsuario;
 import model.Usuario;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import java.awt.event.ActionListener;
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.KeyListener;
-import java.sql.SQLException;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowListener;
-import java.awt.event.WindowEvent;
 
 public class frmLogin extends JFrame implements ActionListener, KeyListener, WindowListener{
 
@@ -73,15 +72,19 @@ public class frmLogin extends JFrame implements ActionListener, KeyListener, Win
 		 * Carrega combobox com dados cadastrados no banco de dados
 		 * */
 		cbLogin = new JComboBox();
-		DAOUsuario dao = new DAOUsuario();
-		
-		for (int i = 0; i < dao.listaUsuarios().size(); i++) {
-			cbLogin.addItem(dao.listaUsuarios().get(i).getLogin());
+		DefaultComboBoxModel<String> cbLoginModel = new DefaultComboBoxModel<>();
+		for (int i = 0; i < new DAOUsuario().listaUsuarios().size(); i++) {
+			cbLoginModel.addElement(new DAOUsuario().listaUsuarios().get(i).getLogin());
 		}
 		
+		cbLogin.setModel(cbLoginModel);
 		cbLogin.setBounds(10, 172, 205, 28);
-		AutoCompleteDecorator.decorate(cbLogin);
-			
+		//cbLogin.setSelectedItem(null);
+		
+		cbLogin.setEditable(true);
+		JTextField edtCbLogin = (JTextField) cbLogin.getEditor().getEditorComponent();
+		edtCbLogin.addKeyListener(new ComboKeyHandler(cbLogin));
+		
 		contentPane.add(cbLogin);
 		DAOConexaoMySQL.getInstance();
 	}

@@ -128,7 +128,6 @@ public class FuncoesGlobais {
 			if (vazio && !moveu_foco) {
 				c.requestFocus();
 				moveu_foco = true;
-				System.out.println("entrou aki");
 			}
 		}
 
@@ -146,8 +145,9 @@ public class FuncoesGlobais {
 			boolean pula_campo = false;
 
 			for (int j = 0; j < comp.size(); j++) {
-				if (c == comp.get(j))
+				if (c == comp.get(j)) {
 					pula_campo = true;
+				}
 			}
 			
 			if (!pula_campo) {

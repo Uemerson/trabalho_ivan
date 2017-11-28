@@ -1,15 +1,14 @@
 package view;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,20 +25,12 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListDataListener;
-
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import controler.ComboKeyHandler;
 import controler.FuncoesGlobais;
 import dao.DAOCargo;
-import dao.DAOConexaoMySQL;
 import dao.DAOFuncionario;
-import javafx.scene.control.ComboBox;
-import model.Funcionario;
 import tableModel.FuncionarioTableModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class frmPesquisaFuncionario extends JInternalFrame implements FocusListener, DocumentListener, ActionListener {
 	private JTextField txtNome;
