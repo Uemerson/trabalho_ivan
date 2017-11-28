@@ -21,8 +21,10 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.InternalFrameEvent;
 
-public class frmCadastroMensalidade extends JInternalFrame implements ActionListener {
+public class frmCadastroMensalidade extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JPanel pnlBotoes;
 	private JButton btnExcluir;
 	private JButton btnNovo;
@@ -42,7 +44,7 @@ public class frmCadastroMensalidade extends JInternalFrame implements ActionList
 
 	private static frmCadastroMensalidade singleton = null;
 	
-	public static frmCadastroMensalidade getFrmCadastroMensalidade() throws ParseException {
+	public static frmCadastroMensalidade getInstance() throws ParseException {
 		if (singleton == null) {
 			singleton = new frmCadastroMensalidade();
 		}
@@ -51,6 +53,7 @@ public class frmCadastroMensalidade extends JInternalFrame implements ActionList
 	}
 	
 	public frmCadastroMensalidade() {
+		addInternalFrameListener(this);
 		setBounds(100, 100, 591, 258);
 		setClosable(true);
 		setTitle("Cadastro de Mensalidade");
@@ -214,5 +217,20 @@ public class frmCadastroMensalidade extends JInternalFrame implements ActionList
 				JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
+	}
+	public void internalFrameActivated(InternalFrameEvent e) {
+	}
+	public void internalFrameClosed(InternalFrameEvent e) {
+	}
+	public void internalFrameClosing(InternalFrameEvent e) {
+		this.singleton = null;
+	}
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+	}
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+	}
+	public void internalFrameIconified(InternalFrameEvent e) {
+	}
+	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 }

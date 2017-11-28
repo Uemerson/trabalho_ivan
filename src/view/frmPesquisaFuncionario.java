@@ -31,8 +31,10 @@ import controler.FuncoesGlobais;
 import dao.DAOCargo;
 import dao.DAOFuncionario;
 import tableModel.FuncionarioTableModel;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.InternalFrameEvent;
 
-public class frmPesquisaFuncionario extends JInternalFrame implements FocusListener, DocumentListener, ActionListener {
+public class frmPesquisaFuncionario extends JInternalFrame implements FocusListener, DocumentListener, ActionListener, InternalFrameListener {
 	private JTextField txtNome;
 	private JTable tbTabelaFuncionario;
 	private JButton btnAbrirCadastroFuncionario;
@@ -49,7 +51,7 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 	private JPanel pnlFiltros;
 	private JScrollPane srpPainelTabela;
 
-	public static frmPesquisaFuncionario getFrmPesquisaFuncionario() throws ParseException, SQLException {
+	public static frmPesquisaFuncionario getInstance() throws ParseException, SQLException {
 
 		if (singleton == null) {
 			singleton = new frmPesquisaFuncionario();
@@ -59,6 +61,8 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 	}
 
 	public frmPesquisaFuncionario() throws SQLException {
+		System.out.println("Abrindo frmPesquisa");
+		addInternalFrameListener(this);
 		setClosable(true);
 		setTitle("Pesquisar Funcion\u00E1rio");
 		setBounds(100, 100, 808, 515);
@@ -174,6 +178,7 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 		pnlFiltros.add(lblCargo);
 
 		btnLimparFiltros = new JButton("Limpar Filtros");
+		btnLimparFiltros.addActionListener(this);
 		btnLimparFiltros.setBounds(640, 62, 122, 28);
 		pnlFiltros.add(btnLimparFiltros);
 
@@ -182,14 +187,11 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 		getContentPane().add(srpPainelTabela);
 
 		tbTabelaFuncionario = new JTable();
-		tbTabelaFuncionario.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		FuncionarioTableModel model = new FuncionarioTableModel();
 		tbTabelaFuncionario.setModel(model);
 
 		// Preenche a Table com a lista de usuarios
 		model.addListaDeFuncionario(daoFuncionario.listaFuncionario());
-
-		tbTabelaFuncionario.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		srpPainelTabela.setViewportView(tbTabelaFuncionario);
 
 		btnAbrirCadastroFuncionario = new JButton("Abrir cadastro de funcionario");
@@ -286,6 +288,8 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 				btnAbrirCadastroFuncionario_click();
 			} else if (e.getSource() == cbCargo) {
 				cbCargo_click();
+			} else if (e.getSource() == btnLimparFiltros) {
+				btnLimparFiltros_click();
 			}
 		} catch (NumberFormatException | SQLException | ParseException | PropertyVetoException ex) {
 			ex.printStackTrace();
@@ -318,32 +322,38 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 		}
 	}
 	
+	private void btnLimparFiltros_click() {
+		FuncoesGlobais.limpaCampos(pnlFiltros);
+	}
+	
 	private void btnAbrirCadastroFuncionario_click() throws ParseException, SQLException, PropertyVetoException {
 		// frmCadastroFuncionario.getFrmCadastroFuncionario().preencheCadastro();
 		if (tbTabelaFuncionario.getSelectedRow() > -1) {
 			FuncionarioTableModel model = new FuncionarioTableModel();
 			model = (FuncionarioTableModel) tbTabelaFuncionario.getModel();
 
-			frmCadastroFuncionario.getFrmCadastroFuncionario();
+			frmCadastroFuncionario.getInstance();
 
-			if (frmCadastroFuncionario.getFrmCadastroFuncionario().isVisible()) {
-				frmCadastroFuncionario.getFrmCadastroFuncionario().preencheCadastro(new DAOFuncionario().buscaFuncionario(model.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
-				frmCadastroFuncionario.getFrmCadastroFuncionario().setSelected(true);
+			if (frmCadastroFuncionario.getInstance().isVisible()) {
+				frmCadastroFuncionario.getInstance().preencheCadastro(new DAOFuncionario().buscaFuncionario(model.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
+				frmCadastroFuncionario.getInstance().setSelected(true);
 			}else {
 				
-				frmCadastroFuncionario.getFrmCadastroFuncionario().setVisible(true);
-				frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroFuncionario.getFrmCadastroFuncionario());
-				frmCadastroFuncionario.getFrmCadastroFuncionario().setSelected(true);
-				frmCadastroFuncionario.getFrmCadastroFuncionario().preencheCadastro(new DAOFuncionario().buscaFuncionario(model.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
-				
+				frmCadastroFuncionario.getInstance().setVisible(true);
+				frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroFuncionario.getInstance());
+				frmCadastroFuncionario.getInstance().setSelected(true);
+				frmCadastroFuncionario.getInstance().preencheCadastro(new DAOFuncionario().buscaFuncionario(model.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
 			}
 			
+			dispose();
 		}else {
 			JOptionPane.showMessageDialog(this, "Selecione um registro para abrir o cadastro de funcionario!", "Sistema", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
-	public void resetaFormulario() throws SQLException {
+	
+	//Atualiza os dados dos funcionarios cadastrados
+	public void atualizaDados() throws SQLException {
+		System.out.println("Atualizando dados do frmPesquisaFuncionario");
 		cbRegistro.removeAllItems();
 		cbCargo.removeAllItems();
 		
@@ -366,4 +376,19 @@ public class frmPesquisaFuncionario extends JInternalFrame implements FocusListe
 
 	}
 
+	public void internalFrameActivated(InternalFrameEvent e) {
+	}
+	public void internalFrameClosed(InternalFrameEvent e) {
+	}
+	public void internalFrameClosing(InternalFrameEvent e) {
+		this.singleton = null;
+	}
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+	}
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+	}
+	public void internalFrameIconified(InternalFrameEvent e) {
+	}
+	public void internalFrameOpened(InternalFrameEvent e) {
+	}
 }

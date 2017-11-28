@@ -21,8 +21,10 @@ import javax.swing.border.TitledBorder;
 import javax.swing.text.MaskFormatter;
 
 import controler.FuncoesGlobais;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.InternalFrameEvent;
 
-public class frmCadastroResponsavel extends JInternalFrame implements ActionListener {
+public class frmCadastroResponsavel extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JButton btnAlterar;
 	private JButton btnExcluir;
 	private JButton btnNovo;
@@ -69,7 +71,7 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 	private static frmCadastroResponsavel singleton = null;
 	private JPanel pnlBotoes;
 
-	public static frmCadastroResponsavel getFrmCadastroResponsaveis() throws ParseException {
+	public static frmCadastroResponsavel getInstance() throws ParseException {
 		if (singleton == null) {
 			singleton = new frmCadastroResponsavel();
 		}
@@ -78,6 +80,7 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 	}
 
 	public frmCadastroResponsavel() throws ParseException {
+		addInternalFrameListener(this);
 		setBounds(100, 100, 840, 533);
 		setClosable(true);
 		setTitle("Cadastro de Respons\u00E1vel");
@@ -433,5 +436,20 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 			
 			JOptionPane.showMessageDialog(this, "Cancelado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
 		}
+	}
+	public void internalFrameActivated(InternalFrameEvent e) {
+	}
+	public void internalFrameClosed(InternalFrameEvent e) {
+	}
+	public void internalFrameClosing(InternalFrameEvent e) {
+		this.singleton = null;
+	}
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+	}
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+	}
+	public void internalFrameIconified(InternalFrameEvent e) {
+	}
+	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 }

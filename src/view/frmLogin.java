@@ -100,6 +100,7 @@ public class frmLogin extends JFrame implements ActionListener, KeyListener, Win
            
            frmMenu.getFrmMenu(new Usuario(cbLogin.getSelectedIndex(), cbLogin.getSelectedItem().toString(), txtSenha.getText())).setVisible(true);;
            
+           
 		}else {
 			JOptionPane.showMessageDialog(null,"Acesso Negado!", "Sistema", JOptionPane.ERROR_MESSAGE);
 			txtSenha.setText(null);

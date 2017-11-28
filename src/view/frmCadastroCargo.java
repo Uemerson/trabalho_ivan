@@ -18,8 +18,10 @@ import controler.FuncoesGlobais;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.awt.event.ActionEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.InternalFrameEvent;
 
-public class frmCadastroCargo extends JInternalFrame implements ActionListener {
+public class frmCadastroCargo extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JTextField txtRegistro;
 	private JTextField txtNome;
 	private JTextField txtDescricao;
@@ -37,7 +39,7 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener {
 
 	private static frmCadastroCargo singleton = null;
 	
-	public static frmCadastroCargo getFrmCadastroCargo() throws ParseException {
+	public static frmCadastroCargo getInstance() throws ParseException {
 		if (singleton == null) {
 			singleton = new frmCadastroCargo();
 		}
@@ -46,6 +48,7 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener {
 	}
 	
 	public frmCadastroCargo() {
+		addInternalFrameListener(this);
 		setBounds(100, 100, 585, 245);
 		setClosable(true);
 		setTitle("Cadastro de Cargo");
@@ -202,4 +205,19 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener {
 		}
 	}
 	
+	public void internalFrameActivated(InternalFrameEvent e) {
+	}
+	public void internalFrameClosed(InternalFrameEvent e) {
+	}
+	public void internalFrameClosing(InternalFrameEvent e) {
+		this.singleton = null;
+	}
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+	}
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+	}
+	public void internalFrameIconified(InternalFrameEvent e) {
+	}
+	public void internalFrameOpened(InternalFrameEvent e) {
+	}
 }

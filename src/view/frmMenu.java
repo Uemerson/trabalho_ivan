@@ -34,21 +34,22 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 	private JMenuItem mntmCadastroResponsavel;
 	private JMenuItem mntmCadastroMensalidade;
 	private JMenuItem mntmPesquisarFuncionario;
-	
+
 	private static frmMenu singleton = null;
-	
-	public static frmMenu getFrmMenu(Usuario usuario){
+	private JMenuItem mntmPesquisaUsuario;
+
+	public static frmMenu getFrmMenu(Usuario usuario) {
 		if (singleton == null) {
 			singleton = new frmMenu(usuario);
 		}
-		
+
 		return singleton;
 	}
-	
+
 	public static frmMenu getFrmMenu() {
 		return singleton;
 	}
-	
+
 	public frmMenu(Usuario usuario) {
 		addWindowListener(this);
 		setTitle("Menu Principal");
@@ -67,7 +68,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 		mntmCadastroUsuario.addActionListener(this);
 		mnCadastro.add(mntmCadastroUsuario);
 
-		mntmCadastroFuncionario = new JMenuItem("Funcionario");
+		mntmCadastroFuncionario = new JMenuItem("Funcion\u00E1rio");
 		mntmCadastroFuncionario.addActionListener(this);
 		mnCadastro.add(mntmCadastroFuncionario);
 
@@ -96,6 +97,10 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 
 		mntmPesquisarFuncionario = new JMenuItem("Funcion\u00E1rio");
 		mntmPesquisarFuncionario.addActionListener(this);
+
+		mntmPesquisaUsuario = new JMenuItem("Usu\u00E1rio");
+		mntmPesquisaUsuario.addActionListener(this);
+		mnPesquisar.add(mntmPesquisaUsuario);
 		mnPesquisar.add(mntmPesquisarFuncionario);
 		// setUndecorated(true);
 
@@ -112,166 +117,126 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 		pnlPrincipal.add(dskPrincipal);
 
 	}
-	
+
 	public JDesktopPane getDskPrincipal() {
 		return dskPrincipal;
 	}
-	
+
 	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == mntmCadastroUsuario) {
-			try {
+		try {
+			if (e.getSource() == mntmCadastroUsuario) {
 				mntmCadastroUsuarios_click();
-			} catch (ParseException | PropertyVetoException ex) {
-				ex.printStackTrace();
-			}
-		} else if (e.getSource() == mntmCadastroFuncionario) {
-			try {
+			} else if (e.getSource() == mntmCadastroFuncionario) {
 				mntmCadastroFuncionarios_click();
-			} catch (ParseException | PropertyVetoException | SQLException ex) {
-				ex.printStackTrace();
-			}
-		} else if (e.getSource() == mntmCadastroCargo) {
-			try {
+			} else if (e.getSource() == mntmCadastroCargo) {
 				mntmCadastroCargos_click();
-			} catch (ParseException | PropertyVetoException ex) {
-				ex.printStackTrace();
-			}
-		} else if (e.getSource() == mntmCadastroAluno) {
-			try {
+			} else if (e.getSource() == mntmCadastroAluno) {
 				mntmCadastroAlunos_click();
-			} catch (ParseException | PropertyVetoException ex) {
-				ex.printStackTrace();
-			}
-		} else if (e.getSource() == mntmCadastroResponsavel) {
-			try {
+			} else if (e.getSource() == mntmCadastroResponsavel) {
 				mntmCadastroResponsaveis_click();
-			} catch (ParseException | PropertyVetoException ex) {
-				ex.printStackTrace();
-			}
-		} else if (e.getSource() == mntmCadastroMatricula) {
-			try {
+			} else if (e.getSource() == mntmCadastroMatricula) {
 				mntmCadastroMatriculas_click();
-			} catch (ParseException | PropertyVetoException ex) {
-				ex.printStackTrace();
-			}
-		} else if (e.getSource() == mntmCadastroMensalidade) {
-			try {
+			} else if (e.getSource() == mntmCadastroMensalidade) {
 				mntmCadastroMensalidades_click();
-			} catch (ParseException | PropertyVetoException ex) {
-				ex.printStackTrace();
-			}
-		} else if (e.getSource() == mntmPesquisarFuncionario) {
-			try {
+			} else if (e.getSource() == mntmPesquisarFuncionario) {
 				mntmPesquisarFuncionario_click();
-			} catch (ParseException | PropertyVetoException | SQLException ex) {
-				ex.printStackTrace();
+			} else if (e.getSource() == mntmPesquisaUsuario) {
+				mntmPesquisarUsuario_click();
 			}
+		} catch (ParseException | PropertyVetoException | SQLException ex) {
+			ex.printStackTrace();
 		}
-
 	}
 
 	private void mntmCadastroUsuarios_click() throws ParseException, PropertyVetoException {
-		frmCadastroUsuario.getFrmCadastroUsuario();
-
-		if (frmCadastroUsuario.getFrmCadastroUsuario().isVisible()) {
-			frmCadastroUsuario.getFrmCadastroUsuario().setSelected(true);
+		if (frmCadastroUsuario.getInstance().isVisible()) {
+			frmCadastroUsuario.getInstance().setSelected(true);
 		} else {
-			frmCadastroUsuario.getFrmCadastroUsuario().setVisible(true);
-			dskPrincipal.add(frmCadastroUsuario.getFrmCadastroUsuario());
-			frmCadastroUsuario.getFrmCadastroUsuario().setSelected(true);
+			dskPrincipal.add(frmCadastroUsuario.getInstance());
+			frmCadastroUsuario.getInstance().setVisible(true);
+			frmCadastroUsuario.getInstance().setSelected(true);
 		}
 	}
 
 	private void mntmCadastroFuncionarios_click() throws ParseException, PropertyVetoException, SQLException {
-		frmCadastroFuncionario.getFrmCadastroFuncionario();
-
-		if (frmCadastroFuncionario.getFrmCadastroFuncionario().isVisible()) {
-			frmCadastroFuncionario.getFrmCadastroFuncionario().setSelected(true);
+		if (frmCadastroFuncionario.getInstance().isVisible()) {
+			frmCadastroFuncionario.getInstance().setSelected(true);
 		} else {
-			//Reseta as configurações do formulario, por que nesse caso a pessoa está abrindo novamente
-			frmCadastroFuncionario.getFrmCadastroFuncionario().resetaFormulario();
-			frmCadastroFuncionario.getFrmCadastroFuncionario().setVisible(true);
-			dskPrincipal.add(frmCadastroFuncionario.getFrmCadastroFuncionario());
-			frmCadastroFuncionario.getFrmCadastroFuncionario().setSelected(true);
+			dskPrincipal.add(frmCadastroFuncionario.getInstance());
+			frmCadastroFuncionario.getInstance().setVisible(true);
+			frmCadastroFuncionario.getInstance().setSelected(true);
 		}
 	}
 
 	private void mntmCadastroCargos_click() throws ParseException, PropertyVetoException {
-		frmCadastroCargo.getFrmCadastroCargo();
-
-		if (frmCadastroCargo.getFrmCadastroCargo().isVisible()) {
-			frmCadastroCargo.getFrmCadastroCargo().setSelected(true);
+		if (frmCadastroCargo.getInstance().isVisible()) {
+			frmCadastroCargo.getInstance().setSelected(true);
 		} else {
-			frmCadastroCargo.getFrmCadastroCargo().setVisible(true);
-			dskPrincipal.add(frmCadastroCargo.getFrmCadastroCargo());
-			frmCadastroCargo.getFrmCadastroCargo().setSelected(true);
+			dskPrincipal.add(frmCadastroCargo.getInstance());
+			frmCadastroCargo.getInstance().setVisible(true);
+			frmCadastroCargo.getInstance().setSelected(true);
 		}
 	}
 
 	private void mntmCadastroAlunos_click() throws ParseException, PropertyVetoException {
-
-		frmCadastroAluno.getFrmCadastroAluno();
-
-		if (frmCadastroAluno.getFrmCadastroAluno().isVisible()) {
-			frmCadastroAluno.getFrmCadastroAluno().setSelected(true);
+		if (frmCadastroAluno.getInstance().isVisible()) {
+			frmCadastroAluno.getInstance().setSelected(true);
 		} else {
-			frmCadastroAluno.getFrmCadastroAluno().setVisible(true);
-			dskPrincipal.add(frmCadastroAluno.getFrmCadastroAluno());
-			frmCadastroAluno.getFrmCadastroAluno().setSelected(true);
+			frmCadastroAluno.getInstance().setVisible(true);
+			dskPrincipal.add(frmCadastroAluno.getInstance());
+			frmCadastroAluno.getInstance().setSelected(true);
 		}
-
 	}
 
 	private void mntmCadastroResponsaveis_click() throws ParseException, PropertyVetoException {
-
-		frmCadastroResponsavel.getFrmCadastroResponsaveis();
-
-		if (frmCadastroResponsavel.getFrmCadastroResponsaveis().isVisible()) {
-			frmCadastroResponsavel.getFrmCadastroResponsaveis().setSelected(true);
+		if (frmCadastroResponsavel.getInstance().isVisible()) {
+			frmCadastroResponsavel.getInstance().setSelected(true);
 		} else {
-			frmCadastroResponsavel.getFrmCadastroResponsaveis().setVisible(true);
-			dskPrincipal.add(frmCadastroResponsavel.getFrmCadastroResponsaveis());
-			frmCadastroResponsavel.getFrmCadastroResponsaveis().setSelected(true);
+			frmCadastroResponsavel.getInstance().setVisible(true);
+			dskPrincipal.add(frmCadastroResponsavel.getInstance());
+			frmCadastroResponsavel.getInstance().setSelected(true);
 		}
 
 	}
 
 	private void mntmCadastroMatriculas_click() throws ParseException, PropertyVetoException {
-
-		frmCadastroMatricula.getFrmCadastroMatricula();
-
-		if (frmCadastroMatricula.getFrmCadastroMatricula().isVisible()) {
-			frmCadastroMatricula.getFrmCadastroMatricula().setSelected(true);
+		if (frmCadastroMatricula.getInstance().isVisible()) {
+			frmCadastroMatricula.getInstance().setSelected(true);
 		} else {
-			frmCadastroMatricula.getFrmCadastroMatricula().setVisible(true);
-			dskPrincipal.add(frmCadastroMatricula.getFrmCadastroMatricula());
-			frmCadastroMatricula.getFrmCadastroMatricula().setSelected(true);
+			dskPrincipal.add(frmCadastroMatricula.getInstance());
+			frmCadastroMatricula.getInstance().setVisible(true);
+			frmCadastroMatricula.getInstance().setSelected(true);
 		}
 
 	}
 
 	private void mntmCadastroMensalidades_click() throws ParseException, PropertyVetoException {
-		frmCadastroMensalidade.getFrmCadastroMensalidade();
-
-		if (frmCadastroMensalidade.getFrmCadastroMensalidade().isVisible()) {
-			frmCadastroMensalidade.getFrmCadastroMensalidade().setSelected(true);
+		if (frmCadastroMensalidade.getInstance().isVisible()) {
+			frmCadastroMensalidade.getInstance().setSelected(true);
 		} else {
-			frmCadastroMensalidade.getFrmCadastroMensalidade().setVisible(true);
-			dskPrincipal.add(frmCadastroMensalidade.getFrmCadastroMensalidade());
-			frmCadastroMensalidade.getFrmCadastroMensalidade().setSelected(true);
+			dskPrincipal.add(frmCadastroMensalidade.getInstance());
+			frmCadastroMensalidade.getInstance().setVisible(true);
+			frmCadastroMensalidade.getInstance().setSelected(true);
+		}
+	}
+
+	private void mntmPesquisarFuncionario_click() throws ParseException, PropertyVetoException, SQLException {
+		if (frmPesquisaFuncionario.getInstance().isVisible()) {
+			frmPesquisaFuncionario.getInstance().setSelected(true);
+		} else {
+			dskPrincipal.add(frmPesquisaFuncionario.getInstance());
+			frmPesquisaFuncionario.getInstance().setVisible(true);
+			frmPesquisaFuncionario.getInstance().setSelected(true);
 		}
 	}
 	
-	private void mntmPesquisarFuncionario_click() throws ParseException, PropertyVetoException, SQLException {
-		frmPesquisaFuncionario.getFrmPesquisaFuncionario();
-		
-		if (frmPesquisaFuncionario.getFrmPesquisaFuncionario().isVisible()) {
-			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setSelected(true);
+	private void mntmPesquisarUsuario_click() throws ParseException, PropertyVetoException, SQLException {
+		if (frmPesquisaUsuario.getInstance().isVisible()) {
+			frmPesquisaUsuario.getInstance().setSelected(true);
 		} else {
-			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setVisible(true);
-			dskPrincipal.add(frmPesquisaFuncionario.getFrmPesquisaFuncionario());
-			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setSelected(true);
+			dskPrincipal.add(frmPesquisaUsuario.getInstance());
+			frmPesquisaUsuario.getInstance().setVisible(true);
+			frmPesquisaUsuario.getInstance().setSelected(true);
 		}
 	}
 	
@@ -281,7 +246,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 	public void windowClosed(WindowEvent e) {
 	}
 
-	// Evento ao sair
+	// Evento ao sair e limpando a memoria do singleton
 	public void windowClosing(WindowEvent e) {
 
 		Object[] titulos_botoes = { "Sair", "Logoff", "Cancelar" };
@@ -290,29 +255,30 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 				JOptionPane.QUESTION_MESSAGE, null, titulos_botoes, titulos_botoes[0])) {
 		// Sair
 		case JOptionPane.YES_OPTION:
-			
+
 			try {
 				DAOConexaoMySQL.closeInstance();
 				System.exit(0);
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
-			
+
 			break;
 
 		// Logoff
 		case JOptionPane.NO_OPTION:
-			
+
 			dispose();
-			
+
 			try {
 				frmLogin form = new frmLogin();
 				form = new frmLogin();
 				form.setVisible(true);
+				//this.singleton = null;	
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}
-			
+
 			break;
 
 		// Cancelar
@@ -337,4 +303,5 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 
 	public void windowOpened(WindowEvent e) {
 	}
+
 }

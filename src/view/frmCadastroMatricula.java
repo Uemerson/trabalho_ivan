@@ -26,8 +26,10 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.InternalFrameEvent;
 
-public class frmCadastroMatricula extends JInternalFrame implements ActionListener {
+public class frmCadastroMatricula extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JPanel pnlBotoes;
 	private JButton btnNovo;
 	private JButton btnExcluir;
@@ -58,7 +60,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 	private JTextField txtAluno;
 	private JLabel lblAno;
 
-	public static frmCadastroMatricula getFrmCadastroMatricula() throws ParseException {
+	public static frmCadastroMatricula getInstance() throws ParseException {
 		if (singleton == null) {
 			singleton = new frmCadastroMatricula();
 		}
@@ -67,6 +69,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 	}
 
 	public frmCadastroMatricula() throws ParseException {
+		addInternalFrameListener(this);
 		setBounds(100, 100, 721, 300);
 		setClosable(true);
 		setTitle("Cadastro de Matr\u00EDcula");
@@ -302,5 +305,20 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 			}
 		}
 
+	}
+	public void internalFrameActivated(InternalFrameEvent e) {
+	}
+	public void internalFrameClosed(InternalFrameEvent e) {
+	}
+	public void internalFrameClosing(InternalFrameEvent e) {
+		this.singleton = null;
+	}
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+	}
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+	}
+	public void internalFrameIconified(InternalFrameEvent e) {
+	}
+	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 }

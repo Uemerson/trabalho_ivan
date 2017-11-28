@@ -2,8 +2,8 @@ package model;
 
 public class Usuario {
 
-	private int Registro;
-	private String Login, Senha;
+	private int Registro, Id_funcionario;
+	private String Login, Senha, Nome_funcionario;
 	
 	public Usuario() {}
 	
@@ -31,7 +31,21 @@ public class Usuario {
 	public void setSenha(String senha) {
 		Senha = senha;
 	}
-	
-	
+
+	public int getId_funcionario() {
+		return Id_funcionario;
+	}
+
+	public void setId_funcionario(int id_funcionario) {
+		Id_funcionario = id_funcionario;
+	}
+
+	public String getNome_funcionario() {
+		return Nome_funcionario;
+	}
+
+	public void setNome_funcionario(String nome_funcionario) {
+		Nome_funcionario = nome_funcionario;
+	}
 	
 }

@@ -46,7 +46,42 @@ public class DAOFuncionario {
 		System.out.println("Cadastro de funcionario com sucesso!");
 		
 	}
-
+	
+	public void atualizaFuncionario(Funcionario funcionario) throws SQLException {
+		SQL = "UPDATE Funcionario SET NOME = ?, DATA_NASCIMENTO = ?, RG = ?, CPF = ?, LOGRADOURO = ?, ENDERECO = ?, NUMERO = ?, BAIRRO = ?, CIDADE = ?, ESTADO = ?, " +
+			"TELEFONE_RESIDENCIAL = ?, TELEFONE_COMERCIAL = ?, CELULAR = ?, EMAIL = ?, CARGO = ?, DATA_ADMISSAO = ?, DATA_DEMISSAO = ?, SALARIO = ?, " + 
+			" FORMACAO = ?, NUM_AUTORIZACAO_SER = ?, DATA_AUTORIZACAO_SER = ?, NUM_REGISTRO_DIPLOMA = ? WHERE ID = ?";
+			
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setString(1, funcionario.getNome());
+		preparedStatement.setDate(2,  new java.sql.Date(funcionario.getData_de_Nascimento().getTime()));
+		preparedStatement.setString(3, funcionario.getRG());
+		preparedStatement.setString(4, funcionario.getCPF());
+		preparedStatement.setString(5, funcionario.getLogradouro());
+		preparedStatement.setString(6, funcionario.getEndereco());
+		preparedStatement.setInt(7, funcionario.getNumero_da_Casa());
+		preparedStatement.setString(8, funcionario.getBairro());
+		preparedStatement.setString(9, funcionario.getCidade());
+		preparedStatement.setString(10, funcionario.getEstado());
+		preparedStatement.setString(11, funcionario.getTel_Residencial());
+		preparedStatement.setString(12, funcionario.getTel_Comercial());
+		preparedStatement.setString(13, funcionario.getCelular());
+		preparedStatement.setString(14, funcionario.getEmail());
+		preparedStatement.setString(15, funcionario.getCargo());
+		preparedStatement.setDate(16, funcionario.getData_de_Admissao() == null ? null : new java.sql.Date(funcionario.getData_de_Admissao().getTime()));
+		preparedStatement.setDate(17, funcionario.getData_de_Demissao() == null ? null : new java.sql.Date(funcionario.getData_de_Demissao().getTime()));
+		preparedStatement.setDouble(18, funcionario.getSalario());
+		preparedStatement.setString(19, funcionario.getFormacao_Academica());
+		preparedStatement.setInt(20, funcionario.getNumero_de_Autorizacao_da_SER());
+		preparedStatement.setDate(21, (funcionario.getData_de_Autorizacao() == null) ? null : new java.sql.Date(funcionario.getData_de_Autorizacao().getTime()));
+		preparedStatement.setInt(22, funcionario.getNumero_do_Registro_do_Diploma());
+		preparedStatement.setInt(23, funcionario.getRegistro());
+		
+		preparedStatement.execute();
+		System.out.println("Funcionario atualizado com sucesso!");
+		
+	}
+	
 	public ArrayList<Funcionario> listaFuncionario() throws SQLException{
 		SQL = "SELECT * FROM FUNCIONARIO";
 		

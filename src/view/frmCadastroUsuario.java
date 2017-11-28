@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.UIManager;
 import java.awt.Color;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.InternalFrameEvent;
 
-public class frmCadastroUsuario extends JInternalFrame implements ActionListener {
+public class frmCadastroUsuario extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JPanel pnlBotoes;
 	private JButton btnNovo;
 	private JButton btnExcluir;
@@ -45,7 +47,7 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 	
 	private static frmCadastroUsuario singleton = null;
 	
-	public static frmCadastroUsuario getFrmCadastroUsuario() throws ParseException {
+	public static frmCadastroUsuario getInstance() throws ParseException {
 		if (singleton == null) {
 			singleton = new frmCadastroUsuario();
 		}
@@ -54,6 +56,8 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 	}
 	
 	public frmCadastroUsuario() {
+		System.out.println("Abrindo frmUsuario");
+		addInternalFrameListener(this);
 		setBounds(100, 100, 591, 300);
 		setClosable(true);
 		setTitle("Cadastro de Usuário");
@@ -225,5 +229,23 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 			
 			JOptionPane.showMessageDialog(this, "Cancelado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
 		}
+	}
+	public void internalFrameActivated(InternalFrameEvent e) {
+	}
+	public void internalFrameClosed(InternalFrameEvent e) {
+	}
+	
+	//Limpo a memoria do singleton
+	public void internalFrameClosing(InternalFrameEvent e) {
+		this.singleton = null;
+	}
+	
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+	}
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+	}
+	public void internalFrameIconified(InternalFrameEvent e) {
+	}
+	public void internalFrameOpened(InternalFrameEvent arg0e) {
 	}
 }

@@ -1,6 +1,3 @@
-
-
-
 package view;
 
 import java.awt.Color;
@@ -33,8 +30,10 @@ import dao.DAOCargo;
 import dao.DAOFuncionario;
 import model.Cargo;
 import model.Funcionario;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.event.InternalFrameEvent;
 
-public class frmCadastroFuncionario extends JInternalFrame implements ActionListener {
+public class frmCadastroFuncionario extends JInternalFrame implements ActionListener, InternalFrameListener {
 	
 	private JButton btnExcluir;
 	private JPanel pnlInformacaoFuncionario;
@@ -88,15 +87,17 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 	private JPanel pnlBotoes;
 	private static frmCadastroFuncionario singleton = null;
 	
-	public static frmCadastroFuncionario getFrmCadastroFuncionario() throws ParseException, SQLException {
+	public static frmCadastroFuncionario getInstance() throws ParseException, SQLException {
 		if (singleton == null) {
 			singleton = new frmCadastroFuncionario();
 		}
-		
+			
 		return singleton;
 	}
 	
 	public frmCadastroFuncionario() throws ParseException, SQLException {
+		addInternalFrameListener(this);
+		System.out.println("Abrindo frmCadastroFuncionario");
 		getContentPane().setLayout(null);
 		
 		pnlBotoes = new JPanel();
@@ -478,17 +479,14 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 	}
 	
 	private void btnPesquisar_click() throws ParseException, SQLException, PropertyVetoException {
-
-		frmPesquisaFuncionario.getFrmPesquisaFuncionario();
 		
-		if (frmPesquisaFuncionario.getFrmPesquisaFuncionario().isVisible()) {
-			frmPesquisaFuncionario.getFrmPesquisaFuncionario().resetaFormulario();
-			
-			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setSelected(true);
+		if (frmPesquisaFuncionario.getInstance().isVisible()) {
+			frmPesquisaFuncionario.getInstance().atualizaDados();		//Atualiza os dados do formulario
+			frmPesquisaFuncionario.getInstance().setSelected(true);
 		} else {
-			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setVisible(true);
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaFuncionario.getFrmPesquisaFuncionario());
-			frmPesquisaFuncionario.getFrmPesquisaFuncionario().setSelected(true);
+			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaFuncionario.getInstance());
+			frmPesquisaFuncionario.getInstance().setVisible(true);
+			frmPesquisaFuncionario.getInstance().setSelected(true);
 		}
 	}
 	
@@ -633,7 +631,9 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 					
 					//Atualiza o registro
 					else {
-						
+						funcionario.setRegistro(Integer.parseInt(txtRegistro.getText()));
+						DAOFuncionario dao = new DAOFuncionario();
+						dao.atualizaFuncionario(funcionario);
 					}
 					
 					FuncoesGlobais.limpaCampos(pnlInformacaoFuncionario);
@@ -649,6 +649,8 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 					//Novo Registro
 					if (txtRegistro.getText().equals("NOVO")) {
 						JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
+					}else {
+						JOptionPane.showMessageDialog(this, "Cadastro atualizado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
 					}
 			}
 		}
@@ -714,23 +716,20 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		});
 		
 	}
-
-	public void resetaFormulario() {
-		FuncoesGlobais.desativaCampos(pnlBotoes);
-		FuncoesGlobais.limpaCampos(pnlInformacaoDeProfessores);
-		FuncoesGlobais.limpaCampos(pnlInformacaoFuncionario);
-		FuncoesGlobais.resetaBordaPadrao(pnlInformacaoDeProfessores);
-		FuncoesGlobais.resetaBordaPadrao(pnlInformacaoFuncionario);
-		FuncoesGlobais.desativaCampos(pnlInformacaoDeProfessores);
-		FuncoesGlobais.desativaCampos(pnlInformacaoFuncionario);
-		
-		btnNovo.setEnabled(true);
-		btnPesquisar.setEnabled(true);
-		
-		javax.swing.SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				btnNovo.requestFocusInWindow();
-			}
-		});
+	
+	public void internalFrameActivated(InternalFrameEvent e) {
+	}
+	public void internalFrameClosed(InternalFrameEvent e) {
+	}
+	public void internalFrameClosing(InternalFrameEvent e) {
+		this.singleton = null;
+	}
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+	}
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+	}
+	public void internalFrameIconified(InternalFrameEvent e) {
+	}
+	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 }

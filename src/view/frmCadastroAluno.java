@@ -1,35 +1,30 @@
 package view;
 
-import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
 
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
+import javax.swing.JFormattedTextField;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 import javax.swing.text.MaskFormatter;
 
 import controler.FuncoesGlobais;
 
-import javax.swing.UIManager;
-import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import java.awt.Font;
-import java.text.ParseException;
 
-import javax.swing.SwingConstants;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JEditorPane;
-import javax.swing.JFormattedTextField;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JTextArea;
-
-
-public class frmCadastroAluno extends JInternalFrame implements ActionListener {
+public class frmCadastroAluno extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JButton btnNovo;
 	private JButton btnExcluir;
 	private JButton btnAlterar;
@@ -82,7 +77,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener {
 	private JPanel pnlInformacoesAluno;
 	private JPanel pnlBotoes;
 	
-	public static frmCadastroAluno getFrmCadastroAluno() throws ParseException {
+	public static frmCadastroAluno getInstance() throws ParseException {
 		if (singleton == null) {
 			singleton = new frmCadastroAluno();
 		}
@@ -91,6 +86,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener {
 	}
 	
 	public frmCadastroAluno() throws ParseException {
+		addInternalFrameListener(this);
 		setClosable(true);
 		setTitle("Cadastro de aluno");
 		setBounds(100, 100, 840, 622);
@@ -453,5 +449,20 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
 			}
 		}
+	}
+	public void internalFrameActivated(InternalFrameEvent e) {
+	}
+	public void internalFrameClosed(InternalFrameEvent e) {
+	}
+	public void internalFrameClosing(InternalFrameEvent e) {
+		this.singleton = null;
+	}
+	public void internalFrameDeactivated(InternalFrameEvent e) {
+	}
+	public void internalFrameDeiconified(InternalFrameEvent e) {
+	}
+	public void internalFrameIconified(InternalFrameEvent e) {
+	}
+	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 }

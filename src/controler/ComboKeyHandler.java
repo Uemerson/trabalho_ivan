@@ -16,6 +16,7 @@ public class ComboKeyHandler extends KeyAdapter {
 	private final JComboBox<String> comboBox;
 	private final List<String> list = new ArrayList<>();
 	private boolean shouldHide;
+	private boolean caseSentive;
 
 	public ComboKeyHandler(JComboBox<String> combo) {
 		super();
@@ -81,7 +82,7 @@ public class ComboKeyHandler extends KeyAdapter {
 			break;
 		}
 	}
-	
+
 	private static void setSuggestionModel(JComboBox<String> comboBox, ComboBoxModel<String> mdl, String str) {
 		comboBox.setModel(mdl);
 		comboBox.setSelectedIndex(-1);
@@ -91,10 +92,18 @@ public class ComboKeyHandler extends KeyAdapter {
 	private static ComboBoxModel<String> getSuggestedModel(List<String> list, String text) {
 		DefaultComboBoxModel<String> m = new DefaultComboBoxModel<>();
 		for (String s : list) {
-			if (s.startsWith(text)) {
-				m.addElement(s);
-			}
+			
+				//String comparacao = s.toUpperCase();
+				//s = s.toUpperCase();
+				//System.out.println("Comparacao : " + comparacao);
+				
+				if (s.startsWith(text)) {
+					//System.out.println("Text: " + text);
+					m.addElement(s);
+				}
+			
 		}
 		return m;
 	}
+
 }
