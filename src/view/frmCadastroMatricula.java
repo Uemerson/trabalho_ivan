@@ -25,6 +25,8 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.event.InternalFrameEvent;
@@ -106,6 +108,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		pnlBotoes.add(btnCancelar);
 
 		btnPesquisar = new JButton("Pesquisar");
+		btnPesquisar.addActionListener(this);
 		btnPesquisar.setBounds(460, 11, 85, 44);
 		pnlBotoes.add(btnPesquisar);
 
@@ -218,7 +221,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		btnPesquisarResponsavel.setEnabled(false);
 		btnPesquisarResponsavel.setBounds(485, 138, 28, 28);
 		pnlCadastroDeMatricula.add(btnPesquisarResponsavel);
-		
+
 		btnAluno = new JButton("");
 		btnAluno.setIcon(new ImageIcon(frmCadastroMatricula.class.getResource("/imagens/pesquisar.png")));
 		btnAluno.setEnabled(false);
@@ -228,12 +231,19 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnNovo) {
-			btnNovo_click();
-		} else if (e.getSource() == btnSalvar) {
-			btnSalvar_click();
-		} else if (e.getSource() == btnCancelar) {
-			btnCancelar_click();
+		try {
+			if (e.getSource() == btnNovo) {
+				btnNovo_click();
+			} else if (e.getSource() == btnSalvar) {
+				btnSalvar_click();
+			} else if (e.getSource() == btnCancelar) {
+				btnCancelar_click();
+			} else if (e.getSource() == btnPesquisar) {
+				btnPesquisar_click();
+
+			}
+		} catch (PropertyVetoException | ParseException | SQLException ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -246,7 +256,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		btnCancelar.setEnabled(true);
 		txtRegistro.setText("NOVO");
 		txtRegistro.setEnabled(false);
-		
+
 		cbAluno.requestFocus();
 	}
 
@@ -292,19 +302,36 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		}
 
 	}
+
+	private void btnPesquisar_click() throws PropertyVetoException, ParseException, SQLException {
+		if (frmPesquisaMatricula.getInstance().isVisible()) {
+			frmPesquisaMatricula.getInstance().setSelected(true);
+		} else {
+			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaMatricula.getInstance());
+			frmPesquisaMatricula.getInstance().setVisible(true);
+			frmPesquisaMatricula.getInstance().setSelected(true);
+		}
+	}
+
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
+
 	public void internalFrameClosed(InternalFrameEvent e) {
 	}
+
 	public void internalFrameClosing(InternalFrameEvent e) {
 		this.singleton = null;
 	}
+
 	public void internalFrameDeactivated(InternalFrameEvent e) {
 	}
+
 	public void internalFrameDeiconified(InternalFrameEvent e) {
 	}
+
 	public void internalFrameIconified(InternalFrameEvent e) {
 	}
+
 	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 }

@@ -59,7 +59,6 @@ public class frmPesquisaMatricula extends JInternalFrame implements ActionListen
 	}
 
 	public frmPesquisaMatricula() throws SQLException, ParseException {
-		System.out.println("Abrindo frmPesquisa");
 		addInternalFrameListener(this);
 		setClosable(true);
 		setTitle("Pesquisar Matr\u00EDcula");

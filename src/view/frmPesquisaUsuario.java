@@ -55,7 +55,6 @@ public class frmPesquisaUsuario extends JInternalFrame implements ActionListener
 	}
 
 	public frmPesquisaUsuario() throws SQLException {
-		System.out.println("Abrindo frmPesquisa");
 		addInternalFrameListener(this);
 		setClosable(true);
 		setTitle("Pesquisar Usu\u00E1rio");

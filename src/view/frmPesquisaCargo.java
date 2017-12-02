@@ -54,7 +54,6 @@ public class frmPesquisaCargo extends JInternalFrame implements ActionListener, 
 	}
 
 	public frmPesquisaCargo() throws SQLException {
-		System.out.println("Abrindo frmPesquisa");
 		addInternalFrameListener(this);
 		setClosable(true);
 		setTitle("Pesquisar Cargo");

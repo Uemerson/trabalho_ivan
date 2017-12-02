@@ -56,7 +56,6 @@ public class frmPesquisaResponsavel extends JInternalFrame implements ActionList
 	}
 
 	public frmPesquisaResponsavel() throws SQLException {
-		System.out.println("Abrindo frmPesquisa");
 		addInternalFrameListener(this);
 		setClosable(true);
 		setTitle("Pesquisar Respons\u00E1vel");

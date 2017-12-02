@@ -159,4 +159,11 @@ public class DAOFuncionario {
 				rs.getString("Formacao"), rs.getString("Cargo"), rs.getDate("DATA_AUTORIZACAO_SER"), rs.getDate("DATA_ADMISSAO"), rs.getDate("DATA_DEMISSAO"), rs.getDate("DATA_NASCIMENTO"));
 		
 	}
+
+	public void excluirFuncionario(int ID) throws SQLException {
+		SQL = "DELETE FROM FUNCIONARIO WHERE ID = ?";
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setInt(1, ID);
+		preparedStatement.executeUpdate();
+	}
 }

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
+import java.sql.SQLException;
 import java.text.ParseException;
 
 import javax.swing.DefaultComboBoxModel;
@@ -119,7 +121,7 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 		pnlBotoes.add(btnCancelar);
 
 		btnPesquisar = new JButton("Pesquisar");
-		btnPesquisar.setEnabled(false);
+		btnPesquisar.addActionListener(this);
 		btnPesquisar.setBounds(460, 11, 85, 44);
 		pnlBotoes.add(btnPesquisar);
 
@@ -185,7 +187,9 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 
 		cbGrauInstrucao = new JComboBox();
 		cbGrauInstrucao.setEnabled(false);
-		cbGrauInstrucao.setModel(new DefaultComboBoxModel(new String[] {"Ensino Fundamental Incompleto", "Ensino Fundamental Completo", "Ensino M\u00E9dio Incompleto", "Ensino M\u00E9dio Completo", "Ensino Superior Incompleto", "Ensino Superior Completo"}));
+		cbGrauInstrucao.setModel(new DefaultComboBoxModel(new String[] { "Ensino Fundamental Incompleto",
+				"Ensino Fundamental Completo", "Ensino M\u00E9dio Incompleto", "Ensino M\u00E9dio Completo",
+				"Ensino Superior Incompleto", "Ensino Superior Completo" }));
 		cbGrauInstrucao.setBounds(597, 56, 197, 28);
 		cbGrauInstrucao.setSelectedItem(null);
 		pnlCadastroResponsavel.add(cbGrauInstrucao);
@@ -240,8 +244,7 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 
 		cbLogradouro = new JComboBox();
 		cbLogradouro.setEnabled(false);
-		cbLogradouro
-				.setModel(new DefaultComboBoxModel(new String[] {"Avenida", "Rua", "Pra\u00E7a", "Zona Rural"}));
+		cbLogradouro.setModel(new DefaultComboBoxModel(new String[] { "Avenida", "Rua", "Pra\u00E7a", "Zona Rural" }));
 		cbLogradouro.setBounds(112, 61, 142, 28);
 		cbLogradouro.setSelectedItem(null);
 		pnlLocalDeTrabalho.add(cbLogradouro);
@@ -354,12 +357,18 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnNovo) {
-			btnNovo_click();
-		} else if (e.getSource() == btnSalvar) {
-			btnSalvar_click();
-		} else if (e.getSource() == btnCancelar) {
-			btnCancelar_click();
+		try {
+			if (e.getSource() == btnNovo) {
+				btnNovo_click();
+			} else if (e.getSource() == btnSalvar) {
+				btnSalvar_click();
+			} else if (e.getSource() == btnCancelar) {
+				btnCancelar_click();
+			} else if (e.getSource() == btnPesquisar) {
+				btnPesquisar_click();
+			}
+		} catch (ParseException | SQLException | PropertyVetoException ex) {
+			ex.printStackTrace();
 		}
 	}
 
@@ -411,45 +420,58 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 	}
 
 	private void btnCancelar_click() {
-		if(JOptionPane.showConfirmDialog(this, 
-				"Deseja realmente cancelar o novo cadastrado?", 
-				"Sistema", 
-				JOptionPane.YES_NO_OPTION, 
-				JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
-			
-		
+		if (JOptionPane.showConfirmDialog(this, "Deseja realmente cancelar o novo cadastrado?", "Sistema",
+				JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
+
 			FuncoesGlobais.limpaCampos(pnlCadastroResponsavel);
 			FuncoesGlobais.limpaCampos(pnlPerfilSocioEconomico);
 			FuncoesGlobais.limpaCampos(pnlLocalDeTrabalho);
-			
+
 			FuncoesGlobais.desativaCampos(pnlCadastroResponsavel);
 			FuncoesGlobais.desativaCampos(pnlPerfilSocioEconomico);
 			FuncoesGlobais.desativaCampos(pnlLocalDeTrabalho);
-			
+
 			FuncoesGlobais.desativaCampos(pnlBotoes);
 			FuncoesGlobais.resetaBordaPadrao(pnlCadastroResponsavel);
 			FuncoesGlobais.resetaBordaPadrao(pnlPerfilSocioEconomico);
 			FuncoesGlobais.resetaBordaPadrao(pnlLocalDeTrabalho);
-			
+
 			btnNovo.setEnabled(true);
 			btnPesquisar.setEnabled(true);
-			
+
 			JOptionPane.showMessageDialog(this, "Cancelado com sucesso!", "Sistema", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
+
+	private void btnPesquisar_click() throws ParseException, SQLException, PropertyVetoException {
+		if (frmPesquisaResponsavel.getInstance().isVisible()) {
+			frmPesquisaResponsavel.getInstance().setSelected(true);
+		} else {
+			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaResponsavel.getInstance());
+			frmPesquisaResponsavel.getInstance().setVisible(true);
+			frmPesquisaResponsavel.getInstance().setSelected(true);
+		}
+	}
+
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
+
 	public void internalFrameClosed(InternalFrameEvent e) {
 	}
+
 	public void internalFrameClosing(InternalFrameEvent e) {
 		this.singleton = null;
 	}
+
 	public void internalFrameDeactivated(InternalFrameEvent e) {
 	}
+
 	public void internalFrameDeiconified(InternalFrameEvent e) {
 	}
+
 	public void internalFrameIconified(InternalFrameEvent e) {
 	}
+
 	public void internalFrameOpened(InternalFrameEvent e) {
 	}
 }

@@ -57,7 +57,6 @@ public class frmPesquisaMensalidade extends JInternalFrame implements ActionList
 	}
 
 	public frmPesquisaMensalidade() throws SQLException, ParseException {
-		System.out.println("Abrindo frmPesquisa");
 		addInternalFrameListener(this);
 		setClosable(true);
 		setTitle("Pesquisar Mensalidade");
