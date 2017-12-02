@@ -315,12 +315,13 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
-
+	
+	//Limpa a memoria
 	public void internalFrameClosed(InternalFrameEvent e) {
+		this.singleton = null;
 	}
 
 	public void internalFrameClosing(InternalFrameEvent e) {
-		this.singleton = null;
 	}
 
 	public void internalFrameDeactivated(InternalFrameEvent e) {
