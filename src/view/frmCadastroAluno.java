@@ -527,7 +527,8 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
-
+	
+	//Limpa memoria
 	public void internalFrameClosed(InternalFrameEvent e) {
 		this.singleton = null;
 	}
