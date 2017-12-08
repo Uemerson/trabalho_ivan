@@ -41,4 +41,16 @@ public class DAOUsuario {
 		
 		return null;
 	}
+
+	public void novoUsuario(Usuario usuario) throws SQLException {
+		SQL = "INSERT INTO USUARIO (ID_FUNC, LOGIN, SENHA) VALUES (?, ?, ?)";
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		
+		preparedStatement.setInt(1, usuario.getId_funcionario());
+		preparedStatement.setString(2, usuario.getLogin());
+		preparedStatement.setString(3, usuario.getSenha());
+		
+		preparedStatement.execute();
+		System.out.println("Cadastro de usuario com sucesso!");
+	}
 }

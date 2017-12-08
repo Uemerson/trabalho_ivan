@@ -1,35 +1,38 @@
 package view;
 
+import java.awt.Component;
 import java.awt.Container;
-import java.awt.EventQueue;
-
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
 import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.border.TitledBorder;
-
-import controler.FuncoesGlobais;
-
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.ImageIcon;
+
+import controler.FuncoesGlobais;
+import dao.DAOCargo;
+import model.Cargo;
+import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
 
 public class frmCadastroCargo extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JTextField txtRegistro;
 	private JTextField txtNome;
-	private JTextField txtDescricao;
 	private JLabel lblRegistro;
 	private JLabel lblNome;
 	private JLabel lblDescricao;
@@ -43,6 +46,7 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 	private JButton btnPesquisar;
 
 	private static frmCadastroCargo singleton = null;
+	private JEditorPane edpDescricao;
 
 	public static frmCadastroCargo getInstance() throws ParseException {
 		if (singleton == null) {
@@ -54,16 +58,16 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 
 	public frmCadastroCargo() {
 		addInternalFrameListener(this);
-		setBounds(100, 100, 585, 285);
+		setBounds(100, 100, 585, 379);
 		setClosable(true);
 		setTitle("Cadastro de Cargo");
 		getContentPane().setLayout(null);
-		
-		//Hack para remover icone do nimbus
-		Container pane =  ((BasicInternalFrameUI) this.getUI()).getNorthPane();
-		//pane.remove(0);
+
+		// Hack para remover icone do nimbus
+		Container pane = ((BasicInternalFrameUI) this.getUI()).getNorthPane();
+		// pane.remove(0);
 		pane.getComponent(0).setVisible(false);
-		
+
 		pnlBotoes = new JPanel();
 		pnlBotoes.setLayout(null);
 		pnlBotoes.setBounds(10, 11, 549, 100);
@@ -122,45 +126,44 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 		pnlCadastroDeCargo = new JPanel();
 		pnlCadastroDeCargo.setBorder(
 				new TitledBorder(null, "Cadastro de Cargo", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		pnlCadastroDeCargo.setBounds(10, 123, 549, 129);
+		pnlCadastroDeCargo.setBounds(10, 123, 549, 219);
 		getContentPane().add(pnlCadastroDeCargo);
 		pnlCadastroDeCargo.setLayout(null);
 
 		lblRegistro = new JLabel("Registro");
 		lblRegistro.setHorizontalAlignment(SwingConstants.LEFT);
 		lblRegistro.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblRegistro.setBounds(10, 11, 90, 28);
+		lblRegistro.setBounds(10, 19, 90, 28);
 		pnlCadastroDeCargo.add(lblRegistro);
 
 		txtRegistro = new JTextField();
 		txtRegistro.setEnabled(false);
 		txtRegistro.setColumns(10);
-		txtRegistro.setBounds(110, 11, 338, 28);
+		txtRegistro.setBounds(110, 19, 420, 28);
 		pnlCadastroDeCargo.add(txtRegistro);
 
 		lblNome = new JLabel("Nome");
 		lblNome.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNome.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblNome.setBounds(10, 50, 90, 28);
+		lblNome.setBounds(10, 59, 90, 28);
 		pnlCadastroDeCargo.add(lblNome);
 
 		lblDescricao = new JLabel("Descri\u00E7\u00E3o");
 		lblDescricao.setHorizontalAlignment(SwingConstants.LEFT);
 		lblDescricao.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblDescricao.setBounds(10, 89, 90, 28);
+		lblDescricao.setBounds(10, 99, 90, 28);
 		pnlCadastroDeCargo.add(lblDescricao);
 
 		txtNome = new JTextField();
 		txtNome.setEnabled(false);
 		txtNome.setColumns(10);
-		txtNome.setBounds(110, 50, 338, 28);
+		txtNome.setBounds(110, 59, 420, 28);
 		pnlCadastroDeCargo.add(txtNome);
-
-		txtDescricao = new JTextField();
-		txtDescricao.setEnabled(false);
-		txtDescricao.setColumns(10);
-		txtDescricao.setBounds(110, 89, 338, 28);
-		pnlCadastroDeCargo.add(txtDescricao);
+		
+		edpDescricao = new JEditorPane();
+		edpDescricao.setEnabled(false);
+		edpDescricao.setBounds(110, 103, 420, 97);
+		pnlCadastroDeCargo.add(edpDescricao);
 
 	}
 
@@ -185,7 +188,7 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 		FuncoesGlobais.desativaCampos(pnlBotoes);
 		FuncoesGlobais.ativaCampos(pnlCadastroDeCargo);
 		FuncoesGlobais.limpaCampos(pnlCadastroDeCargo);
-
+		
 		txtRegistro.setText("NOVO");
 		txtRegistro.setEnabled(false);
 
@@ -211,7 +214,11 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 	}
 
 	private void btnSalvar_click() {
-		if (FuncoesGlobais.verificaCampos(pnlCadastroDeCargo) == true) {
+		
+		ArrayList<Component> listaComp = new ArrayList<>();
+		listaComp.add(edpDescricao);
+		
+		if (FuncoesGlobais.verificaCampos(pnlCadastroDeCargo, listaComp) == true) {
 
 			JOptionPane.showMessageDialog(this, "Erro - Os campos em vermelho devem ser preenchidos!", "Sistema",
 					JOptionPane.ERROR_MESSAGE);
@@ -221,15 +228,29 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 			if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o novo cadastrado?", "Sistema",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 
-				FuncoesGlobais.limpaCampos(pnlCadastroDeCargo);
-				FuncoesGlobais.desativaCampos(pnlCadastroDeCargo);
-				FuncoesGlobais.desativaCampos(pnlBotoes);
+				try {
+					Cargo cargo = new Cargo();
+					cargo.setNome(txtNome.getText());
+					cargo.setDescricao(edpDescricao.getText().isEmpty() ? null : edpDescricao.getText());
+					
+					System.out.println(txtNome.getText());
+					System.out.println(cargo.getNome());
+					
+					DAOCargo daoCargo = new DAOCargo();
+					daoCargo.novoCargo(cargo);
+					
+					FuncoesGlobais.limpaCampos(pnlCadastroDeCargo);
+					FuncoesGlobais.desativaCampos(pnlCadastroDeCargo);
+					FuncoesGlobais.desativaCampos(pnlBotoes);
+					
+					btnNovo.setEnabled(true);
+					btnPesquisar.setEnabled(true);
 
-				btnNovo.setEnabled(true);
-				btnPesquisar.setEnabled(true);
-
-				JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
-						JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (SQLException ex) {
+					JOptionPane.showMessageDialog(this, "Não foi possivel salvar o cadastro de cargo, tente novamente!", "Sistema", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
 	}
@@ -247,6 +268,7 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
 
+	// Limpa memoria
 	public void internalFrameClosed(InternalFrameEvent e) {
 		this.singleton = null;
 	}

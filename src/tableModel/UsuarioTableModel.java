@@ -1,9 +1,9 @@
 package tableModel;
 
-import java.awt.List;
 import java.util.ArrayList;
 
 import javax.swing.table.AbstractTableModel;
+
 import model.Usuario;
 
 public class UsuarioTableModel extends AbstractTableModel {

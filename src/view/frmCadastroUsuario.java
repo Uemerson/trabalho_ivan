@@ -1,37 +1,36 @@
 package view;
 
-import java.awt.EventQueue;
-
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.border.TitledBorder;
-
-import controler.FuncoesGlobais;
-import model.Cargo;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
+import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.ImageIcon;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
-import javax.swing.UIManager;
-import java.awt.Color;
-import java.awt.Container;
 
-import javax.swing.event.InternalFrameListener;
-import javax.swing.event.SwingPropertyChangeSupport;
-import javax.swing.plaf.basic.BasicInternalFrameUI;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
+
+import controler.FuncoesGlobais;
+import dao.DAOFuncionario;
+import dao.DAOUsuario;
+import model.Usuario;
+
+import javax.swing.JPasswordField;
 
 public class frmCadastroUsuario extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JPanel pnlBotoes;
@@ -43,17 +42,18 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 	private JButton btnPesquisar;
 	private JTextField txtRegistro;
 	private JTextField txtLogin;
-	private JTextField TxtSenha;
 	private JLabel lblRegistro;
 	private JLabel lblLogin;
 	private JLabel lblSenha;
 	private JButton btnPesquisarFuncionario;
 	private JPanel pnlCadastroDeUsuario;
 	private JComboBox cbFuncionario;
+	private int idFuncionario = 0;
 
 	private static frmCadastroUsuario singleton = null;
+	private JPasswordField txtSenha;
 
-	public static frmCadastroUsuario getInstance() throws ParseException {
+	public static frmCadastroUsuario getInstance() throws ParseException, SQLException {
 		if (singleton == null) {
 			singleton = new frmCadastroUsuario();
 		}
@@ -61,18 +61,19 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 		return singleton;
 	}
 
-	public frmCadastroUsuario() {
+	public frmCadastroUsuario() throws SQLException {
+		idFuncionario = 0;
 		addInternalFrameListener(this);
 		setBounds(100, 100, 591, 336);
 		setClosable(true);
 		setTitle("Cadastro de Usuário");
 		getContentPane().setLayout(null);
-		
-		//Hack para remover icone do nimbus
-		Container pane =  ((BasicInternalFrameUI) this.getUI()).getNorthPane();
-		//pane.remove(0);
+
+		// Hack para remover icone do nimbus
+		Container pane = ((BasicInternalFrameUI) this.getUI()).getNorthPane();
+		// pane.remove(0);
 		pane.getComponent(0).setVisible(false);
-		
+
 		pnlBotoes = new JPanel();
 		pnlBotoes.setBounds(10, 11, 555, 102);
 		pnlBotoes.setLayout(null);
@@ -165,12 +166,6 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 		txtLogin.setBounds(110, 96, 338, 28);
 		pnlCadastroDeUsuario.add(txtLogin);
 
-		TxtSenha = new JTextField();
-		TxtSenha.setEnabled(false);
-		TxtSenha.setColumns(10);
-		TxtSenha.setBounds(110, 135, 338, 28);
-		pnlCadastroDeUsuario.add(TxtSenha);
-
 		JLabel lblFuncionrio = new JLabel("Funcion\u00E1rio");
 		lblFuncionrio.setHorizontalAlignment(SwingConstants.LEFT);
 		lblFuncionrio.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -179,20 +174,29 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 
 		cbFuncionario = new JComboBox();
 
-		cbFuncionario.addItem("Administrador");
-		cbFuncionario.addItem("Uemerson");
-		cbFuncionario.addItem("Teste");
+		DefaultComboBoxModel<String> cbFuncionarioModel = new DefaultComboBoxModel<>();
 
+		for (int i = 0; i < new DAOFuncionario().listaFuncionario().size(); i++) {
+			cbFuncionarioModel.addElement(new DAOFuncionario().listaFuncionario().get(i).getNome());
+		}
+
+		cbFuncionario.setModel(cbFuncionarioModel);
 		cbFuncionario.setSelectedItem(null);
 		cbFuncionario.setEnabled(false);
 		cbFuncionario.setBounds(110, 57, 338, 28);
 		pnlCadastroDeUsuario.add(cbFuncionario);
 
 		btnPesquisarFuncionario = new JButton("");
+		btnPesquisarFuncionario.addActionListener(this);
 		btnPesquisarFuncionario.setEnabled(false);
 		btnPesquisarFuncionario.setIcon(new ImageIcon(frmCadastroUsuario.class.getResource("/imagens/pesquisar.png")));
 		btnPesquisarFuncionario.setBounds(458, 57, 28, 28);
 		pnlCadastroDeUsuario.add(btnPesquisarFuncionario);
+
+		txtSenha = new JPasswordField();
+		txtSenha.setEnabled(false);
+		txtSenha.setBounds(110, 135, 338, 28);
+		pnlCadastroDeUsuario.add(txtSenha);
 
 	}
 
@@ -207,8 +211,10 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 				btnCancelar_click();
 			} else if (e.getSource() == btnPesquisar) {
 				btnPesquisar_click();
-
+			} else if (e.getSource() == btnPesquisarFuncionario) {
+				btnPesquisarFuncionario_click();
 			}
+
 		} catch (ParseException | SQLException | PropertyVetoException ex) {
 			ex.printStackTrace();
 		}
@@ -218,12 +224,16 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 		FuncoesGlobais.desativaCampos(pnlBotoes);
 		FuncoesGlobais.ativaCampos(pnlCadastroDeUsuario);
 
+		cbFuncionario.setEnabled(false);
 		txtRegistro.setEnabled(false);
 		txtRegistro.setText("NOVO");
 		cbFuncionario.requestFocus();
 
 		btnCancelar.setEnabled(true);
 		btnSalvar.setEnabled(true);
+
+		idFuncionario = 0;
+		btnSalvar.requestFocus();
 	}
 
 	private void btnSalvar_click() {
@@ -234,16 +244,29 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 
 			if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o novo cadastrado?", "Sistema",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+				try {
+					Usuario usuario = new Usuario();
+					usuario.setLogin(txtLogin.getText());
+					String senha = new String(txtSenha.getPassword());
+					usuario.setId_funcionario(idFuncionario);
+					usuario.setSenha(senha);
 
-				FuncoesGlobais.limpaCampos(pnlCadastroDeUsuario);
-				FuncoesGlobais.desativaCampos(pnlCadastroDeUsuario);
-				FuncoesGlobais.desativaCampos(pnlBotoes);
+					DAOUsuario daoUsuario = new DAOUsuario();
 
-				btnNovo.setEnabled(true);
-				btnPesquisar.setEnabled(true);
+					daoUsuario.novoUsuario(usuario);
 
-				JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
-						JOptionPane.INFORMATION_MESSAGE);
+					FuncoesGlobais.limpaCampos(pnlCadastroDeUsuario);
+					FuncoesGlobais.desativaCampos(pnlCadastroDeUsuario);
+					FuncoesGlobais.desativaCampos(pnlBotoes);
+
+					btnNovo.setEnabled(true);
+					btnPesquisar.setEnabled(true);
+
+					JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
+							JOptionPane.INFORMATION_MESSAGE);
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
 			}
 		}
 	}
@@ -274,6 +297,35 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 		}
 	}
 
+	private void btnPesquisarFuncionario_click() {
+		try {
+			if (frmPesquisaFuncionario.getInstance().isVisible()) {
+				frmPesquisaFuncionario.getInstance().atualizaDados(); // Atualiza os dados do formulario
+				frmPesquisaFuncionario.getInstance().getBtnConfirma().setVisible(true);
+				frmPesquisaFuncionario.getInstance().getBtnConfirma().setText("Abrir cadastro de usuário");
+				frmPesquisaFuncionario.getInstance().setSelected(true);
+			} else {
+				frmPesquisaFuncionario.getInstance().atualizaDados(); // Atualiza os dados do formulario
+				frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaFuncionario.getInstance());
+				frmPesquisaFuncionario.getInstance().getBtnConfirma().setVisible(true);
+				frmPesquisaFuncionario.getInstance().getBtnConfirma().setText("Abrir cadastro de usuário");
+				frmPesquisaFuncionario.getInstance().setVisible(true);
+				frmPesquisaFuncionario.getInstance().setSelected(true);
+			}
+		} catch (ParseException | SQLException | PropertyVetoException ex) {
+			JOptionPane.showMessageDialog(this, "Erro ao tentar abrir pesquisa de funcionario, tente novamente!",
+					"Sistema", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	public void preencheFuncionario(int idFuncionario) throws SQLException {
+		this.idFuncionario = idFuncionario;
+
+		cbFuncionario.setSelectedItem(new DAOFuncionario().buscaFuncionario(idFuncionario).getNome());
+
+		//System.out.println("Id funcionario: " + idFuncionario);
+	}
+
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
 
@@ -283,7 +335,7 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 	}
 
 	public void internalFrameClosing(InternalFrameEvent e) {
-		
+
 	}
 
 	public void internalFrameDeactivated(InternalFrameEvent e) {

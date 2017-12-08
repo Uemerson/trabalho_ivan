@@ -4,26 +4,27 @@ import java.util.Date;
 
 public class Funcionario {
 
-	private int Registro, Numero_da_Casa, Numero_de_Autorizacao_da_SER, Numero_do_Registro_do_Diploma;
+	private int Registro, Numero_da_Casa, Numero_de_Autorizacao_da_SER, Numero_do_Registro_do_Diploma, Cargo;
 	private double Salario;
-	private String Nome, CPF, RG, Logradouro, Endereco, Bairro, Cidade, Estado, Tel_Residencial, Tel_Comercial, Celular, Email, Formacao_Academica, Cargo;
+	private String Nome, NomeCargo, CPF, RG, Logradouro, Endereco, Bairro, Cidade, Estado, Tel_Residencial, Tel_Comercial, Celular, Email, Formacao_Academica;
 	private Date Data_de_Autorizacao, Data_de_Admissao, Data_de_Demissao, Data_de_Nascimento;
 	
 	public Funcionario() {};
 	
-	public Funcionario(int Registro, String Nome, String CPF, String Cargo) {
+	public Funcionario(int Registro, String Nome, String CPF, int Cargo, String NomeCargo) {
 		this.Registro = Registro;
 		this.Nome = Nome;
 		this.CPF = CPF;
 		this.Cargo = Cargo;
+		this.NomeCargo = NomeCargo;
 	}
 	
 	public Funcionario(int registro, int numero_da_Casa, int numero_de_Autorizacao_da_SER,
 			int numero_do_Registro_do_Diploma, double salario, String nome, String cPF, String rG, String logradouro,
 			String endereco, String bairro, String cidade, String estado, String tel_Residencial, String tel_Comercial,
-			String celular, String email, String formacao_Academica, String cargo, Date data_de_Autorizacao,
+			String celular, String email, String formacao_Academica, int cargo, String nomeCargo, Date data_de_Autorizacao,
 			Date data_de_Admissao, Date data_de_Demissao, Date data_de_Nascimento) {
-		super();
+		
 		Registro = registro;
 		Numero_da_Casa = numero_da_Casa;
 		Numero_de_Autorizacao_da_SER = numero_de_Autorizacao_da_SER;
@@ -43,6 +44,7 @@ public class Funcionario {
 		Email = email;
 		Formacao_Academica = formacao_Academica;
 		Cargo = cargo;
+		NomeCargo = nomeCargo;
 		Data_de_Autorizacao = data_de_Autorizacao;
 		Data_de_Admissao = data_de_Admissao;
 		Data_de_Demissao = data_de_Demissao;
@@ -169,10 +171,10 @@ public class Funcionario {
 	public void setFormacao_Academica(String formacao_Academica) {
 		Formacao_Academica = formacao_Academica;
 	}
-	public String getCargo() {
+	public int getCargo() {
 		return Cargo;
 	}
-	public void setCargo(String cargo) {
+	public void setCargo(int cargo) {
 		Cargo = cargo;
 	}
 	public Date getData_de_Autorizacao() {
@@ -186,6 +188,11 @@ public class Funcionario {
 	}
 	public void setData_de_Demissao(Date data_de_Demissao) {
 		Data_de_Demissao = data_de_Demissao;
-	} 
-	
+	}
+	public String getNomeCargo() {
+		return NomeCargo;
+	}
+	public void setNomeCargo(String nomeCargo) {
+		NomeCargo = nomeCargo;
+	}
 }

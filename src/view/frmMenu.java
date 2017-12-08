@@ -183,7 +183,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 		}
 	}
 
-	private void mntmCadastroUsuarios_click() throws ParseException, PropertyVetoException {
+	private void mntmCadastroUsuarios_click() throws ParseException, PropertyVetoException, SQLException {
 		if (frmCadastroUsuario.getInstance().isVisible()) {
 			frmCadastroUsuario.getInstance().setSelected(true);
 		} else {

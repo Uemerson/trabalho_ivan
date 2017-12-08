@@ -1,11 +1,16 @@
 package model;
 
+import java.util.Date;
+
 public class Aluno {
 	
 	private int Registro;
 	
-	private String Nome, RG, Orgao_Emissor, CPF, Data_de_Nascimento, Sexo,
-	Cor, Raca, Logradouro, endereco, Numero_da_Casa, Tel_Residencial, Tel_Comercial, Celular, Email,
+	private Date Data_de_Nascimento;
+	private int Numero_da_Casa;
+	
+	private String Nome, RG, Orgao_Emissor, CPF, Sexo,
+	Cor, Raca, Logradouro, endereco, Tel_Residencial, Tel_Comercial, Celular, Email,
 	Local_de_Origem_do_Aluno, Rede_Estabelecimento_de_Ordem_do_aluno,
 	Situacao_do_Aluno_no_Ano_Anterior, Observacoes_do_Aluno;
 
@@ -25,11 +30,11 @@ public class Aluno {
 		this.endereco = endereco;
 	}
 
-	public String getNumero_da_Casa() {
+	public int getNumero_da_Casa() {
 		return Numero_da_Casa;
 	}
 
-	public void setNumero_da_Casa(String numero_da_Casa) {
+	public void setNumero_da_Casa(int numero_da_Casa) {
 		Numero_da_Casa = numero_da_Casa;
 	}
 
@@ -81,11 +86,11 @@ public class Aluno {
 		CPF = cPF;
 	}
 
-	public String getData_de_Nascimento() {
+	public Date getData_de_Nascimento() {
 		return Data_de_Nascimento;
 	}
 
-	public void setData_de_Nascimento(String data_de_Nascimento) {
+	public void setData_de_Nascimento(Date data_de_Nascimento) {
 		Data_de_Nascimento = data_de_Nascimento;
 	}
 

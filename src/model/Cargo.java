@@ -3,7 +3,6 @@ package model;
 public class Cargo {
 
 	private int Registro;
-	
 	private String Nome, Descricao;
 
 	public Cargo() {}
@@ -12,10 +11,6 @@ public class Cargo {
 		this.Registro = Registro;
 		this.Nome = Nome;
 		this.Descricao = Descricao;
-	}
-	
-	public String toString() {
-		return this.Nome;
 	}
 	
 	public int getRegistro() {
@@ -41,5 +36,6 @@ public class Cargo {
 	public void setDescricao(String descricao) {
 		Descricao = descricao;
 	}
+
 	
 }

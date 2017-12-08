@@ -1,12 +1,17 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -20,11 +25,17 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.text.MaskFormatter;
 
 import controler.FuncoesGlobais;
-import javax.swing.event.InternalFrameListener;
-import javax.swing.event.InternalFrameEvent;
+import dao.DAOFuncionario;
+import dao.DAOResponsavel;
+import model.Responsavel;
+
+import javax.swing.ImageIcon;
 
 public class frmCadastroResponsavel extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JButton btnAlterar;
@@ -59,19 +70,18 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 	private JTextField txtNumero;
 	private JPanel pnlPerfilSocioEconomico;
 	private JLabel lblRenda;
-	private JComboBox cbRenda;
 	private JLabel lblCasaPropria;
 	private JComboBox cbCasaPropria;
 	private JLabel lblNumeroDeFilhos;
-	private JComboBox cbNumFilhos;
 	private JLabel lblNumeroDePessoasQueResidemNaCasa;
-	private JComboBox cbNumeroDePessoasQueResidemNaCasa;
 	private JLabel lblHorario;
 	private JFormattedTextField txtHorario;
-	private JComboBox cbHorario;
 
 	private static frmCadastroResponsavel singleton = null;
 	private JPanel pnlBotoes;
+	private JTextField txtRenda;
+	private JTextField txtNumeroFilho;
+	private JTextField txtNumeroPessoasCasa;
 
 	public static frmCadastroResponsavel getInstance() throws ParseException {
 		if (singleton == null) {
@@ -82,51 +92,77 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 	}
 
 	public frmCadastroResponsavel() throws ParseException {
+		// Hack para remover icone do nimbus
+		Container pane = ((BasicInternalFrameUI) this.getUI()).getNorthPane();
+		// pane.remove(0);
+		pane.getComponent(0).setVisible(false);
+
 		addInternalFrameListener(this);
-		setBounds(100, 100, 840, 533);
+		setBounds(100, 100, 840, 558);
 		setClosable(true);
 		setTitle("Cadastro de Respons\u00E1vel");
 		getContentPane().setLayout(null);
 
 		pnlBotoes = new JPanel();
-		pnlBotoes.setBounds(10, 11, 804, 64);
+		pnlBotoes.setBounds(10, 11, 804, 94);
 		pnlBotoes.setLayout(null);
 		getContentPane().add(pnlBotoes);
 
 		btnNovo = new JButton("Novo");
+		btnNovo.setIcon(new ImageIcon(frmCadastroResponsavel.class.getResource("/imagens/novo 48x48.png")));
 		btnNovo.addActionListener(this);
-		btnNovo.setBounds(10, 11, 80, 44);
+		btnNovo.setBounds(10, 11, 80, 79);
+		btnNovo.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnNovo.setVerticalTextPosition(SwingConstants.BOTTOM);
+
 		pnlBotoes.add(btnNovo);
 
 		btnExcluir = new JButton("Excluir");
+		btnExcluir.addActionListener(this);
+		btnExcluir.setIcon(new ImageIcon(frmCadastroResponsavel.class.getResource("/imagens/excluir 48x48.png")));
 		btnExcluir.setEnabled(false);
-		btnExcluir.setBounds(100, 11, 80, 44);
+		btnExcluir.setBounds(100, 11, 80, 79);
+		btnExcluir.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnExcluir.setVerticalTextPosition(SwingConstants.BOTTOM);
 		pnlBotoes.add(btnExcluir);
 
 		btnAlterar = new JButton("Alterar");
+		btnAlterar.addActionListener(this);
+		btnAlterar.setIcon(new ImageIcon(frmCadastroResponsavel.class.getResource("/imagens/editar 48x48.png")));
 		btnAlterar.setEnabled(false);
-		btnAlterar.setBounds(190, 11, 80, 44);
+		btnAlterar.setBounds(190, 11, 80, 79);
+		btnAlterar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnAlterar.setVerticalTextPosition(SwingConstants.BOTTOM);
 		pnlBotoes.add(btnAlterar);
 
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.setIcon(new ImageIcon(frmCadastroResponsavel.class.getResource("/imagens/salvar 48x48.png")));
 		btnSalvar.addActionListener(this);
 		btnSalvar.setEnabled(false);
-		btnSalvar.setBounds(280, 11, 80, 44);
+		btnSalvar.setBounds(280, 11, 80, 79);
+		btnSalvar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnSalvar.setVerticalTextPosition(SwingConstants.BOTTOM);
 		pnlBotoes.add(btnSalvar);
 
 		btnCancelar = new JButton("Cancelar");
+		btnCancelar.setIcon(new ImageIcon(frmCadastroResponsavel.class.getResource("/imagens/cancelar 48x48.png")));
 		btnCancelar.addActionListener(this);
 		btnCancelar.setEnabled(false);
-		btnCancelar.setBounds(370, 11, 80, 44);
+		btnCancelar.setBounds(370, 11, 80, 79);
+		btnCancelar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnCancelar.setVerticalTextPosition(SwingConstants.BOTTOM);
 		pnlBotoes.add(btnCancelar);
 
 		btnPesquisar = new JButton("Pesquisar");
+		btnPesquisar.setIcon(new ImageIcon(frmCadastroResponsavel.class.getResource("/imagens/lupa 48x48.png")));
 		btnPesquisar.addActionListener(this);
-		btnPesquisar.setBounds(460, 11, 85, 44);
+		btnPesquisar.setBounds(460, 11, 85, 79);
+		btnPesquisar.setHorizontalTextPosition(SwingConstants.CENTER);
+		btnPesquisar.setVerticalTextPosition(SwingConstants.BOTTOM);
 		pnlBotoes.add(btnPesquisar);
 
 		pnlCadastroResponsavel = new JPanel();
-		pnlCadastroResponsavel.setBounds(10, 86, 804, 179);
+		pnlCadastroResponsavel.setBounds(10, 113, 804, 179);
 		pnlCadastroResponsavel.setBorder(
 				new TitledBorder(null, "Cadastro de Responsavel", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		getContentPane().add(pnlCadastroResponsavel);
@@ -187,9 +223,9 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 
 		cbGrauInstrucao = new JComboBox();
 		cbGrauInstrucao.setEnabled(false);
-		cbGrauInstrucao.setModel(new DefaultComboBoxModel(new String[] { "Ensino Fundamental Incompleto",
-				"Ensino Fundamental Completo", "Ensino M\u00E9dio Incompleto", "Ensino M\u00E9dio Completo",
-				"Ensino Superior Incompleto", "Ensino Superior Completo" }));
+		cbGrauInstrucao.setModel(new DefaultComboBoxModel(new String[] { "N\u00E3o Alfabetizado",
+				"Ensino Fundamental Incompleto", "Ensino Fundamental Completo", "Ensino M\u00E9dio Incompleto",
+				"Ensino M\u00E9dio Completo", "Ensino Superior Incompleto", "Ensino Superior Completo" }));
 		cbGrauInstrucao.setBounds(597, 56, 197, 28);
 		cbGrauInstrucao.setSelectedItem(null);
 		pnlCadastroResponsavel.add(cbGrauInstrucao);
@@ -220,7 +256,7 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 		pnlLocalDeTrabalho = new JPanel();
 		pnlLocalDeTrabalho.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Local de Trabalho",
 				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		pnlLocalDeTrabalho.setBounds(10, 276, 804, 100);
+		pnlLocalDeTrabalho.setBounds(10, 303, 804, 100);
 		getContentPane().add(pnlLocalDeTrabalho);
 		pnlLocalDeTrabalho.setLayout(null);
 
@@ -286,17 +322,10 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 		txtHorario.setBounds(433, 22, 47, 28);
 		pnlLocalDeTrabalho.add(txtHorario);
 
-		cbHorario = new JComboBox();
-		cbHorario.setEnabled(false);
-		cbHorario.setModel(new DefaultComboBoxModel(new String[] { "AM", "PM" }));
-		cbHorario.setBounds(490, 22, 58, 28);
-		cbHorario.setSelectedItem(null);
-		pnlLocalDeTrabalho.add(cbHorario);
-
 		pnlPerfilSocioEconomico = new JPanel();
 		pnlPerfilSocioEconomico.setBorder(new TitledBorder(null, "Perfil S\u00F3cio Economico", TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
-		pnlPerfilSocioEconomico.setBounds(10, 387, 554, 106);
+		pnlPerfilSocioEconomico.setBounds(10, 414, 804, 106);
 		getContentPane().add(pnlPerfilSocioEconomico);
 		pnlPerfilSocioEconomico.setLayout(null);
 
@@ -305,14 +334,6 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 		lblRenda.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblRenda.setBounds(10, 21, 69, 28);
 		pnlPerfilSocioEconomico.add(lblRenda);
-
-		cbRenda = new JComboBox();
-		cbRenda.setEnabled(false);
-		cbRenda.setModel(new DefaultComboBoxModel(new String[] { "1 Sal\u00E1rio", "2 Sal\u00E1rios", "3 Sal\u00E1rios",
-				"4 Sal\u00E1rios", "5 Sal\u00E1rios", "6 Sal\u00E1rios ou mais" }));
-		cbRenda.setBounds(59, 21, 119, 28);
-		cbRenda.setSelectedItem(null);
-		pnlPerfilSocioEconomico.add(cbRenda);
 
 		lblCasaPropria = new JLabel("Casa Propria");
 		lblCasaPropria.setHorizontalAlignment(SwingConstants.LEFT);
@@ -333,26 +354,65 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 		lblNumeroDeFilhos.setBounds(361, 21, 130, 28);
 		pnlPerfilSocioEconomico.add(lblNumeroDeFilhos);
 
-		cbNumFilhos = new JComboBox();
-		cbNumFilhos.setEnabled(false);
-		cbNumFilhos.setModel(new DefaultComboBoxModel(new String[] { "0", "1", "2", "3", "4", "5", "6 ou mais" }));
-		cbNumFilhos.setBounds(478, 21, 66, 28);
-		cbNumFilhos.setSelectedItem(null);
-		pnlPerfilSocioEconomico.add(cbNumFilhos);
-
 		lblNumeroDePessoasQueResidemNaCasa = new JLabel("Numero de Pessoas que Residem na Casa");
 		lblNumeroDePessoasQueResidemNaCasa.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNumeroDePessoasQueResidemNaCasa.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNumeroDePessoasQueResidemNaCasa.setBounds(10, 60, 283, 28);
 		pnlPerfilSocioEconomico.add(lblNumeroDePessoasQueResidemNaCasa);
 
-		cbNumeroDePessoasQueResidemNaCasa = new JComboBox();
-		cbNumeroDePessoasQueResidemNaCasa.setEnabled(false);
-		cbNumeroDePessoasQueResidemNaCasa
-				.setModel(new DefaultComboBoxModel(new String[] { "1", "2", "3", "4", "5", "6 ou mais" }));
-		cbNumeroDePessoasQueResidemNaCasa.setBounds(293, 60, 58, 28);
-		cbNumeroDePessoasQueResidemNaCasa.setSelectedItem(null);
-		pnlPerfilSocioEconomico.add(cbNumeroDePessoasQueResidemNaCasa);
+		txtRenda = new JTextField();
+		txtRenda.setEnabled(false);
+		txtRenda.setColumns(10);
+		txtRenda.setBounds(59, 21, 119, 28);
+		pnlPerfilSocioEconomico.add(txtRenda);
+
+		txtNumeroFilho = new JTextField();
+		txtNumeroFilho.setEnabled(false);
+		txtNumeroFilho.setBounds(474, 21, 58, 28);
+		pnlPerfilSocioEconomico.add(txtNumeroFilho);
+
+		txtNumeroPessoasCasa = new JTextField();
+		txtNumeroPessoasCasa.setEnabled(false);
+		txtNumeroPessoasCasa.setBounds(293, 60, 58, 28);
+		pnlPerfilSocioEconomico.add(txtNumeroPessoasCasa);
+
+	}
+
+	public void preencheCadastro(Responsavel responsavel) {
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+		FuncoesGlobais.limpaCampos(pnlCadastroResponsavel);
+		FuncoesGlobais.limpaCampos(pnlLocalDeTrabalho);
+		FuncoesGlobais.limpaCampos(pnlPerfilSocioEconomico);
+		FuncoesGlobais.resetaBordaPadrao(pnlCadastroResponsavel);
+		FuncoesGlobais.resetaBordaPadrao(pnlLocalDeTrabalho);
+		FuncoesGlobais.resetaBordaPadrao(pnlPerfilSocioEconomico);
+		FuncoesGlobais.desativaCampos(pnlCadastroResponsavel);
+		FuncoesGlobais.desativaCampos(pnlLocalDeTrabalho);
+		FuncoesGlobais.desativaCampos(pnlPerfilSocioEconomico);
+
+		btnNovo.setEnabled(true);
+		btnAlterar.setEnabled(true);
+		btnExcluir.setEnabled(true);
+		btnPesquisar.setEnabled(true);
+
+		txtRegistro.setText(Integer.toString(responsavel.getRegistro()));
+		txtNome.setText(responsavel.getNome_do_Responsavel());
+		cbGrauInstrucao.setSelectedItem(responsavel.getGrau_de_Intrucao());
+		txtProfissao.setText(responsavel.getProfissao());
+		txtNomeDoLocal.setText(responsavel.getLocal_de_Trabalho());
+		txtHorario.setValue(responsavel.getHorario_de_Trabalho());
+		cbLogradouro.setSelectedItem(responsavel.getLogradouro());
+		txtEndereco.setText(responsavel.getEndereco());
+		txtNumero.setText(responsavel.getNumeroCasa() == 0 ? null : Integer.toString(responsavel.getNumeroCasa()));
+		txtDataDeNascimento.setValue(new SimpleDateFormat("dd/MM/yyyy").format(responsavel.getData_de_Nascimento()));
+		txtRG.setText(responsavel.getRG());
+		txtCPF.setText(responsavel.getCPF());
+		txtRenda.setText(Double.toString(responsavel.getRenda()));
+		cbCasaPropria.setSelectedItem(responsavel.getCasa_Propria() == true ? "Sim" : "Não");
+		txtNumeroFilho.setText(Integer.toString(responsavel.getNumero_de_Filhos()));
+		txtNumeroPessoasCasa.setText(Integer.toString(responsavel.getNumero_de_Pessoas_que_Residem_na_Casa()));
+		// Time horarioTrabalho = new Time(new
+		// SimpleDateFormat("HH:mm").parse(txtHorario.getText()).getTime());
 
 	}
 
@@ -362,6 +422,10 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 				btnNovo_click();
 			} else if (e.getSource() == btnSalvar) {
 				btnSalvar_click();
+			} else if (e.getSource() == btnExcluir) {
+				btnExcluir_click();
+			} else if (e.getSource() == btnAlterar) {
+				btnAlterar_click();
 			} else if (e.getSource() == btnCancelar) {
 				btnCancelar_click();
 			} else if (e.getSource() == btnPesquisar) {
@@ -391,32 +455,107 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 	}
 
 	private void btnSalvar_click() {
-		if (FuncoesGlobais.verificaCampos(pnlCadastroResponsavel)
-				| FuncoesGlobais.verificaCampos(pnlPerfilSocioEconomico)
-				| FuncoesGlobais.verificaCampos(pnlLocalDeTrabalho)) {
-			JOptionPane.showMessageDialog(this, "Erro - Os campos em vermelho devem ser preenchidos!", "Sistema",
-					JOptionPane.ERROR_MESSAGE);
-		}
 
-		else {
-			if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o novo cadastrado?", "Sistema",
-					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
+		if (txtRegistro.getText() == "NOVO") {
+			ArrayList<Component> listaComp = new ArrayList<>();
+			listaComp.add(txtNumero);
 
-				FuncoesGlobais.limpaCampos(pnlCadastroResponsavel);
-				FuncoesGlobais.limpaCampos(pnlPerfilSocioEconomico);
-				FuncoesGlobais.limpaCampos(pnlLocalDeTrabalho);
-				FuncoesGlobais.desativaCampos(pnlCadastroResponsavel);
-				FuncoesGlobais.desativaCampos(pnlPerfilSocioEconomico);
-				FuncoesGlobais.desativaCampos(pnlLocalDeTrabalho);
-				FuncoesGlobais.desativaCampos(pnlBotoes);
+			if (FuncoesGlobais.verificaCampos(pnlCadastroResponsavel)
+					| FuncoesGlobais.verificaCampos(pnlPerfilSocioEconomico)
+					| FuncoesGlobais.verificaCampos(pnlLocalDeTrabalho, listaComp)) {
+				JOptionPane.showMessageDialog(this, "Erro - Os campos em vermelho devem ser preenchidos!", "Sistema",
+						JOptionPane.ERROR_MESSAGE);
+			}
 
-				btnNovo.setEnabled(true);
-				btnPesquisar.setEnabled(true);
+			else {
+				if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o novo cadastrado?", "Sistema",
+						JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
 
-				JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
-						JOptionPane.INFORMATION_MESSAGE);
+					try {
+						Responsavel responsavel = new Responsavel();
+
+						responsavel.setCPF(txtCPF.getText().replace(".", ""));
+						responsavel.setNome_do_Responsavel(txtNome.getText());
+						responsavel.setGrau_de_Intrucao(cbGrauInstrucao.getSelectedItem().toString());
+						responsavel.setRG(txtRG.getText());
+						responsavel.setProfissao(txtProfissao.getText());
+						responsavel.setData_de_Nascimento(
+								new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeNascimento.getText()));
+						responsavel.setLocal_de_Trabalho(txtNomeDoLocal.getText());
+						Time horarioTrabalho = new Time(
+								new SimpleDateFormat("HH:mm").parse(txtHorario.getText()).getTime());
+						responsavel.setHorario_de_Trabalho(horarioTrabalho);
+						responsavel.setLogradouro(cbLogradouro.getSelectedItem().toString());
+						responsavel.setEndereco(txtEndereco.getText());
+						responsavel.setNumeroCasa(
+								txtNumero.getText().isEmpty() ? 0 : Integer.parseInt(txtNumero.getText()));
+						responsavel.setRenda(Double.parseDouble(txtRenda.getText()));
+						responsavel.setCasa_Propria(cbCasaPropria.getSelectedItem().toString() == "Sim" ? true : false);
+						responsavel.setNumero_de_Filhos(Integer.parseInt(txtNumeroFilho.getText()));
+						responsavel.setNumero_de_Pessoas_que_Residem_na_Casa(
+								Integer.parseInt(txtNumeroPessoasCasa.getText()));
+
+						DAOResponsavel daoResponsavel = new DAOResponsavel();
+						daoResponsavel.novoResponsavel(responsavel);
+
+						FuncoesGlobais.limpaCampos(pnlCadastroResponsavel);
+						FuncoesGlobais.limpaCampos(pnlPerfilSocioEconomico);
+						FuncoesGlobais.limpaCampos(pnlLocalDeTrabalho);
+						FuncoesGlobais.desativaCampos(pnlCadastroResponsavel);
+						FuncoesGlobais.desativaCampos(pnlPerfilSocioEconomico);
+						FuncoesGlobais.desativaCampos(pnlLocalDeTrabalho);
+						FuncoesGlobais.desativaCampos(pnlBotoes);
+
+						btnNovo.setEnabled(true);
+						btnPesquisar.setEnabled(true);
+
+						JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
+								JOptionPane.INFORMATION_MESSAGE);
+					} catch (ParseException | SQLException e) {
+						e.printStackTrace();
+
+						JOptionPane.showMessageDialog(this, "Erro ao tentar salvar o cadastro!", "Sistema",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
 			}
 		}
+	}
+
+	private void btnExcluir_click() throws NumberFormatException, SQLException {
+
+		if (JOptionPane.showConfirmDialog(this, "Deseja realmente excluir o cadastro?", "Sistema",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+			DAOResponsavel daoResponsavel = new DAOResponsavel();
+
+			daoResponsavel.excluirResponsavel(Integer.parseInt(txtRegistro.getText()));
+			JOptionPane.showMessageDialog(this, "Registro excluido com sucesso!", "Sistema",
+					JOptionPane.INFORMATION_MESSAGE);
+
+			FuncoesGlobais.limpaCampos(pnlCadastroResponsavel);
+			FuncoesGlobais.limpaCampos(pnlLocalDeTrabalho);
+			FuncoesGlobais.limpaCampos(pnlPerfilSocioEconomico);
+			FuncoesGlobais.desativaCampos(pnlCadastroResponsavel);
+			FuncoesGlobais.desativaCampos(pnlLocalDeTrabalho);
+			FuncoesGlobais.desativaCampos(pnlPerfilSocioEconomico);
+			FuncoesGlobais.desativaCampos(pnlBotoes);
+
+			btnNovo.setEnabled(true);
+			btnPesquisar.setEnabled(true);
+			btnNovo.requestFocus();
+		}
+	}
+
+	private void btnAlterar_click() {
+		FuncoesGlobais.ativaCampos(pnlCadastroResponsavel);
+		FuncoesGlobais.ativaCampos(pnlLocalDeTrabalho);
+		FuncoesGlobais.ativaCampos(pnlPerfilSocioEconomico);
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+
+		btnSalvar.setEnabled(true);
+		btnCancelar.setEnabled(true);
+		txtRegistro.setEnabled(false);
+		txtCPF.requestFocus();
 	}
 
 	private void btnCancelar_click() {
@@ -445,9 +584,15 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 
 	private void btnPesquisar_click() throws ParseException, SQLException, PropertyVetoException {
 		if (frmPesquisaResponsavel.getInstance().isVisible()) {
+			frmPesquisaResponsavel.getInstance().atualizaDados(); // Atualiza os dados do formulario
+			frmPesquisaResponsavel.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaResponsavel.getInstance().getBtnConfirma().setText("Abrir cadastro de responsável");
 			frmPesquisaResponsavel.getInstance().setSelected(true);
 		} else {
+			frmPesquisaResponsavel.getInstance().atualizaDados(); // Atualiza os dados do formulario
 			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaResponsavel.getInstance());
+			frmPesquisaResponsavel.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaResponsavel.getInstance().getBtnConfirma().setText("Abrir cadastro de responsável");
 			frmPesquisaResponsavel.getInstance().setVisible(true);
 			frmPesquisaResponsavel.getInstance().setSelected(true);
 		}
@@ -456,11 +601,12 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
 
+	// Limpar o buffer da memoria
 	public void internalFrameClosed(InternalFrameEvent e) {
+		this.singleton = null;
 	}
 
 	public void internalFrameClosing(InternalFrameEvent e) {
-		this.singleton = null;
 	}
 
 	public void internalFrameDeactivated(InternalFrameEvent e) {

@@ -35,4 +35,16 @@ public class DAOCargo {
 		
 		return rs.getInt("ID");
 	}
+	
+	public void novoCargo(Cargo cargo) throws SQLException {
+		SQL = "INSERT INTO CARGO (NOME, DESCRICAO) VALUES (?, ?)";
+		
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setString(1, cargo.getNome());
+		preparedStatement.setString(2, cargo.getDescricao());
+		
+		preparedStatement.execute();
+		
+		System.out.println("Cadastro de cargo com sucesso!");
+	}
 }

@@ -59,7 +59,14 @@ public class ComboKeyHandler extends KeyAdapter {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_RIGHT:
 			for (String s : list) {
+				String comparacao = s.toUpperCase();
+				/*
 				if (s.startsWith(text)) {
+					textField.setText(s);
+					return;
+				}*/
+				
+				if (comparacao.startsWith(text.toUpperCase())) {
 					textField.setText(s);
 					return;
 				}
@@ -93,15 +100,18 @@ public class ComboKeyHandler extends KeyAdapter {
 		DefaultComboBoxModel<String> m = new DefaultComboBoxModel<>();
 		for (String s : list) {
 			
-				//String comparacao = s.toUpperCase();
+				String comparacao = s.toUpperCase();
 				//s = s.toUpperCase();
 				//System.out.println("Comparacao : " + comparacao);
 				
-				if (s.startsWith(text)) {
+				/*if (s.startsWith(text)) {
 					//System.out.println("Text: " + text);
 					m.addElement(s);
+				}*/
+				
+				if (comparacao.startsWith(text.toUpperCase())) {
+					m.addElement(s);
 				}
-			
 		}
 		return m;
 	}

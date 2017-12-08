@@ -149,7 +149,7 @@ public class FuncoesGlobais {
 					pula_campo = true;
 				}
 			}
-			
+
 			if (!pula_campo) {
 				// JTextField
 				if (c instanceof JTextField && !(c instanceof JFormattedTextField)) {
@@ -246,4 +246,5 @@ public class FuncoesGlobais {
 			}
 		}
 	}
+	
 }

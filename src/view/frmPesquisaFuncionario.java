@@ -1,46 +1,43 @@
 package view;
 
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
-import controler.ComboKeyHandler;
-import controler.FuncoesGlobais;
-import dao.DAOCargo;
-import dao.DAOFuncionario;
-import tableModel.FuncionarioTableModel;
+import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
-import javax.swing.event.InternalFrameEvent;
-import javax.swing.JRadioButton;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
-public class frmPesquisaFuncionario extends JInternalFrame implements DocumentListener, ActionListener, InternalFrameListener {
+import controler.FuncoesGlobais;
+import dao.DAOFuncionario;
+import tableModel.FuncionarioTableModel;
+import javax.swing.SwingConstants;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+public class frmPesquisaFuncionario extends JInternalFrame implements DocumentListener, ActionListener, InternalFrameListener, KeyListener {
 	private JTable tbTabelaFuncionario;
-	private JButton btnAbrirCadastroFuncionario;
+	private JButton btnConfirma;
 
 	private static frmPesquisaFuncionario singleton = null;
 	private JPanel pnlFiltros;
@@ -51,7 +48,8 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 	private JRadioButton rdbtnFiltrarPorCpf;
 	private JTextField txtBuscarPor;
 	private JLabel lblBuscarPor;
-
+	private FuncionarioTableModel funcionarioTableModel;
+	
 	public static frmPesquisaFuncionario getInstance() throws ParseException, SQLException {
 
 		if (singleton == null) {
@@ -73,8 +71,6 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 		// pane.remove(0);
 		pane.getComponent(0).setVisible(false);
 
-		DAOFuncionario daoFuncionario = new DAOFuncionario();
-
 		pnlFiltros = new JPanel();
 		pnlFiltros.setBorder(new TitledBorder(null, "Filtros", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		pnlFiltros.setBounds(10, 11, 772, 84);
@@ -90,14 +86,17 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 		pnlFiltros.add(rdbtnFiltrarPorRegistro);
 
 		rdbtnFiltrarPorNome = new JRadioButton("Filtrar por nome");
+		rdbtnFiltrarPorNome.addActionListener(this);
 		rdbtnFiltrarPorNome.setBounds(144, 13, 122, 23);
 		pnlFiltros.add(rdbtnFiltrarPorNome);
 
 		rdbtnFiltrarPorCpf = new JRadioButton("Filtrar por CPF");
+		rdbtnFiltrarPorCpf.addActionListener(this);
 		rdbtnFiltrarPorCpf.setBounds(266, 13, 122, 23);
 		pnlFiltros.add(rdbtnFiltrarPorCpf);
 
 		rdbtnFiltrarPorCargo = new JRadioButton("Filtrar por cargo");
+		rdbtnFiltrarPorCargo.addActionListener(this);
 		rdbtnFiltrarPorCargo.setBounds(387, 13, 122, 23);
 		pnlFiltros.add(rdbtnFiltrarPorCargo);
 
@@ -111,32 +110,33 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 		pnlFiltros.add(lblBuscarPor);
 
 		txtBuscarPor = new JTextField();
+		txtBuscarPor.addKeyListener(this);
+		txtBuscarPor.setHorizontalAlignment(SwingConstants.LEFT);
 		txtBuscarPor.setBounds(144, 43, 365, 28);
 		pnlFiltros.add(txtBuscarPor);
 		txtBuscarPor.setColumns(10);
 		txtBuscarPor.getDocument().addDocumentListener(this);
-
+		
 		srpPainelTabela = new JScrollPane();
 		srpPainelTabela.setBounds(10, 107, 772, 334);
 		getContentPane().add(srpPainelTabela);
 
+		// Preenche a Table com a lista de usuarios
 		tbTabelaFuncionario = new JTable();
 		tbTabelaFuncionario.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		FuncionarioTableModel model = new FuncionarioTableModel();
-		tbTabelaFuncionario.setModel(model);
-
-		// Preenche a Table com a lista de usuarios
-		model.addListaDeFuncionario(daoFuncionario.listaFuncionario());
+		funcionarioTableModel = new FuncionarioTableModel();
+		funcionarioTableModel.addListaDeFuncionarios(new DAOFuncionario().listaFuncionario());
+		tbTabelaFuncionario.setModel(funcionarioTableModel);
 		srpPainelTabela.setViewportView(tbTabelaFuncionario);
-
-		btnAbrirCadastroFuncionario = new JButton("Abrir cadastro de funcionario");
-		btnAbrirCadastroFuncionario.addActionListener(this);
-		btnAbrirCadastroFuncionario.setBounds(594, 446, 188, 28);
-		getContentPane().add(btnAbrirCadastroFuncionario);
-
-		JButton btnAbrirCadastroDeUsuario = new JButton("Abrir cadastro de usuario");
-		btnAbrirCadastroDeUsuario.setBounds(404, 446, 180, 28);
-		getContentPane().add(btnAbrirCadastroDeUsuario);
+		
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(funcionarioTableModel);
+		tbTabelaFuncionario.setRowSorter(sorter);
+		
+		btnConfirma = new JButton("Confirma");
+		btnConfirma.addActionListener(this);
+		btnConfirma.setBounds(578, 446, 204, 28);
+		btnConfirma.setVisible(false);
+		getContentPane().add(btnConfirma);
 	}
 
 	public void focusLost(FocusEvent e) {
@@ -170,69 +170,145 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 	}
 
 	private void txtBuscarPor_documentUpdate() throws SQLException {
-		DAOFuncionario dao = new DAOFuncionario();
-		System.out.println(dao.buscaFuncionario(0));
+
+		if (!txtBuscarPor.getText().isEmpty()) {
+			tbTabelaFuncionario.setRowSorter(null);
+			funcionarioTableModel.limpar();
+			
+			if (rdbtnFiltrarPorRegistro.isSelected())
+				funcionarioTableModel.addListaDeFuncionarios(new DAOFuncionario().listaFuncionario(Integer.parseInt(txtBuscarPor.getText())));
+			else if (rdbtnFiltrarPorNome.isSelected())
+				funcionarioTableModel.addListaDeFuncionarios(new DAOFuncionario().listaFuncionarioNome(txtBuscarPor.getText()));
+			else if (rdbtnFiltrarPorCargo.isSelected())
+				funcionarioTableModel.addListaDeFuncionarios(new DAOFuncionario().listaFuncionarioCargo(txtBuscarPor.getText()));
+			else if (rdbtnFiltrarPorCpf.isSelected())
+				funcionarioTableModel.addListaDeFuncionarios(new DAOFuncionario().listaFuncionarioCPF(txtBuscarPor.getText()));
+			
+			TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(funcionarioTableModel);
+			tbTabelaFuncionario.setRowSorter(sorter);
+		}else {
+			tbTabelaFuncionario.setRowSorter(null);
+			funcionarioTableModel.limpar();
+			funcionarioTableModel.addListaDeFuncionarios(new DAOFuncionario().listaFuncionario());
+			
+			TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(funcionarioTableModel);
+			tbTabelaFuncionario.setRowSorter(sorter);
+		}
+		//tbTabelaFuncionario.setModel(model);
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		try {
 			if (e.getSource() == rdbtnFiltrarPorCargo) {
 				rdbtnFiltrarPorCargo_click();
-			} else if (e.getSource() == btnAbrirCadastroFuncionario) {
-				btnAbrirCadastroFuncionario_click();
-			}
+			} else if (e.getSource() == rdbtnFiltrarPorRegistro) {
+				rdbtnFiltrarPorRegistro_click();
+			} else if (e.getSource() == rdbtnFiltrarPorCpf) {
+				rdbtnFiltrarPorCPF_click();
+			} else if (e.getSource() == rdbtnFiltrarPorNome) {
+				rdbtnFiltrarPorNome_click();
+			} else if (e.getSource() == btnConfirma) {
+				btnConfirma_click();
+			} 
 		} catch (ParseException | SQLException | PropertyVetoException ex) {
-			JOptionPane.showMessageDialog(this, "Erro ao tentar abrir o cadastro de funcionario!", "Sistema", JOptionPane.ERROR_MESSAGE);
+			System.out.println(ex.getMessage());
+			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação!", "Sistema", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
-	private void btnAbrirCadastroFuncionario_click() throws ParseException, SQLException, PropertyVetoException {
-		if (tbTabelaFuncionario.getSelectedRow() > -1) {
-			FuncionarioTableModel model = new FuncionarioTableModel();
-			model = (FuncionarioTableModel) tbTabelaFuncionario.getModel();
-
-			frmCadastroFuncionario.getInstance();
-
-			if (frmCadastroFuncionario.getInstance().isVisible()) {
-				frmCadastroFuncionario.getInstance().preencheCadastro(new DAOFuncionario()
-						.buscaFuncionario(model.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
-				frmCadastroFuncionario.getInstance().setSelected(true);
+	
+	private void btnConfirma_click() throws ParseException, SQLException, PropertyVetoException {
+		if (btnConfirma.getText().equals("Abrir cadastro de funcionario")) {
+			if (tbTabelaFuncionario.getSelectedRow() > -1) {
+				frmCadastroFuncionario.getInstance();
+	
+				if (frmCadastroFuncionario.getInstance().isVisible()) {
+					frmCadastroFuncionario.getInstance().preencheCadastro(new DAOFuncionario()
+							.buscaFuncionario(funcionarioTableModel.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
+					frmCadastroFuncionario.getInstance().setSelected(true);
+				} else {
+	
+					frmCadastroFuncionario.getInstance().setVisible(true);
+					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroFuncionario.getInstance());
+					frmCadastroFuncionario.getInstance().setSelected(true);
+					frmCadastroFuncionario.getInstance().preencheCadastro(new DAOFuncionario()
+							.buscaFuncionario(funcionarioTableModel.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
+				}
+	
+				dispose();
 			} else {
-
-				frmCadastroFuncionario.getInstance().setVisible(true);
-				frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroFuncionario.getInstance());
-				frmCadastroFuncionario.getInstance().setSelected(true);
-				frmCadastroFuncionario.getInstance().preencheCadastro(new DAOFuncionario()
-						.buscaFuncionario(model.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
+				JOptionPane.showMessageDialog(this, "Selecione um registro para abrir o cadastro de funcionario!",
+						"Sistema", JOptionPane.ERROR_MESSAGE);
 			}
-
-			dispose();
-		} else {
-			JOptionPane.showMessageDialog(this, "Selecione um registro para abrir o cadastro de funcionario!",
-					"Sistema", JOptionPane.ERROR_MESSAGE);
+		}else if (btnConfirma.getText() == "Abrir cadastro de usuário") {
+			if (tbTabelaFuncionario.getSelectedRow() > -1) {
+	
+				frmCadastroUsuario.getInstance();
+	
+				if (frmCadastroUsuario.getInstance().isVisible()) {
+					frmCadastroUsuario.getInstance().preencheFuncionario(funcionarioTableModel.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro());
+					frmCadastroUsuario.getInstance().setSelected(true);
+				} else {
+					frmCadastroUsuario.getInstance().setVisible(true);
+					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroUsuario.getInstance());
+					frmCadastroUsuario.getInstance().setSelected(true);
+					frmCadastroUsuario.getInstance().preencheFuncionario(funcionarioTableModel.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro());
+				}
+	
+				dispose();
+			} else {
+				JOptionPane.showMessageDialog(this, "Selecione um registro para abrir o cadastro de usuário!",
+						"Sistema", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 
 	private void rdbtnFiltrarPorCargo_click() {
-
+		txtBuscarPor.setText(null);
+		txtBuscarPor.requestFocus();
 	}
-
+	
+	private void rdbtnFiltrarPorNome_click() {
+		txtBuscarPor.setText(null);
+		txtBuscarPor.requestFocus();
+	}
+	
+	private void rdbtnFiltrarPorCPF_click() {
+		txtBuscarPor.setText(null);
+		txtBuscarPor.requestFocus();
+	}
+	
+	private void rdbtnFiltrarPorRegistro_click() {
+		txtBuscarPor.setText(null);
+		txtBuscarPor.requestFocus();
+	}
+	
 	// Atualiza os dados dos funcionarios cadastrados
 	public void atualizaDados() throws SQLException {
-
-		DAOCargo daoCargo = new DAOCargo();
-		DAOFuncionario daoFuncionario = new DAOFuncionario();
-
-		FuncionarioTableModel model = new FuncionarioTableModel();
-		model.addListaDeFuncionario(daoFuncionario.listaFuncionario());
-
-		tbTabelaFuncionario.setModel(model);
+		System.out.println("Atualizando dados funcionario");
+		txtBuscarPor.setText(null);
+		tbTabelaFuncionario.setRowSorter(null);
+		funcionarioTableModel.limpar();
+		funcionarioTableModel.addListaDeFuncionarios(new DAOFuncionario().listaFuncionario());
+		
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(funcionarioTableModel);
+		tbTabelaFuncionario.setRowSorter(sorter);
+		
+		//tbTabelaFuncionario.setModel(model);
 		FuncoesGlobais.limpaCampos(pnlFiltros);
+	}
+
+	public JButton getBtnConfirma() {
+		return btnConfirma;
+	}
+
+	public void setBtnConfirma(JButton btnConfirma) {
+		this.btnConfirma = btnConfirma;
 	}
 
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
-
+	
+	//Limpa buffer da memoria
 	public void internalFrameClosed(InternalFrameEvent e) {
 		this.singleton = null;
 	}
@@ -251,5 +327,22 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 	}
 
 	public void internalFrameOpened(InternalFrameEvent e) {
+	}
+	
+	public void keyPressed(KeyEvent e) {
+	}
+	public void keyReleased(KeyEvent e) {
+	}
+	public void keyTyped(KeyEvent e) {
+		if (e.getSource() == txtBuscarPor) {
+			String caracteres = "0123456789";
+			
+			if (txtBuscarPor.getText().length() >= 10 && rdbtnFiltrarPorRegistro.isSelected())
+				e.consume();
+			
+			if (!caracteres.contains(e.getKeyChar() + "") && rdbtnFiltrarPorRegistro.isSelected())
+				e.consume();
+			
+		}
 	}
 }

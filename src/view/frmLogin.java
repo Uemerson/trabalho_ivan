@@ -79,7 +79,7 @@ public class frmLogin extends JFrame implements ActionListener, KeyListener, Win
 		
 		cbLogin.setModel(cbLoginModel);
 		cbLogin.setBounds(10, 172, 205, 28);
-		//cbLogin.setSelectedItem(null);
+		cbLogin.setSelectedItem(null);
 		
 		cbLogin.setEditable(true);
 		JTextField edtCbLogin = (JTextField) cbLogin.getEditor().getEditorComponent();
@@ -94,7 +94,7 @@ public class frmLogin extends JFrame implements ActionListener, KeyListener, Win
 		DAOUsuario dao = new DAOUsuario();
 		
 		if (dao.verificaLogin(new Usuario(cbLogin.getSelectedIndex(), cbLogin.getSelectedItem().toString(), txtSenha.getText())) != null) {
-           JOptionPane.showMessageDialog(null,"Login realizado com sucesso", "Sistema", JOptionPane.INFORMATION_MESSAGE);
+           //JOptionPane.showMessageDialog(null,"Login realizado com sucesso", "Sistema", JOptionPane.INFORMATION_MESSAGE);
            
            dispose();
            

@@ -1,13 +1,18 @@
 package view;
 
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
@@ -21,10 +26,11 @@ import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.text.MaskFormatter;
 
 import controler.FuncoesGlobais;
-import javax.swing.ImageIcon;
+import model.Aluno;
 
 public class frmCadastroAluno extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JButton btnNovo;
@@ -47,15 +53,15 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 	private JLabel lblCor;
 	private JComboBox cbCor;
 	private JLabel lblRaca;
-	private JComboBox cbRaça;
+	private JComboBox cbRaca;
 	private JLabel lblEndereco;
-	private JTextField txtEndereco;
+	private JTextField txtNumeroCasa;
 	private JLabel lblDataDeNascimento;
 	private JLabel lblTelefoneResidencial;
 	private JLabel lblTelefoneComercial;
 	private JLabel lblCelular;
 	private JLabel lblEmail;
-	private JTextField textEmail;
+	private JTextField txtEmail;
 	private JLabel lblLocalDeOrigem;
 	private JLabel lblRedeEstabelecimentoDe;
 	private JLabel lblSituacaoDoAlunoAnoAnterior;
@@ -64,11 +70,11 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 	private JTextField txtRedeEstabelecimentoDeOrdemDoAluno;
 	private JTextField txtSituacaoAnoAnterior;
 	private JEditorPane edpObservacoesAluno;
-	private JFormattedTextField txtTelefoneResidencial;
+	private JFormattedTextField txtTelComercial;
 	private JLabel lblLogradouro;
 	private JComboBox cbLogradouro;
 	private JLabel lblNumero;
-	private JTextField textField;
+	private JTextField txtEndereco;
 	private JFormattedTextField txtTelResidencial;
 	private JFormattedTextField txtCelular;
 	private JFormattedTextField txtDataDeNascimento;
@@ -92,6 +98,11 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 	}
 
 	public frmCadastroAluno() throws ParseException {
+		// Hack para remover icone do nimbus
+		Container pane = ((BasicInternalFrameUI) this.getUI()).getNorthPane();
+		// pane.remove(0);
+		pane.getComponent(0).setVisible(false);
+		
 		addInternalFrameListener(this);
 		setClosable(true);
 		setTitle("Cadastro de aluno");
@@ -168,7 +179,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 
 		txtNome = new JTextField();
 		txtNome.setEnabled(false);
-		txtNome.setBounds(100, 97, 328, 28);
+		txtNome.setBounds(100, 97, 296, 28);
 		pnlInformacoesAluno.add(txtNome);
 		txtNome.setColumns(10);
 
@@ -187,13 +198,13 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		lblRg = new JLabel("RG");
 		lblRg.setHorizontalAlignment(SwingConstants.LEFT);
 		lblRg.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblRg.setBounds(438, 97, 36, 28);
+		lblRg.setBounds(406, 97, 36, 28);
 		pnlInformacoesAluno.add(lblRg);
 
 		txtRG = new JTextField();
 		txtRG.setEnabled(false);
 		txtRG.setColumns(10);
-		txtRG.setBounds(484, 97, 92, 28);
+		txtRG.setBounds(452, 97, 124, 28);
 		pnlInformacoesAluno.add(txtRG);
 
 		lblOrgaoEmissor = new JLabel("\u00D3rg\u00E3o  Emissor");
@@ -246,12 +257,12 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		lblRaca.setBounds(448, 177, 69, 28);
 		pnlInformacoesAluno.add(lblRaca);
 
-		cbRaça = new JComboBox();
-		cbRaça.setModel(new DefaultComboBoxModel(new String[] { "Ind\u00EDgina", "Afrodescendente" }));
-		cbRaça.setEnabled(false);
-		cbRaça.setBounds(515, 177, 90, 28);
-		cbRaça.setSelectedItem(null);
-		pnlInformacoesAluno.add(cbRaça);
+		cbRaca = new JComboBox();
+		cbRaca.setModel(new DefaultComboBoxModel(new String[] { "Ind\u00EDgina", "Afrodescendente" }));
+		cbRaca.setEnabled(false);
+		cbRaca.setBounds(515, 177, 90, 28);
+		cbRaca.setSelectedItem(null);
+		pnlInformacoesAluno.add(cbRaca);
 
 		lblEndereco = new JLabel("Endere\u00E7o");
 		lblEndereco.setHorizontalAlignment(SwingConstants.LEFT);
@@ -259,12 +270,12 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		lblEndereco.setBounds(178, 136, 69, 28);
 		pnlInformacoesAluno.add(lblEndereco);
 
-		txtEndereco = new JTextField();
-		txtEndereco.setEnabled(false);
-		txtEndereco.setHorizontalAlignment(SwingConstants.RIGHT);
-		txtEndereco.setColumns(10);
-		txtEndereco.setBounds(558, 136, 47, 28);
-		pnlInformacoesAluno.add(txtEndereco);
+		txtNumeroCasa = new JTextField();
+		txtNumeroCasa.setEnabled(false);
+		txtNumeroCasa.setHorizontalAlignment(SwingConstants.RIGHT);
+		txtNumeroCasa.setColumns(10);
+		txtNumeroCasa.setBounds(558, 136, 47, 28);
+		pnlInformacoesAluno.add(txtNumeroCasa);
 
 		lblDataDeNascimento = new JLabel("Data de Nascimento");
 		lblDataDeNascimento.setHorizontalAlignment(SwingConstants.CENTER);
@@ -296,16 +307,16 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		lblEmail.setBounds(10, 177, 80, 28);
 		pnlInformacoesAluno.add(lblEmail);
 
-		textEmail = new JTextField();
-		textEmail.setEnabled(false);
-		textEmail.setColumns(10);
-		textEmail.setBounds(100, 177, 338, 28);
-		pnlInformacoesAluno.add(textEmail);
+		txtEmail = new JTextField();
+		txtEmail.setEnabled(false);
+		txtEmail.setColumns(10);
+		txtEmail.setBounds(100, 177, 338, 28);
+		pnlInformacoesAluno.add(txtEmail);
 
-		txtTelefoneResidencial = new JFormattedTextField(new MaskFormatter("(##)####-####"));
-		txtTelefoneResidencial.setEnabled(false);
-		txtTelefoneResidencial.setBounds(139, 214, 139, 30);
-		pnlInformacoesAluno.add(txtTelefoneResidencial);
+		txtTelComercial = new JFormattedTextField(new MaskFormatter("(##)####-####"));
+		txtTelComercial.setEnabled(false);
+		txtTelComercial.setBounds(139, 214, 139, 30);
+		pnlInformacoesAluno.add(txtTelComercial);
 
 		lblLogradouro = new JLabel("Logradouro");
 		lblLogradouro.setHorizontalAlignment(SwingConstants.LEFT);
@@ -326,11 +337,11 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		lblNumero.setBounds(534, 136, 14, 28);
 		pnlInformacoesAluno.add(lblNumero);
 
-		textField = new JTextField();
-		textField.setEnabled(false);
-		textField.setColumns(10);
-		textField.setBounds(257, 136, 271, 28);
-		pnlInformacoesAluno.add(textField);
+		txtEndereco = new JTextField();
+		txtEndereco.setEnabled(false);
+		txtEndereco.setColumns(10);
+		txtEndereco.setBounds(257, 136, 271, 28);
+		pnlInformacoesAluno.add(txtEndereco);
 
 		txtTelResidencial = new JFormattedTextField(new MaskFormatter("(##)####-####"));
 		txtTelResidencial.setEnabled(false);
@@ -491,8 +502,20 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 	}
 
 	private void btnSalvar_click() {
-		if (FuncoesGlobais.verificaCampos(pnlInformacoesAluno) == true
-				| FuncoesGlobais.verificaCampos(pnlInformacoesPessoaisDoAluno)) {
+		ArrayList<Component> listaCompInfoAluno = new ArrayList<>(),
+								listaCompInfoPessoais = new ArrayList<>();
+		
+		listaCompInfoAluno.add(txtTelComercial);
+		listaCompInfoAluno.add(txtTelResidencial);
+		listaCompInfoAluno.add(txtEmail);
+		
+		listaCompInfoPessoais.add(txtLocalOrigem);
+		listaCompInfoPessoais.add(txtRedeEstabelecimentoDeOrdemDoAluno);
+		listaCompInfoPessoais.add(txtSituacaoAnoAnterior);
+		listaCompInfoPessoais.add(edpObservacoesAluno);
+		
+		if (FuncoesGlobais.verificaCampos(pnlInformacoesAluno, listaCompInfoAluno) == true
+				| FuncoesGlobais.verificaCampos(pnlInformacoesPessoaisDoAluno, listaCompInfoPessoais)) {
 
 			JOptionPane.showMessageDialog(this, "Erro - Os campos em vermelho devem ser preenchidos!", "Sistema",
 					JOptionPane.ERROR_MESSAGE);
@@ -501,7 +524,32 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 
 			if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o novo cadastrado?", "Sistema",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
-
+				try {
+				
+				Aluno aluno = new Aluno();
+			
+				aluno.setData_de_Nascimento(new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeNascimento.getText()));
+				aluno.setCPF(txtCPF.getText().replace(".", ""));
+				//aluno.setPai
+				//aluno.setMae
+				aluno.setNome(txtNome.getText());
+				aluno.setRG(txtRG.getText());
+				aluno.setOrgao_Emissor(txtOrgaoEmissor.getText());
+				aluno.setLogradouro(cbLogradouro.getSelectedItem().toString());
+				aluno.setEnderco(txtEndereco.getText());
+				aluno.setNumero_da_Casa(Integer.parseInt(txtNumeroCasa.getText()));
+				aluno.setCor(cbCor.getSelectedItem().toString());
+				aluno.setEmail(txtEmail.getText().isEmpty() ? null : txtEmail.getText());
+				aluno.setRaca(cbRaca.getSelectedItem().toString());
+				aluno.setSexo(cbSexo.getSelectedItem().toString());
+				aluno.setTel_Comercial(txtTelComercial.getValue() == null ? null : txtTelComercial.getText().replace("(", "").replace(")", "").replace("-", ""));
+				aluno.setTel_Residencial(txtTelResidencial.getValue() == null ? null : txtTelResidencial.getText().replace("(", "").replace(")", "").replace("-", ""));
+				aluno.setCelular(txtCelular.getText().replace("(", "").replace(")", "").replace("-", ""));
+				aluno.setLocal_de_Origem_do_Aluno(txtLocalOrigem.getText().isEmpty() ? null : txtLocalOrigem.getText());
+				aluno.setRede_Estabelecimento_de_Ordem_do_aluno(txtRedeEstabelecimentoDeOrdemDoAluno.getText().isEmpty() ? null : txtRedeEstabelecimentoDeOrdemDoAluno.getText());
+				aluno.setSituacao_do_Aluno_no_Ano_Anterior(txtSituacaoAnoAnterior.getText().isEmpty() ? null : txtSituacaoAnoAnterior.getText());
+				aluno.setObservacoes_do_Aluno(edpObservacoesAluno.getText().isEmpty() ? null : edpObservacoesAluno.getText());
+				
 				FuncoesGlobais.limpaCampos(pnlInformacoesAluno);
 				FuncoesGlobais.limpaCampos(pnlInformacoesPessoaisDoAluno);
 				FuncoesGlobais.desativaCampos(pnlBotoes);
@@ -511,10 +559,14 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 
 				JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
 						JOptionPane.INFORMATION_MESSAGE);
+				
+				} catch (ParseException ex) {
+					ex.printStackTrace();
+				}
 			}
 		}
 	}
-
+	
 	private void btnPesquisar_click() throws ParseException, SQLException, PropertyVetoException {
 		if (frmPesquisaAluno.getInstance().isVisible()) {
 			frmPesquisaAluno.getInstance().setSelected(true);

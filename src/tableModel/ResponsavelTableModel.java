@@ -1,28 +1,30 @@
 package tableModel;
 
 import java.util.ArrayList;
+
 import javax.swing.table.AbstractTableModel;
-import model.Funcionario;
 
-public class FuncionarioTableModel extends AbstractTableModel {
+import model.Responsavel;
 
-	private ArrayList<Funcionario> linhas;
+public class ResponsavelTableModel extends AbstractTableModel {
+
+	private ArrayList<Responsavel> linhas;
 
 	// Array com os nomes das colunas.
-	private String[] colunas = new String[] { "REGISTRO", "NOME", "CPF", "CARGO" };
+	private String[] colunas = new String[] { "REGISTRO", "NOME", "CPF", "RG" };
 
 	// Constantes representando o índice das colunas
 	private static final int REGISTRO = 0;
 	private static final int NOME = 1;
 	private static final int CPF = 2;
-	private static final int CARGO = 3;
+	private static final int RG = 3;
 
-	public FuncionarioTableModel() {
-		linhas = new ArrayList<Funcionario>();
+	public ResponsavelTableModel() {
+		linhas = new ArrayList<Responsavel>();
 	}
 
-	public FuncionarioTableModel(ArrayList<Funcionario> listaFuncionario) {
-		linhas = new ArrayList<Funcionario>(listaFuncionario);
+	public ResponsavelTableModel(ArrayList<Responsavel> listaResponsavel) {
+		linhas = new ArrayList<Responsavel>(listaResponsavel);
 	}
 
 	@Override
@@ -51,7 +53,7 @@ public class FuncionarioTableModel extends AbstractTableModel {
 			return String.class;
 		case CPF:
 			return String.class;
-		case CARGO:
+		case RG:
 			return String.class;
 
 		default:
@@ -69,17 +71,17 @@ public class FuncionarioTableModel extends AbstractTableModel {
 	// Retornar o conteúdo da célula especificada
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		// Pega o usuário referente a linha especificada.
-		Funcionario funcionario = linhas.get(rowIndex);
+		Responsavel responsavel = linhas.get(rowIndex);
 
 		switch (columnIndex) {
 		case REGISTRO:
-			return funcionario.getRegistro();
+			return responsavel.getRegistro();
 		case NOME:
-			return funcionario.getNome();
+			return responsavel.getNome_do_Responsavel();
 		case CPF:
-			return funcionario.getCPF();
-		case CARGO:
-			return funcionario.getNomeCargo();
+			return responsavel.getCPF();
+		case RG:
+			return responsavel.getRG();
 
 		default:
 			throw new IndexOutOfBoundsException("columnIndex out of bounds");
@@ -90,23 +92,23 @@ public class FuncionarioTableModel extends AbstractTableModel {
 	// Se as células não forem editáveis, nem precisamos implementar o método
 	// “setValueAt
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		Funcionario funcionario = linhas.get(rowIndex);
+		Responsavel responsavel = linhas.get(rowIndex);
 
 		switch (columnIndex) {
 		case REGISTRO:
-			funcionario.setRegistro((int) aValue);
+			responsavel.setRegistro((int) aValue);
 			break;
 
 		case NOME:
-			funcionario.setNome((String) aValue);
+			responsavel.setNome_do_Responsavel((String) aValue);
 			break;
 
 		case CPF:
-			funcionario.setCPF((String) aValue);
+			responsavel.setCPF((String) aValue);
 			break;
 
-		case CARGO:
-			funcionario.setNomeCargo((String) aValue);
+		case RG:
+			responsavel.setRG((String) aValue);
 
 		default:
 			throw new IndexOutOfBoundsException("columnIndex out of bounds");
@@ -116,14 +118,14 @@ public class FuncionarioTableModel extends AbstractTableModel {
 	}
 
 	// Retorna o usuário referente a linha especificada
-	public Funcionario getFuncionario(int indiceLinha) {
+	public Responsavel getResponsavel(int indiceLinha) {
 		return linhas.get(indiceLinha);
 	}
 
 	// Adiciona o usuário especificado ao modelo
-	public void addFuncionario(Funcionario Funcionario) {
+	public void addResponsavel(Responsavel Responsavel) {
 		// Adiciona o registro.
-		linhas.add(Funcionario);
+		linhas.add(Responsavel);
 
 		// Pega a quantidade de registros e subtrai 1 para
 		// achar o último índice. A subtração é necessária
@@ -135,7 +137,7 @@ public class FuncionarioTableModel extends AbstractTableModel {
 	}
 
 	// Remove o usuário da linha especificada.
-	public void removeFuncionario(int indiceLinha) {
+	public void removeResponsavel(int indiceLinha) {
 		// Remove o registro.
 		linhas.remove(indiceLinha);
 
@@ -144,16 +146,16 @@ public class FuncionarioTableModel extends AbstractTableModel {
 	}
 
 	// Adiciona uma lista de usuários no final da lista.
-	public void addListaDeFuncionarios(ArrayList<Funcionario> Funcionarios) {
+	public void addListaDeResponsavels(ArrayList<Responsavel> Responsavels) {
 		// Pega o tamanho antigo da tabela, que servirá
 		// como índice para o primeiro dos novos registros
 		int indice = getRowCount();
 
 		// Adiciona os registros.
-		linhas.addAll(Funcionarios);
+		linhas.addAll(Responsavels);
 
 		// Notifica a mudança.
-		fireTableRowsInserted(indice, indice + Funcionarios.size());
+		fireTableRowsInserted(indice, indice + Responsavels.size());
 	}
 
 	// Remove todos os registros.
