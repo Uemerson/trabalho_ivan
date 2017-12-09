@@ -12,7 +12,7 @@ public class DAOFuncionario {
 	private PreparedStatement preparedStatement;
 	
 	public void novoFuncionario(Funcionario funcionario) throws SQLException {
-		SQL = "INSERT INTO Funcionario (NOME, DATA_NASCIMENTO, RG, CPF, LOGRADOURO, ENDERECO, NUMERO, BAIRRO, CIDADE, ESTADO, " +
+		SQL = "INSERT INTO FUNCIONARIO (NOME, DATA_NASCIMENTO, RG, CPF, LOGRADOURO, ENDERECO, NUMERO, BAIRRO, CIDADE, ESTADO, " +
 			"TELEFONE_RESIDENCIAL, TELEFONE_COMERCIAL, CELULAR, EMAIL, CARGO, DATA_ADMISSAO, DATA_DEMISSAO, SALARIO, " + 
 			" FORMACAO, NUMERO_SER, DATA_SER, NUMERO_DIPLOMA) VALUES (?, ?, ?, ?, ? , ? , ?, ?, " + 
 			"?, ?, ?, ?, ?, ?, ? , ? , ?, ?, ?, ?, ?, ?)";
@@ -47,7 +47,7 @@ public class DAOFuncionario {
 	}
 	
 	public void atualizaFuncionario(Funcionario funcionario) throws SQLException {
-		SQL = "UPDATE Funcionario SET NOME = ?, DATA_NASCIMENTO = ?, RG = ?, CPF = ?, LOGRADOURO = ?, ENDERECO = ?, NUMERO = ?, BAIRRO = ?, CIDADE = ?, ESTADO = ?, " +
+		SQL = "UPDATE FUNCIONARIO SET NOME = ?, DATA_NASCIMENTO = ?, RG = ?, CPF = ?, LOGRADOURO = ?, ENDERECO = ?, NUMERO = ?, BAIRRO = ?, CIDADE = ?, ESTADO = ?, " +
 			"TELEFONE_RESIDENCIAL = ?, TELEFONE_COMERCIAL = ?, CELULAR = ?, EMAIL = ?, CARGO = ?, DATA_ADMISSAO = ?, DATA_DEMISSAO = ?, SALARIO = ?, " + 
 			" FORMACAO = ?, NUMERO_SER = ?, DATA_SER = ?, NUMERO_DIPLOMA = ? WHERE ID = ?";
 			

@@ -19,7 +19,7 @@ public class DAOConexaoMySQL implements Serializable{
 		
 		usuario = "uemerson";
 		senha = "12345678";
-		url = "jdbc:mysql://bancodados.cvbbsyhqb8hp.sa-east-1.rds.amazonaws.com:3306/colegio";
+		url = "jdbc:mysql://bancodados.cvbbsyhqb8hp.sa-east-1.rds.amazonaws.com:3306/COLEGIO";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");

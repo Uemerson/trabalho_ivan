@@ -30,7 +30,10 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.text.MaskFormatter;
 
 import controler.FuncoesGlobais;
+import dao.DAOAluno;
+import dao.DAOResponsavel;
 import model.Aluno;
+import model.Responsavel;
 
 public class frmCadastroAluno extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JButton btnNovo;
@@ -58,7 +61,6 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 	private JTextField txtNumeroCasa;
 	private JLabel lblDataDeNascimento;
 	private JLabel lblTelefoneResidencial;
-	private JLabel lblTelefoneComercial;
 	private JLabel lblCelular;
 	private JLabel lblEmail;
 	private JTextField txtEmail;
@@ -70,7 +72,6 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 	private JTextField txtRedeEstabelecimentoDeOrdemDoAluno;
 	private JTextField txtSituacaoAnoAnterior;
 	private JEditorPane edpObservacoesAluno;
-	private JFormattedTextField txtTelComercial;
 	private JLabel lblLogradouro;
 	private JComboBox cbLogradouro;
 	private JLabel lblNumero;
@@ -88,8 +89,15 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 	private JLabel lblMae;
 	private JButton btnPesquisaPai;
 	private JComboBox cbMae;
+	private JButton btnPesquisaMae;
+	private int idPai, idMae;
+	private JTextField txtBairro;
+	private JLabel lblCidade;
+	private JTextField txtCidade;
+	private JComboBox cbEstado;
+	private JLabel label;
 
-	public static frmCadastroAluno getInstance() throws ParseException {
+	public static frmCadastroAluno getInstance() throws ParseException, SQLException {
 		if (singleton == null) {
 			singleton = new frmCadastroAluno();
 		}
@@ -97,16 +105,16 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		return singleton;
 	}
 
-	public frmCadastroAluno() throws ParseException {
+	public frmCadastroAluno() throws ParseException, SQLException {
 		// Hack para remover icone do nimbus
 		Container pane = ((BasicInternalFrameUI) this.getUI()).getNorthPane();
 		// pane.remove(0);
 		pane.getComponent(0).setVisible(false);
-		
+
 		addInternalFrameListener(this);
 		setClosable(true);
 		setTitle("Cadastro de aluno");
-		setBounds(100, 100, 832, 662);
+		setBounds(100, 100, 887, 657);
 		getContentPane().setLayout(null);
 
 		pnlBotoes = new JPanel();
@@ -167,7 +175,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		pnlInformacoesAluno = new JPanel();
 		pnlInformacoesAluno.setBorder(new TitledBorder(null, "Informa\u00E7\u00F5es do aluno", TitledBorder.LEADING,
 				TitledBorder.TOP, null, null));
-		pnlInformacoesAluno.setBounds(10, 121, 799, 276);
+		pnlInformacoesAluno.setBounds(10, 121, 851, 260);
 		getContentPane().add(pnlInformacoesAluno);
 		pnlInformacoesAluno.setLayout(null);
 
@@ -216,51 +224,51 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		txtOrgaoEmissor = new JTextField();
 		txtOrgaoEmissor.setEnabled(false);
 		txtOrgaoEmissor.setColumns(10);
-		txtOrgaoEmissor.setBounds(697, 97, 92, 28);
+		txtOrgaoEmissor.setBounds(697, 97, 137, 28);
 		pnlInformacoesAluno.add(txtOrgaoEmissor);
 
 		lblCpf = new JLabel("CPF");
 		lblCpf.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCpf.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCpf.setBounds(589, 19, 47, 28);
+		lblCpf.setBounds(640, 17, 47, 28);
 		pnlInformacoesAluno.add(lblCpf);
 
 		cbSexo = new JComboBox();
 		cbSexo.setEnabled(false);
 		cbSexo.setModel(new DefaultComboBoxModel(new String[] { "Masculino", "Feminino" }));
 		cbSexo.setSelectedItem(null);
-		cbSexo.setBounds(697, 177, 92, 28);
+		cbSexo.setBounds(288, 216, 80, 28);
 		pnlInformacoesAluno.add(cbSexo);
 
 		lblSexo = new JLabel("Sexo");
 		lblSexo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSexo.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblSexo.setBounds(607, 177, 80, 28);
+		lblSexo.setBounds(218, 214, 53, 28);
 		pnlInformacoesAluno.add(lblSexo);
 
 		lblCor = new JLabel("Cor");
 		lblCor.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCor.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCor.setBounds(607, 136, 80, 28);
+		lblCor.setBounds(716, 175, 36, 28);
 		pnlInformacoesAluno.add(lblCor);
 
 		cbCor = new JComboBox();
 		cbCor.setEnabled(false);
 		cbCor.setModel(new DefaultComboBoxModel(new String[] { "Branco", "Moreno", "Negro", "Pardo" }));
-		cbCor.setBounds(697, 136, 92, 28);
+		cbCor.setBounds(762, 175, 72, 28);
 		cbCor.setSelectedItem(null);
 		pnlInformacoesAluno.add(cbCor);
 
 		lblRaca = new JLabel("Ra\u00E7a");
-		lblRaca.setHorizontalAlignment(SwingConstants.CENTER);
+		lblRaca.setHorizontalAlignment(SwingConstants.LEFT);
 		lblRaca.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblRaca.setBounds(448, 177, 69, 28);
+		lblRaca.setBounds(10, 214, 80, 28);
 		pnlInformacoesAluno.add(lblRaca);
 
 		cbRaca = new JComboBox();
 		cbRaca.setModel(new DefaultComboBoxModel(new String[] { "Ind\u00EDgina", "Afrodescendente" }));
 		cbRaca.setEnabled(false);
-		cbRaca.setBounds(515, 177, 90, 28);
+		cbRaca.setBounds(100, 214, 100, 28);
 		cbRaca.setSelectedItem(null);
 		pnlInformacoesAluno.add(cbRaca);
 
@@ -286,37 +294,26 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		lblTelefoneResidencial = new JLabel("Telefone Residencial");
 		lblTelefoneResidencial.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTelefoneResidencial.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblTelefoneResidencial.setBounds(288, 214, 129, 28);
+		lblTelefoneResidencial.setBounds(379, 212, 129, 28);
 		pnlInformacoesAluno.add(lblTelefoneResidencial);
-
-		lblTelefoneComercial = new JLabel("Telefone Comercial");
-		lblTelefoneComercial.setHorizontalAlignment(SwingConstants.LEFT);
-		lblTelefoneComercial.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblTelefoneComercial.setBounds(10, 214, 119, 28);
-		pnlInformacoesAluno.add(lblTelefoneComercial);
 
 		lblCelular = new JLabel("Celular");
 		lblCelular.setHorizontalAlignment(SwingConstants.CENTER);
 		lblCelular.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblCelular.setBounds(565, 214, 80, 28);
+		lblCelular.setBounds(635, 217, 63, 28);
 		pnlInformacoesAluno.add(lblCelular);
 
 		lblEmail = new JLabel("Email");
 		lblEmail.setHorizontalAlignment(SwingConstants.LEFT);
 		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblEmail.setBounds(10, 177, 80, 28);
+		lblEmail.setBounds(370, 175, 47, 28);
 		pnlInformacoesAluno.add(lblEmail);
 
 		txtEmail = new JTextField();
 		txtEmail.setEnabled(false);
 		txtEmail.setColumns(10);
-		txtEmail.setBounds(100, 177, 338, 28);
+		txtEmail.setBounds(427, 177, 279, 28);
 		pnlInformacoesAluno.add(txtEmail);
-
-		txtTelComercial = new JFormattedTextField(new MaskFormatter("(##)####-####"));
-		txtTelComercial.setEnabled(false);
-		txtTelComercial.setBounds(139, 214, 139, 30);
-		pnlInformacoesAluno.add(txtTelComercial);
 
 		lblLogradouro = new JLabel("Logradouro");
 		lblLogradouro.setHorizontalAlignment(SwingConstants.LEFT);
@@ -345,12 +342,12 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 
 		txtTelResidencial = new JFormattedTextField(new MaskFormatter("(##)####-####"));
 		txtTelResidencial.setEnabled(false);
-		txtTelResidencial.setBounds(430, 214, 139, 30);
+		txtTelResidencial.setBounds(518, 213, 117, 30);
 		pnlInformacoesAluno.add(txtTelResidencial);
 
 		txtCelular = new JFormattedTextField(new MaskFormatter("(##)####-####"));
 		txtCelular.setEnabled(false);
-		txtCelular.setBounds(646, 214, 143, 30);
+		txtCelular.setBounds(707, 215, 127, 30);
 		pnlInformacoesAluno.add(txtCelular);
 
 		txtDataDeNascimento = new JFormattedTextField(new MaskFormatter("##/##/####"));
@@ -360,97 +357,155 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 
 		txtCPF = new JFormattedTextField(new MaskFormatter("###.###.###.##"));
 		txtCPF.setEnabled(false);
-		txtCPF.setBounds(646, 19, 143, 30);
+		txtCPF.setBounds(691, 18, 143, 30);
 		pnlInformacoesAluno.add(txtCPF);
-		
+
 		JLabel lblPai = new JLabel("Pai");
 		lblPai.setHorizontalAlignment(SwingConstants.LEFT);
 		lblPai.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblPai.setBounds(10, 58, 80, 28);
 		pnlInformacoesAluno.add(lblPai);
-		
+
 		cbPai = new JComboBox();
 		cbPai.setEnabled(false);
 		cbPai.setBounds(100, 58, 258, 28);
-		pnlInformacoesAluno.add(cbPai);
 		
+		DefaultComboBoxModel<String> cbPaiModel = new DefaultComboBoxModel<>();
+		
+		for (int i = 0; i < new DAOResponsavel().listaResponsavel().size(); i++) {
+			cbPaiModel.addElement(new DAOResponsavel().listaResponsavel().get(i).getNome_do_Responsavel());
+		}
+		
+		cbPai.setModel(cbPaiModel);
+		cbPai.setSelectedItem(null);
+		pnlInformacoesAluno.add(cbPai);
+
 		btnPesquisaPai = new JButton("");
+		btnPesquisaPai.addActionListener(this);
 		btnPesquisaPai.setIcon(new ImageIcon(frmCadastroAluno.class.getResource("/imagens/pesquisar.png")));
 		btnPesquisaPai.setEnabled(false);
 		btnPesquisaPai.setBounds(368, 58, 28, 28);
 		pnlInformacoesAluno.add(btnPesquisaPai);
-		
-		JButton btnMae = new JButton("");
-		btnMae.setIcon(new ImageIcon(frmCadastroAluno.class.getResource("/imagens/pesquisar.png")));
-		btnMae.setEnabled(false);
-		btnMae.setBounds(761, 60, 28, 28);
-		pnlInformacoesAluno.add(btnMae);
-		
+
+		btnPesquisaMae = new JButton("");
+		btnPesquisaMae.addActionListener(this);
+		btnPesquisaMae.setIcon(new ImageIcon(frmCadastroAluno.class.getResource("/imagens/pesquisar.png")));
+		btnPesquisaMae.setEnabled(false);
+		btnPesquisaMae.setBounds(806, 58, 28, 28);
+		pnlInformacoesAluno.add(btnPesquisaMae);
+
 		cbMae = new JComboBox();
 		cbMae.setEnabled(false);
-		cbMae.setBounds(493, 60, 258, 28);
-		pnlInformacoesAluno.add(cbMae);
+		cbMae.setBounds(538, 58, 258, 28);
 		
+		DefaultComboBoxModel<String> cbMaeModel = new DefaultComboBoxModel<>();
+		for (int i = 0; i < new DAOResponsavel().listaResponsavel().size(); i++) {
+			cbMaeModel.addElement(new DAOResponsavel().listaResponsavel().get(i).getNome_do_Responsavel());
+		}
+		
+		cbMae.setModel(cbMaeModel);
+		cbMae.setSelectedItem(null);
+		pnlInformacoesAluno.add(cbMae);
+
 		lblMae = new JLabel("M\u00E3e");
 		lblMae.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMae.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblMae.setBounds(447, 58, 36, 28);
+		lblMae.setBounds(492, 56, 36, 28);
 		pnlInformacoesAluno.add(lblMae);
+		
+		txtBairro = new JTextField();
+		txtBairro.setEnabled(false);
+		txtBairro.setColumns(10);
+		txtBairro.setBounds(672, 136, 162, 28);
+		pnlInformacoesAluno.add(txtBairro);
+		
+		JLabel lblBairro = new JLabel("Bairro");
+		lblBairro.setHorizontalAlignment(SwingConstants.LEFT);
+		lblBairro.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblBairro.setBounds(615, 136, 47, 28);
+		pnlInformacoesAluno.add(lblBairro);
+		
+		lblCidade = new JLabel("Cidade");
+		lblCidade.setHorizontalAlignment(SwingConstants.LEFT);
+		lblCidade.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblCidade.setBounds(10, 175, 80, 28);
+		pnlInformacoesAluno.add(lblCidade);
+		
+		txtCidade = new JTextField();
+		txtCidade.setEnabled(false);
+		txtCidade.setColumns(10);
+		txtCidade.setBounds(100, 177, 100, 28);
+		pnlInformacoesAluno.add(txtCidade);
+		
+		cbEstado = new JComboBox();
+		cbEstado.setModel(new DefaultComboBoxModel(new String[] {"AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"}));
+		cbEstado.setEnabled(false);
+		cbEstado.setBounds(288, 177, 70, 28);
+		cbEstado.setSelectedItem(null);
+		pnlInformacoesAluno.add(cbEstado);
+		
+		label = new JLabel("Estado");
+		label.setHorizontalAlignment(SwingConstants.LEFT);
+		label.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		label.setBounds(218, 177, 63, 28);
+		pnlInformacoesAluno.add(label);
 
 		pnlInformacoesPessoaisDoAluno = new JPanel();
 		pnlInformacoesPessoaisDoAluno.setBorder(new TitledBorder(null, "Informa\u00E7\u00F5es Pessoais do Aluno",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		pnlInformacoesPessoaisDoAluno.setBounds(10, 408, 799, 220);
+		pnlInformacoesPessoaisDoAluno.setBounds(10, 392, 851, 224);
 		getContentPane().add(pnlInformacoesPessoaisDoAluno);
 		pnlInformacoesPessoaisDoAluno.setLayout(null);
 
 		lblLocalDeOrigem = new JLabel("Local de Origem do Aluno");
 		lblLocalDeOrigem.setHorizontalAlignment(SwingConstants.LEFT);
 		lblLocalDeOrigem.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblLocalDeOrigem.setBounds(10, 25, 198, 28);
+		lblLocalDeOrigem.setBounds(10, 11, 198, 28);
 		pnlInformacoesPessoaisDoAluno.add(lblLocalDeOrigem);
 
 		lblRedeEstabelecimentoDe = new JLabel("Rede Estabelecimento de Ordem do Aluno");
 		lblRedeEstabelecimentoDe.setHorizontalAlignment(SwingConstants.LEFT);
 		lblRedeEstabelecimentoDe.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblRedeEstabelecimentoDe.setBounds(10, 64, 283, 28);
+		lblRedeEstabelecimentoDe.setBounds(10, 50, 283, 28);
 		pnlInformacoesPessoaisDoAluno.add(lblRedeEstabelecimentoDe);
 
 		lblSituacaoDoAlunoAnoAnterior = new JLabel("Situa\u00E7\u00E3o do Aluno no Ano Anterior");
 		lblSituacaoDoAlunoAnoAnterior.setHorizontalAlignment(SwingConstants.LEFT);
 		lblSituacaoDoAlunoAnoAnterior.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblSituacaoDoAlunoAnoAnterior.setBounds(10, 103, 221, 28);
+		lblSituacaoDoAlunoAnoAnterior.setBounds(10, 89, 221, 28);
 		pnlInformacoesPessoaisDoAluno.add(lblSituacaoDoAlunoAnoAnterior);
 
 		lblObservacoesDoAluno = new JLabel("Observa\u00E7\u00F5es do Aluno");
 		lblObservacoesDoAluno.setHorizontalAlignment(SwingConstants.LEFT);
 		lblObservacoesDoAluno.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblObservacoesDoAluno.setBounds(10, 142, 210, 28);
+		lblObservacoesDoAluno.setBounds(10, 128, 210, 28);
 		pnlInformacoesPessoaisDoAluno.add(lblObservacoesDoAluno);
 
 		txtLocalOrigem = new JTextField();
 		txtLocalOrigem.setEnabled(false);
 		txtLocalOrigem.setColumns(10);
-		txtLocalOrigem.setBounds(303, 25, 486, 28);
+		txtLocalOrigem.setBounds(303, 11, 538, 28);
 		pnlInformacoesPessoaisDoAluno.add(txtLocalOrigem);
 
 		txtRedeEstabelecimentoDeOrdemDoAluno = new JTextField();
 		txtRedeEstabelecimentoDeOrdemDoAluno.setEnabled(false);
 		txtRedeEstabelecimentoDeOrdemDoAluno.setColumns(10);
-		txtRedeEstabelecimentoDeOrdemDoAluno.setBounds(303, 64, 486, 28);
+		txtRedeEstabelecimentoDeOrdemDoAluno.setBounds(303, 50, 538, 28);
 		pnlInformacoesPessoaisDoAluno.add(txtRedeEstabelecimentoDeOrdemDoAluno);
 
 		txtSituacaoAnoAnterior = new JTextField();
 		txtSituacaoAnoAnterior.setEnabled(false);
 		txtSituacaoAnoAnterior.setColumns(10);
-		txtSituacaoAnoAnterior.setBounds(303, 103, 486, 28);
+		txtSituacaoAnoAnterior.setBounds(303, 89, 538, 28);
 		pnlInformacoesPessoaisDoAluno.add(txtSituacaoAnoAnterior);
 
 		edpObservacoesAluno = new JEditorPane();
 		edpObservacoesAluno.setEnabled(false);
-		edpObservacoesAluno.setBounds(303, 142, 486, 67);
+		edpObservacoesAluno.setBounds(303, 128, 538, 76);
 		pnlInformacoesPessoaisDoAluno.add(edpObservacoesAluno);
-
+		
+		this.idPai = 0;
+		this.idMae = 0;
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -463,12 +518,82 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 				btnSalvar_click();
 			} else if (e.getSource() == btnPesquisar) {
 				btnPesquisar_click();
+			} else if (e.getSource() == btnPesquisaPai) {
+				btnPesquisaPai_click();
+			} else if (e.getSource() == btnPesquisaMae) {
+				btnPesquisaMae_click();
 			}
 		} catch (ParseException | SQLException | PropertyVetoException ex) {
 			ex.printStackTrace();
 		}
 	}
-
+	
+	private void btnPesquisaPai_click() throws ParseException, SQLException, PropertyVetoException {
+		DefaultComboBoxModel<String> cbPaiModel = new DefaultComboBoxModel<>();
+		
+		for (int i = 0; i < new DAOResponsavel().listaResponsavel().size(); i++) {
+			cbPaiModel.addElement(new DAOResponsavel().listaResponsavel().get(i).getNome_do_Responsavel());
+		}
+		
+		cbPai.setModel(cbPaiModel);
+		cbPai.setSelectedItem(null);
+		idPai = 0;
+		
+		if (frmPesquisaPais.getInstance().isVisible()) {
+			frmPesquisaPais.getInstance().setTitle("Pesquisar por Pai");
+			frmPesquisaPais.getInstance().atualizaDados(); // Atualiza os dados do formulario
+			frmPesquisaPais.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaPais.getInstance().getBtnConfirma().setText("Abrir cadastro de aluno");
+			frmPesquisaPais.getInstance().setSelected(true);
+		} else {
+			frmPesquisaPais.getInstance().setTitle("Pesquisar por Pai");
+			frmPesquisaPais.getInstance().atualizaDados(); // Atualiza os dados do formulario
+			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaPais.getInstance());
+			frmPesquisaPais.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaPais.getInstance().getBtnConfirma().setText("Abrir cadastro de aluno");
+			frmPesquisaPais.getInstance().setVisible(true);
+			frmPesquisaPais.getInstance().setSelected(true);
+		}
+	}
+	
+	private void btnPesquisaMae_click() throws ParseException, SQLException, PropertyVetoException {
+		DefaultComboBoxModel<String> cbMaeModel = new DefaultComboBoxModel<>();
+		
+		for (int i = 0; i < new DAOResponsavel().listaResponsavel().size(); i++) {
+			cbMaeModel.addElement(new DAOResponsavel().listaResponsavel().get(i).getNome_do_Responsavel());
+		}
+		
+		cbMae.setModel(cbMaeModel);
+		cbMae.setSelectedItem(null);
+		idMae = 0;
+		
+		if (frmPesquisaPais.getInstance().isVisible()) {
+			frmPesquisaPais.getInstance().setTitle("Pesquisar por Mãe");
+			frmPesquisaPais.getInstance().atualizaDados(); // Atualiza os dados do formulario
+			frmPesquisaPais.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaPais.getInstance().getBtnConfirma().setText("Abrir cadastro de aluno");
+			frmPesquisaPais.getInstance().setSelected(true);
+		} else {
+			frmPesquisaPais.getInstance().setTitle("Pesquisar por Mãe");
+			frmPesquisaPais.getInstance().atualizaDados(); // Atualiza os dados do formulario
+			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaPais.getInstance());
+			frmPesquisaPais.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaPais.getInstance().getBtnConfirma().setText("Abrir cadastro de aluno");
+			frmPesquisaPais.getInstance().setVisible(true);
+			frmPesquisaPais.getInstance().setSelected(true);
+		}
+	}
+	
+	public void preenchePai(Responsavel responsavel) {
+		this.idPai = responsavel.getRegistro();
+		cbPai.setSelectedItem(responsavel.getNome_do_Responsavel());
+	}
+	
+	public void preencheMae(Responsavel responsavel) {
+		this.idMae = responsavel.getRegistro();
+		cbMae.setSelectedItem(responsavel.getNome_do_Responsavel());
+	}
+	
 	private void btnNovo_click() {
 		FuncoesGlobais.limpaCampos(pnlInformacoesAluno);
 		FuncoesGlobais.limpaCampos(pnlInformacoesPessoaisDoAluno);
@@ -481,6 +606,12 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		txtRegistro.setText("NOVO");
 		txtRegistro.setEnabled(false);
 		txtCPF.requestFocus();
+		
+		cbPai.setEnabled(false);
+		cbMae.setEnabled(false);
+		
+		idPai = 0;
+		idMae = 0;
 	}
 
 	private void btnCancelar_click() {
@@ -501,19 +632,18 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		}
 	}
 
-	private void btnSalvar_click() {
-		ArrayList<Component> listaCompInfoAluno = new ArrayList<>(),
-								listaCompInfoPessoais = new ArrayList<>();
-		
-		listaCompInfoAluno.add(txtTelComercial);
+	private void btnSalvar_click() throws SQLException {
+		ArrayList<Component> listaCompInfoAluno = new ArrayList<>(), listaCompInfoPessoais = new ArrayList<>();
+
 		listaCompInfoAluno.add(txtTelResidencial);
 		listaCompInfoAluno.add(txtEmail);
+		listaCompInfoAluno.add(txtNumeroCasa);
 		
 		listaCompInfoPessoais.add(txtLocalOrigem);
 		listaCompInfoPessoais.add(txtRedeEstabelecimentoDeOrdemDoAluno);
 		listaCompInfoPessoais.add(txtSituacaoAnoAnterior);
 		listaCompInfoPessoais.add(edpObservacoesAluno);
-		
+
 		if (FuncoesGlobais.verificaCampos(pnlInformacoesAluno, listaCompInfoAluno) == true
 				| FuncoesGlobais.verificaCampos(pnlInformacoesPessoaisDoAluno, listaCompInfoPessoais)) {
 
@@ -522,56 +652,78 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 
 		} else {
 
-			if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o novo cadastrado?", "Sistema",
+			if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar cadastrado?", "Sistema",
 					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
 				try {
-				
-				Aluno aluno = new Aluno();
-			
-				aluno.setData_de_Nascimento(new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeNascimento.getText()));
-				aluno.setCPF(txtCPF.getText().replace(".", ""));
-				//aluno.setPai
-				//aluno.setMae
-				aluno.setNome(txtNome.getText());
-				aluno.setRG(txtRG.getText());
-				aluno.setOrgao_Emissor(txtOrgaoEmissor.getText());
-				aluno.setLogradouro(cbLogradouro.getSelectedItem().toString());
-				aluno.setEnderco(txtEndereco.getText());
-				aluno.setNumero_da_Casa(Integer.parseInt(txtNumeroCasa.getText()));
-				aluno.setCor(cbCor.getSelectedItem().toString());
-				aluno.setEmail(txtEmail.getText().isEmpty() ? null : txtEmail.getText());
-				aluno.setRaca(cbRaca.getSelectedItem().toString());
-				aluno.setSexo(cbSexo.getSelectedItem().toString());
-				aluno.setTel_Comercial(txtTelComercial.getValue() == null ? null : txtTelComercial.getText().replace("(", "").replace(")", "").replace("-", ""));
-				aluno.setTel_Residencial(txtTelResidencial.getValue() == null ? null : txtTelResidencial.getText().replace("(", "").replace(")", "").replace("-", ""));
-				aluno.setCelular(txtCelular.getText().replace("(", "").replace(")", "").replace("-", ""));
-				aluno.setLocal_de_Origem_do_Aluno(txtLocalOrigem.getText().isEmpty() ? null : txtLocalOrigem.getText());
-				aluno.setRede_Estabelecimento_de_Ordem_do_aluno(txtRedeEstabelecimentoDeOrdemDoAluno.getText().isEmpty() ? null : txtRedeEstabelecimentoDeOrdemDoAluno.getText());
-				aluno.setSituacao_do_Aluno_no_Ano_Anterior(txtSituacaoAnoAnterior.getText().isEmpty() ? null : txtSituacaoAnoAnterior.getText());
-				aluno.setObservacoes_do_Aluno(edpObservacoesAluno.getText().isEmpty() ? null : edpObservacoesAluno.getText());
-				
-				FuncoesGlobais.limpaCampos(pnlInformacoesAluno);
-				FuncoesGlobais.limpaCampos(pnlInformacoesPessoaisDoAluno);
-				FuncoesGlobais.desativaCampos(pnlBotoes);
 
-				btnNovo.setEnabled(true);
-				btnPesquisar.setEnabled(true);
+					Aluno aluno = new Aluno();
 
-				JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
-						JOptionPane.INFORMATION_MESSAGE);
-				
+					aluno.setData_de_Nascimento(
+							new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeNascimento.getText()));
+					aluno.setCPF(txtCPF.getText().replace(".", ""));
+					aluno.setIdPai(idPai);
+					aluno.setIdMae(idMae);
+					aluno.setNome(txtNome.getText());
+					aluno.setRG(txtRG.getText());
+					aluno.setOrgao_Emissor(txtOrgaoEmissor.getText());
+					aluno.setLogradouro(cbLogradouro.getSelectedItem().toString());
+					aluno.setEnderco(txtEndereco.getText());
+					aluno.setNumero_da_Casa(txtNumeroCasa.getText().isEmpty() ? 0 : Integer.parseInt(txtNumeroCasa.getText()));
+					aluno.setCor(cbCor.getSelectedItem().toString());
+					aluno.setEmail(txtEmail.getText().isEmpty() ? null : txtEmail.getText());
+					aluno.setRaca(cbRaca.getSelectedItem().toString());
+					aluno.setSexo(cbSexo.getSelectedItem().toString());
+					aluno.setTel_Residencial(txtTelResidencial.getValue() == null ? null
+							: txtTelResidencial.getText().replace("(", "").replace(")", "").replace("-", ""));
+					aluno.setCelular(txtCelular.getText().replace("(", "").replace(")", "").replace("-", ""));
+					aluno.setLocal_de_Origem_do_Aluno(
+							txtLocalOrigem.getText().isEmpty() ? null : txtLocalOrigem.getText());
+					aluno.setRede_Estabelecimento_de_Ordem_do_aluno(
+							txtRedeEstabelecimentoDeOrdemDoAluno.getText().isEmpty() ? null
+									: txtRedeEstabelecimentoDeOrdemDoAluno.getText());
+					aluno.setSituacao_do_Aluno_no_Ano_Anterior(
+							txtSituacaoAnoAnterior.getText().isEmpty() ? null : txtSituacaoAnoAnterior.getText());
+					aluno.setObservacoes_do_Aluno(
+							edpObservacoesAluno.getText().isEmpty() ? null : edpObservacoesAluno.getText());
+					aluno.setBairro(txtBairro.getText());
+					aluno.setLocal_de_Origem_do_Aluno(txtLocalOrigem.getText().isEmpty() ? null : txtLocalOrigem.getText());
+					aluno.setCidade(txtCidade.getText());
+					aluno.setEstado(cbEstado.getSelectedItem().toString());
+					
+					DAOAluno daoAluno = new DAOAluno();
+					
+					if (txtRegistro.getText().equals("NOVO")) {
+						daoAluno.novoAluno(aluno);
+					}
+					
+					FuncoesGlobais.limpaCampos(pnlInformacoesAluno);
+					FuncoesGlobais.limpaCampos(pnlInformacoesPessoaisDoAluno);
+					FuncoesGlobais.desativaCampos(pnlBotoes);
+
+					btnNovo.setEnabled(true);
+					btnPesquisar.setEnabled(true);
+
+					JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
+							JOptionPane.INFORMATION_MESSAGE);
+
 				} catch (ParseException ex) {
 					ex.printStackTrace();
 				}
 			}
 		}
 	}
-	
+
 	private void btnPesquisar_click() throws ParseException, SQLException, PropertyVetoException {
 		if (frmPesquisaAluno.getInstance().isVisible()) {
+			frmPesquisaAluno.getInstance().atualizaDados(); // Atualiza os dados do formulario
+			frmPesquisaAluno.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaAluno.getInstance().getBtnConfirma().setText("Abrir cadastro de aluno");
 			frmPesquisaAluno.getInstance().setSelected(true);
 		} else {
+			frmPesquisaAluno.getInstance().atualizaDados(); // Atualiza os dados do formulario
 			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaAluno.getInstance());
+			frmPesquisaAluno.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaAluno.getInstance().getBtnConfirma().setText("Abrir cadastro de aluno");
 			frmPesquisaAluno.getInstance().setVisible(true);
 			frmPesquisaAluno.getInstance().setSelected(true);
 		}
@@ -579,14 +731,14 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
-	
-	//Limpa memoria
+
+	// Limpa memoria
 	public void internalFrameClosed(InternalFrameEvent e) {
 		this.singleton = null;
 	}
 
 	public void internalFrameClosing(InternalFrameEvent e) {
-		
+
 	}
 
 	public void internalFrameDeactivated(InternalFrameEvent e) {

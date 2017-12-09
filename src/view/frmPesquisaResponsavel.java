@@ -25,6 +25,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -112,19 +113,23 @@ public class frmPesquisaResponsavel extends JInternalFrame
 		ButtonGroup btngpGrupoFiltros = new ButtonGroup();
 
 		rdbtnFiltrarPorRegistro = new JRadioButton("Filtrar por registro");
+		rdbtnFiltrarPorRegistro.addActionListener(this);
 		rdbtnFiltrarPorRegistro.setSelected(true);
 		rdbtnFiltrarPorRegistro.setBounds(10, 13, 122, 23);
 		pnlFiltros.add(rdbtnFiltrarPorRegistro);
 
 		rdbtnFiltrarPorNome = new JRadioButton("Filtrar por nome");
+		rdbtnFiltrarPorNome.addActionListener(this);
 		rdbtnFiltrarPorNome.setBounds(144, 13, 122, 23);
 		pnlFiltros.add(rdbtnFiltrarPorNome);
 
 		rdbtnFiltrarPorCpf = new JRadioButton("Filtrar por CPF");
+		rdbtnFiltrarPorCpf.addActionListener(this);
 		rdbtnFiltrarPorCpf.setBounds(266, 13, 122, 23);
 		pnlFiltros.add(rdbtnFiltrarPorCpf);
 
 		rdbtnFiltrarPorRG = new JRadioButton("Filtrar por RG");
+		rdbtnFiltrarPorRG.addActionListener(this);
 		rdbtnFiltrarPorRG.setBounds(387, 13, 122, 23);
 		pnlFiltros.add(rdbtnFiltrarPorRG);
 
@@ -144,6 +149,13 @@ public class frmPesquisaResponsavel extends JInternalFrame
 		txtBuscarPor.getDocument().addDocumentListener(this);
 		txtBuscarPor.addKeyListener(this);
 		pnlFiltros.add(txtBuscarPor);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				txtBuscarPor.requestFocus();
+			}
+		});
 	}
 
 	// Atualiza os dados dos funcionarios cadastrados
@@ -162,14 +174,45 @@ public class frmPesquisaResponsavel extends JInternalFrame
 
 	public void actionPerformed(ActionEvent e) {
 		try {
-			if (e.getSource() == btnConfirma) {
+			if (e.getSource() == rdbtnFiltrarPorRegistro) {
+				rdbtnFiltrarPorRegistro_click();
+			} else if (e.getSource() == rdbtnFiltrarPorCpf) {
+				rdbtnFiltrarPorCPF_click();
+			} else if (e.getSource() == rdbtnFiltrarPorNome) {
+				rdbtnFiltrarPorNome_click();
+			}else if (e.getSource() == rdbtnFiltrarPorRG) {
+				rdbtnFiltrarPorRG_click();
+			} else if (e.getSource() == btnConfirma) {
 				btnConfirma_click();
-			}
+			} 
 		} catch (ParseException | SQLException | PropertyVetoException ex) {
-			ex.printStackTrace();
+			System.out.println(ex.getMessage());
+			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação!", "Sistema", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
 
+	private void rdbtnFiltrarPorRG_click() {
+		txtBuscarPor.setText(null);
+		txtBuscarPor.requestFocus();
+	}
+	
+	private void rdbtnFiltrarPorNome_click() {
+		txtBuscarPor.setText(null);
+		txtBuscarPor.requestFocus();
+	}
+	
+	private void rdbtnFiltrarPorCPF_click() {
+		txtBuscarPor.setText(null);
+		txtBuscarPor.requestFocus();
+	}
+	
+	private void rdbtnFiltrarPorRegistro_click() {
+		txtBuscarPor.setText(null);
+		txtBuscarPor.requestFocus();
+	}
+
+	
 	private void btnConfirma_click() throws ParseException, SQLException, PropertyVetoException {
 		if (btnConfirma.getText() == "Abrir cadastro de responsável") {
 		

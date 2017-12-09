@@ -41,6 +41,7 @@ public class DAOResponsavel {
 		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
 		preparedStatement.setInt(1, ID);
 		preparedStatement.executeUpdate();
+		System.out.println("Responsavel excluido com sucesso!");
 	}
 	
 	public ArrayList<Responsavel> listaResponsavel() throws SQLException{
@@ -134,4 +135,30 @@ public class DAOResponsavel {
 		
 	}
 	
+	public void atualizaResponsavel(Responsavel responsavel) throws SQLException {
+		SQL = "UPDATE RESPONSAVEL SET NOME = ?, GRAU_INSTRUCAO = ?, PROFISSAO = ?, NOME_LOCAL = ?, HORARIO = ?, LOGRADOURO = ?,"
+				+ "ENDERECO = ?, NUMERO = ?, DATA_NASCIMENTO = ?, RG = ?, CPF = ?, RENDA = ?, CASA_PROPRIA = ?, NUMERO_FILHOS = ?,"
+				+ "NUMERO_PESSOAS_CASA = ? WHERE RESPONSAVEL.ID = ?";
+		
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setString(1, responsavel.getNome_do_Responsavel());
+		preparedStatement.setString(2, responsavel.getGrau_de_Intrucao());
+		preparedStatement.setString(3, responsavel.getProfissao());
+		preparedStatement.setString(4, responsavel.getLocal_de_Trabalho());
+		preparedStatement.setTime(5, responsavel.getHorario_de_Trabalho());
+		preparedStatement.setString(6, responsavel.getLogradouro());
+		preparedStatement.setString(7, responsavel.getEndereco());
+		preparedStatement.setInt(8, responsavel.getNumeroCasa());
+		preparedStatement.setDate(9, new java.sql.Date(responsavel.getData_de_Nascimento().getTime()));
+		preparedStatement.setString(10, responsavel.getRG());
+		preparedStatement.setString(11, responsavel.getCPF());
+		preparedStatement.setDouble(12, responsavel.getRenda());
+		preparedStatement.setBoolean(13, responsavel.getCasa_Propria());
+		preparedStatement.setInt(14, responsavel.getNumero_de_Filhos());
+		preparedStatement.setInt(15, responsavel.getNumero_de_Pessoas_que_Residem_na_Casa());
+		preparedStatement.setInt(16, responsavel.getRegistro());
+
+		preparedStatement.execute();
+		System.out.println("Responsavel atualizado com sucesso!");
+	}
 }

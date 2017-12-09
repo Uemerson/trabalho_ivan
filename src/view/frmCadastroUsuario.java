@@ -26,6 +26,7 @@ import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 import controler.FuncoesGlobais;
+import dao.DAOConexaoMySQL;
 import dao.DAOFuncionario;
 import dao.DAOUsuario;
 import model.Usuario;
@@ -88,6 +89,7 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 		pnlBotoes.add(btnNovo);
 
 		btnExcluir = new JButton("Excluir");
+		btnExcluir.addActionListener(this);
 		btnExcluir.setIcon(new ImageIcon(frmCadastroUsuario.class.getResource("/imagens/excluir 48x48.png")));
 		btnExcluir.setEnabled(false);
 		btnExcluir.setBounds(100, 11, 80, 79);
@@ -96,6 +98,7 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 		pnlBotoes.add(btnExcluir);
 
 		btnAlterar = new JButton("Alterar");
+		btnAlterar.addActionListener(this);
 		btnAlterar.setIcon(new ImageIcon(frmCadastroUsuario.class.getResource("/imagens/editar 48x48.png")));
 		btnAlterar.setEnabled(false);
 		btnAlterar.setBounds(190, 11, 80, 79);
@@ -213,16 +216,42 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 				btnPesquisar_click();
 			} else if (e.getSource() == btnPesquisarFuncionario) {
 				btnPesquisarFuncionario_click();
+			} else if (e.getSource() == btnExcluir) {
+				btnExcluir_click();
+			} else if (e.getSource() == btnAlterar) {
+				btnAlterar_click();
 			}
 
 		} catch (ParseException | SQLException | PropertyVetoException ex) {
+			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema",
+					JOptionPane.ERROR_MESSAGE);
 			ex.printStackTrace();
+		}
+	}
+
+	private void btnExcluir_click() throws NumberFormatException, SQLException {
+		if (JOptionPane.showConfirmDialog(this, "Deseja realmente excluir o cadastro?", "Sistema",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+			DAOUsuario daoUsuario = new DAOUsuario();
+
+			daoUsuario.excluirUsuario(Integer.parseInt(txtRegistro.getText()));
+			JOptionPane.showMessageDialog(this, "Registro excluido com sucesso!", "Sistema",
+					JOptionPane.INFORMATION_MESSAGE);
+
+			FuncoesGlobais.limpaCampos(pnlCadastroDeUsuario);
+			FuncoesGlobais.desativaCampos(pnlCadastroDeUsuario);
+			FuncoesGlobais.desativaCampos(pnlBotoes);
+
+			btnNovo.setEnabled(true);
+			btnPesquisar.setEnabled(true);
+			btnNovo.requestFocus();
 		}
 	}
 
 	private void btnNovo_click() {
 		FuncoesGlobais.desativaCampos(pnlBotoes);
 		FuncoesGlobais.ativaCampos(pnlCadastroDeUsuario);
+		FuncoesGlobais.limpaCampos(pnlCadastroDeUsuario);
 
 		cbFuncionario.setEnabled(false);
 		txtRegistro.setEnabled(false);
@@ -242,10 +271,11 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 					JOptionPane.ERROR_MESSAGE);
 		} else {
 
-			if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o novo cadastrado?", "Sistema",
+			if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o cadastrado?", "Sistema",
 					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 				try {
 					Usuario usuario = new Usuario();
+
 					usuario.setLogin(txtLogin.getText());
 					String senha = new String(txtSenha.getPassword());
 					usuario.setId_funcionario(idFuncionario);
@@ -253,7 +283,13 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 
 					DAOUsuario daoUsuario = new DAOUsuario();
 
-					daoUsuario.novoUsuario(usuario);
+					if (txtRegistro.getText().equals("NOVO")) {
+						daoUsuario.novoUsuario(usuario);
+					} else {
+						System.out.println(idFuncionario);
+						usuario.setRegistro(Integer.parseInt(txtRegistro.getText()));
+						daoUsuario.alterarUsuario(usuario);
+					}
 
 					FuncoesGlobais.limpaCampos(pnlCadastroDeUsuario);
 					FuncoesGlobais.desativaCampos(pnlCadastroDeUsuario);
@@ -261,9 +297,13 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 
 					btnNovo.setEnabled(true);
 					btnPesquisar.setEnabled(true);
-
-					JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
-							JOptionPane.INFORMATION_MESSAGE);
+					if (txtRegistro.getText().equals("NOVO")) {
+						JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
+								JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(this, "Cadastro atualizado com sucesso!", "Sistema",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
 				} catch (SQLException ex) {
 					ex.printStackTrace();
 				}
@@ -271,18 +311,37 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 		}
 	}
 
+	private void btnAlterar_click() {
+		FuncoesGlobais.ativaCampos(pnlCadastroDeUsuario);
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+
+		cbFuncionario.setEnabled(false);
+		btnPesquisarFuncionario.setEnabled(false);
+
+		btnSalvar.setEnabled(true);
+		btnCancelar.setEnabled(true);
+		txtRegistro.setEnabled(false);
+		txtLogin.requestFocus();
+	}
+
 	private void btnPesquisar_click() throws ParseException, SQLException, PropertyVetoException {
 		if (frmPesquisaUsuario.getInstance().isVisible()) {
+			frmPesquisaUsuario.getInstance().atualizaDados(); // Atualiza os dados do formulario
+			frmPesquisaUsuario.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaUsuario.getInstance().getBtnConfirma().setText("Abrir cadastro de usuário");
 			frmPesquisaUsuario.getInstance().setSelected(true);
 		} else {
+			frmPesquisaUsuario.getInstance().atualizaDados(); // Atualiza os dados do formulario
 			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaUsuario.getInstance());
+			frmPesquisaUsuario.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaUsuario.getInstance().getBtnConfirma().setText("Abrir cadastro de usuário");
 			frmPesquisaUsuario.getInstance().setVisible(true);
 			frmPesquisaUsuario.getInstance().setSelected(true);
 		}
 	}
 
 	private void btnCancelar_click() {
-		if (JOptionPane.showConfirmDialog(this, "Deseja realmente cancelar o novo cadastrado?", "Sistema",
+		if (JOptionPane.showConfirmDialog(this, "Deseja realmente cancelar o cadastrado?", "Sistema",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 
 			FuncoesGlobais.limpaCampos(pnlCadastroDeUsuario);
@@ -323,7 +382,27 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 
 		cbFuncionario.setSelectedItem(new DAOFuncionario().buscaFuncionario(idFuncionario).getNome());
 
-		//System.out.println("Id funcionario: " + idFuncionario);
+		// System.out.println("Id funcionario: " + idFuncionario);
+	}
+
+	public void preencheCadastro(Usuario usuario) {
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+		FuncoesGlobais.limpaCampos(pnlCadastroDeUsuario);
+		FuncoesGlobais.resetaBordaPadrao(pnlCadastroDeUsuario);
+		FuncoesGlobais.desativaCampos(pnlCadastroDeUsuario);
+
+		pnlBotoes.requestFocusInWindow();
+
+		btnNovo.setEnabled(true);
+		btnAlterar.setEnabled(true);
+		btnExcluir.setEnabled(true);
+		btnPesquisar.setEnabled(true);
+
+		this.idFuncionario = usuario.getId_funcionario();
+		txtRegistro.setText(Integer.toString(usuario.getRegistro()));
+		cbFuncionario.setSelectedItem(usuario.getNome_funcionario() == null ? null : usuario.getNome_funcionario());
+		txtLogin.setText(usuario.getLogin());
+		txtSenha.setText(usuario.getSenha());
 	}
 
 	public void internalFrameActivated(InternalFrameEvent e) {

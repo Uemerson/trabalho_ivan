@@ -26,6 +26,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 
 import controler.FuncoesGlobais;
 import dao.DAOCargo;
+import dao.DAOFuncionario;
 import model.Cargo;
 import javax.swing.JEditorPane;
 import javax.swing.JScrollPane;
@@ -82,6 +83,7 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 		pnlBotoes.add(btnNovo);
 
 		btnExcluir = new JButton("Excluir");
+		btnExcluir.addActionListener(this);
 		btnExcluir.setIcon(new ImageIcon(frmCadastroCargo.class.getResource("/imagens/excluir 48x48.png")));
 		btnExcluir.setEnabled(false);
 		btnExcluir.setBounds(100, 11, 80, 79);
@@ -90,6 +92,7 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 		pnlBotoes.add(btnExcluir);
 
 		btnAlterar = new JButton("Alterar");
+		btnAlterar.addActionListener(this);
 		btnAlterar.setIcon(new ImageIcon(frmCadastroCargo.class.getResource("/imagens/editar 48x48.png")));
 		btnAlterar.setEnabled(false);
 		btnAlterar.setBounds(190, 11, 80, 79);
@@ -159,7 +162,7 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 		txtNome.setColumns(10);
 		txtNome.setBounds(110, 59, 420, 28);
 		pnlCadastroDeCargo.add(txtNome);
-		
+
 		edpDescricao = new JEditorPane();
 		edpDescricao.setEnabled(false);
 		edpDescricao.setBounds(110, 103, 420, 97);
@@ -175,20 +178,55 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 				btnCancelar_click();
 			} else if (e.getSource() == btnSalvar) {
 				btnSalvar_click();
+			} else if (e.getSource() == btnAlterar) {
+				btnAlterar_click();
 			} else if (e.getSource() == btnPesquisar) {
 				btnPesquisar_click();
-
+			} else if (e.getSource() == btnExcluir) {
+				btnExcluir_click();
 			}
 		} catch (ParseException | SQLException | PropertyVetoException ex) {
 			ex.printStackTrace();
 		}
 	}
 
+	private void btnExcluir_click() throws NumberFormatException, SQLException {
+		if (JOptionPane.showConfirmDialog(this, "Deseja realmente excluir o cadastro?", "Sistema",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+			DAOFuncionario daoFuncionario = new DAOFuncionario();
+
+			daoFuncionario.excluirFuncionario(Integer.parseInt(txtRegistro.getText()));
+			JOptionPane.showMessageDialog(this, "Registro excluido com sucesso!", "Sistema",
+					JOptionPane.INFORMATION_MESSAGE);
+
+			DAOCargo daoCargo = new DAOCargo();
+			daoCargo.excluirCargo(Integer.parseInt(txtRegistro.getText()));
+
+			FuncoesGlobais.limpaCampos(pnlCadastroDeCargo);
+			FuncoesGlobais.desativaCampos(pnlCadastroDeCargo);
+			FuncoesGlobais.desativaCampos(pnlBotoes);
+
+			btnNovo.setEnabled(true);
+			btnPesquisar.setEnabled(true);
+			btnNovo.requestFocus();
+		}
+	}
+
+	private void btnAlterar_click() {
+		FuncoesGlobais.ativaCampos(pnlCadastroDeCargo);
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+
+		btnSalvar.setEnabled(true);
+		btnCancelar.setEnabled(true);
+		txtRegistro.setEnabled(false);
+		txtNome.requestFocus();
+	}
+
 	private void btnNovo_click() {
 		FuncoesGlobais.desativaCampos(pnlBotoes);
 		FuncoesGlobais.ativaCampos(pnlCadastroDeCargo);
 		FuncoesGlobais.limpaCampos(pnlCadastroDeCargo);
-		
+
 		txtRegistro.setText("NOVO");
 		txtRegistro.setEnabled(false);
 
@@ -214,10 +252,10 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 	}
 
 	private void btnSalvar_click() {
-		
+
 		ArrayList<Component> listaComp = new ArrayList<>();
 		listaComp.add(edpDescricao);
-		
+
 		if (FuncoesGlobais.verificaCampos(pnlCadastroDeCargo, listaComp) == true) {
 
 			JOptionPane.showMessageDialog(this, "Erro - Os campos em vermelho devem ser preenchidos!", "Sistema",
@@ -232,24 +270,32 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 					Cargo cargo = new Cargo();
 					cargo.setNome(txtNome.getText());
 					cargo.setDescricao(edpDescricao.getText().isEmpty() ? null : edpDescricao.getText());
-					
-					System.out.println(txtNome.getText());
-					System.out.println(cargo.getNome());
-					
+
 					DAOCargo daoCargo = new DAOCargo();
-					daoCargo.novoCargo(cargo);
-					
+
+					if (txtRegistro.getText().equals("NOVO")) {
+						daoCargo.novoCargo(cargo);
+					} else {
+						cargo.setRegistro(Integer.parseInt(txtRegistro.getText()));
+						daoCargo.atualizaCargo(cargo);
+					}
 					FuncoesGlobais.limpaCampos(pnlCadastroDeCargo);
 					FuncoesGlobais.desativaCampos(pnlCadastroDeCargo);
 					FuncoesGlobais.desativaCampos(pnlBotoes);
-					
+
 					btnNovo.setEnabled(true);
 					btnPesquisar.setEnabled(true);
 
-					JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
-							JOptionPane.INFORMATION_MESSAGE);
+					if (txtRegistro.getText().equals("NOVO")) {
+						JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
+								JOptionPane.INFORMATION_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(this, "Cadastro atualizado com sucesso!", "Sistema",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
 				} catch (SQLException ex) {
-					JOptionPane.showMessageDialog(this, "Não foi possivel salvar o cadastro de cargo, tente novamente!", "Sistema", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(this, "Não foi possivel salvar o cadastro de cargo, tente novamente!",
+							"Sistema", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
@@ -257,15 +303,37 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 
 	private void btnPesquisar_click() throws ParseException, SQLException, PropertyVetoException {
 		if (frmPesquisaCargo.getInstance().isVisible()) {
+			frmPesquisaCargo.getInstance().atualizaDados(); // Atualiza os dados do formulario
+			frmPesquisaCargo.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaCargo.getInstance().getBtnConfirma().setText("Abrir cadastro de cargo");
 			frmPesquisaCargo.getInstance().setSelected(true);
 		} else {
+			frmPesquisaCargo.getInstance().atualizaDados(); // Atualiza os dados do formulario
 			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaCargo.getInstance());
+			frmPesquisaCargo.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaCargo.getInstance().getBtnConfirma().setText("Abrir cadastro de cargo");
 			frmPesquisaCargo.getInstance().setVisible(true);
 			frmPesquisaCargo.getInstance().setSelected(true);
 		}
 	}
 
 	public void internalFrameActivated(InternalFrameEvent e) {
+	}
+
+	public void preencheCadastro(Cargo cargo) {
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+		FuncoesGlobais.limpaCampos(pnlCadastroDeCargo);
+		FuncoesGlobais.resetaBordaPadrao(pnlCadastroDeCargo);
+		FuncoesGlobais.desativaCampos(pnlCadastroDeCargo);
+
+		btnNovo.setEnabled(true);
+		btnAlterar.setEnabled(true);
+		btnExcluir.setEnabled(true);
+		btnPesquisar.setEnabled(true);
+
+		txtRegistro.setText(Integer.toString(cargo.getRegistro()));
+		txtNome.setText(cargo.getNome());
+		edpDescricao.setText(cargo.getDescricao());
 	}
 
 	// Limpa memoria

@@ -13,6 +13,14 @@ public class Usuario {
 		this.Senha = Senha;
 	}
 	
+	public Usuario(int Registro, String Login, String Senha, String Nome_funcionario, int Id_funcionario) {
+		this.Registro = Registro;
+		this.Login = Login;
+		this.Senha = Senha;
+		this.Nome_funcionario = Nome_funcionario;
+		this.Id_funcionario = Id_funcionario;
+	}
+	
 	public int getRegistro() {
 		return Registro;
 	}

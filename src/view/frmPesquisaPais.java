@@ -37,40 +37,40 @@ import controler.ComboKeyHandler;
 import controler.FuncoesGlobais;
 import dao.DAOCargo;
 import dao.DAOFuncionario;
-import dao.DAOAluno;
-import model.Aluno;
+import dao.DAOResponsavel;
+import model.Responsavel;
 import tableModel.FuncionarioTableModel;
-import tableModel.AlunoTableModel;
+import tableModel.ResponsavelTableModel;
 import tableModel.UsuarioTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.JRadioButton;
 
-public class frmPesquisaAluno extends JInternalFrame
+public class frmPesquisaPais extends JInternalFrame
 		implements ActionListener, InternalFrameListener, DocumentListener, KeyListener {
-	private JTable tbTabelaAluno;
+	private JTable tbTabelaResponsavel;
 
-	private static frmPesquisaAluno singleton = null;
+	private static frmPesquisaPais singleton = null;
 	private JScrollPane srpPainelTabela;
 	private JTextField txtBuscarPor;
-	private AlunoTableModel alunoTableModel;
+	private ResponsavelTableModel responsavelTableModel;
 	private JRadioButton rdbtnFiltrarPorRegistro;
 	private JRadioButton rdbtnFiltrarPorNome;
 	private JRadioButton rdbtnFiltrarPorCpf;
 	private JRadioButton rdbtnFiltrarPorRG;
 	private JButton btnConfirma;
 
-	public static frmPesquisaAluno getInstance() throws ParseException, SQLException {
+	public static frmPesquisaPais getInstance() throws ParseException, SQLException {
 
 		if (singleton == null) {
-			singleton = new frmPesquisaAluno();
+			singleton = new frmPesquisaPais();
 		}
 
 		return singleton;
 	}
 
-	public frmPesquisaAluno() throws SQLException {
+	public frmPesquisaPais() throws SQLException {
 		addInternalFrameListener(this);
 		setClosable(true);
 		setTitle("Pesquisar Respons\u00E1vel");
@@ -86,19 +86,19 @@ public class frmPesquisaAluno extends JInternalFrame
 		srpPainelTabela.setBounds(10, 103, 685, 213);
 		getContentPane().add(srpPainelTabela);
 
-		alunoTableModel = new AlunoTableModel();
-		alunoTableModel.addListaDeAlunos(new DAOAluno().listaAluno());
+		responsavelTableModel = new ResponsavelTableModel();
+		responsavelTableModel.addListaDeResponsavels(new DAOResponsavel().listaResponsavel());
 
-		tbTabelaAluno = new JTable();
-		tbTabelaAluno.setModel(alunoTableModel);
-		tbTabelaAluno.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		tbTabelaResponsavel = new JTable();
+		tbTabelaResponsavel.setModel(responsavelTableModel);
+		tbTabelaResponsavel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(alunoTableModel);
-		tbTabelaAluno.setRowSorter(sorter);
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(responsavelTableModel);
+		tbTabelaResponsavel.setRowSorter(sorter);
 
-		srpPainelTabela.setViewportView(tbTabelaAluno);
+		srpPainelTabela.setViewportView(tbTabelaResponsavel);
 
-		btnConfirma = new JButton("Abrir cadastro de respons\u00E1vel");
+		btnConfirma = new JButton("Abrir cadastro de aluno");
 		btnConfirma.addActionListener(this);
 		btnConfirma.setBounds(500, 327, 195, 28);
 		btnConfirma.setVisible(false);
@@ -160,14 +160,14 @@ public class frmPesquisaAluno extends JInternalFrame
 
 	// Atualiza os dados dos funcionarios cadastrados
 	public void atualizaDados() throws SQLException {
-		System.out.println("Atualizando dados aluno");
+		System.out.println("Atualizando dados responsavel");
 		txtBuscarPor.setText(null);
-		tbTabelaAluno.setRowSorter(null);
-		alunoTableModel.limpar();
-		alunoTableModel.addListaDeAlunos(new DAOAluno().listaAluno());
+		tbTabelaResponsavel.setRowSorter(null);
+		responsavelTableModel.limpar();
+		responsavelTableModel.addListaDeResponsavels(new DAOResponsavel().listaResponsavel());
 
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(alunoTableModel);
-		tbTabelaAluno.setRowSorter(sorter);
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(responsavelTableModel);
+		tbTabelaResponsavel.setRowSorter(sorter);
 
 		// tbTabelaFuncionario.setModel(model);
 	}
@@ -191,6 +191,7 @@ public class frmPesquisaAluno extends JInternalFrame
 		}
 	}
 	
+
 	private void rdbtnFiltrarPorRG_click() {
 		txtBuscarPor.setText(null);
 		txtBuscarPor.requestFocus();
@@ -211,22 +212,31 @@ public class frmPesquisaAluno extends JInternalFrame
 		txtBuscarPor.requestFocus();
 	}
 
+	
 	private void btnConfirma_click() throws ParseException, SQLException, PropertyVetoException {
-		/*if (btnConfirma.getText() == "Abrir cadastro de Aluno") {
+		if (btnConfirma.getText() == "Abrir cadastro de aluno") {
 		
-			if (tbTabelaAluno.getSelectedRow() > -1) {
+			if (tbTabelaResponsavel.getSelectedRow() > -1) {
 				frmCadastroAluno.getInstance();
 	
 				if (frmCadastroAluno.getInstance().isVisible()) {
-					frmCadastroAluno.getInstance().preencheCadastro(new DAOAluno().buscaAluno(alunoTableModel.getAluno(tbTabelaAluno.getSelectedRow()).getRegistro()));
+					if (this.getTitle() == "Pesquisar por Pai")
+						frmCadastroAluno.getInstance().preenchePai(new DAOResponsavel().buscaResponsavel(responsavelTableModel.getResponsavel(tbTabelaResponsavel.getSelectedRow()).getRegistro()));
+					else
+						frmCadastroAluno.getInstance().preencheMae(new DAOResponsavel().buscaResponsavel(responsavelTableModel.getResponsavel(tbTabelaResponsavel.getSelectedRow()).getRegistro()));
+						
 					frmCadastroAluno.getInstance().setSelected(true);
 				} else {
 	
 					frmCadastroAluno.getInstance().setVisible(true);
 					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroAluno.getInstance());
 					frmCadastroAluno.getInstance().setSelected(true);
-					frmCadastroAluno.getInstance().preencheCadastro(new DAOAluno()
-							.buscaAluno(alunoTableModel.getAluno(tbTabelaAluno.getSelectedRow()).getRegistro()));
+					
+					if (this.getTitle() == "Pesquisar por Pai")
+						frmCadastroAluno.getInstance().preenchePai(new DAOResponsavel().buscaResponsavel(responsavelTableModel.getResponsavel(tbTabelaResponsavel.getSelectedRow()).getRegistro()));
+					else
+						frmCadastroAluno.getInstance().preencheMae(new DAOResponsavel().buscaResponsavel(responsavelTableModel.getResponsavel(tbTabelaResponsavel.getSelectedRow()).getRegistro()));
+					
 				}
 	
 				dispose();
@@ -235,7 +245,7 @@ public class frmPesquisaAluno extends JInternalFrame
 						"Sistema", JOptionPane.ERROR_MESSAGE);
 			}
 		
-		}*/
+		}
 	}
 
 	public JButton getBtnConfirma() {
@@ -261,31 +271,31 @@ public class frmPesquisaAluno extends JInternalFrame
 	private void txtBuscarPor_documentUpdate() throws SQLException {
 
 		if (!txtBuscarPor.getText().isEmpty()) {
-			tbTabelaAluno.setRowSorter(null);
-			alunoTableModel.limpar();
+			tbTabelaResponsavel.setRowSorter(null);
+			responsavelTableModel.limpar();
 
 			if (rdbtnFiltrarPorRegistro.isSelected())
-				alunoTableModel.addListaDeAlunos(
-						new DAOAluno().listaAluno(Integer.parseInt(txtBuscarPor.getText())));
+				responsavelTableModel.addListaDeResponsavels(
+						new DAOResponsavel().listaResponsavel(Integer.parseInt(txtBuscarPor.getText())));
 			else if (rdbtnFiltrarPorNome.isSelected())
-				alunoTableModel
-						.addListaDeAlunos(new DAOAluno().listaAlunoNome(txtBuscarPor.getText()));
+				responsavelTableModel
+						.addListaDeResponsavels(new DAOResponsavel().listaResponsavelNome(txtBuscarPor.getText()));
 			else if (rdbtnFiltrarPorRG.isSelected())
-				alunoTableModel
-						.addListaDeAlunos(new DAOAluno().listaAlunoRG(txtBuscarPor.getText()));
+				responsavelTableModel
+						.addListaDeResponsavels(new DAOResponsavel().listaResponsavelRG(txtBuscarPor.getText()));
 			else if (rdbtnFiltrarPorCpf.isSelected())
-				alunoTableModel
-						.addListaDeAlunos(new DAOAluno().listaAlunoCPF(txtBuscarPor.getText()));
+				responsavelTableModel
+						.addListaDeResponsavels(new DAOResponsavel().listaResponsavelCPF(txtBuscarPor.getText()));
 
-			TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(alunoTableModel);
-			tbTabelaAluno.setRowSorter(sorter);
+			TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(responsavelTableModel);
+			tbTabelaResponsavel.setRowSorter(sorter);
 		} else {
-			tbTabelaAluno.setRowSorter(null);
-			alunoTableModel.limpar();
-			alunoTableModel.addListaDeAlunos(new DAOAluno().listaAluno());
+			tbTabelaResponsavel.setRowSorter(null);
+			responsavelTableModel.limpar();
+			responsavelTableModel.addListaDeResponsavels(new DAOResponsavel().listaResponsavel());
 
-			TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(alunoTableModel);
-			tbTabelaAluno.setRowSorter(sorter);
+			TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(responsavelTableModel);
+			tbTabelaResponsavel.setRowSorter(sorter);
 		}
 		// tbTabelaFuncionario.setModel(model);
 	}

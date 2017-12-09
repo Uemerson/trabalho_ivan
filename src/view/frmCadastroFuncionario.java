@@ -190,8 +190,8 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		cbCargo.setEnabled(false);
 		cbCargo.setEditable(true);
 		DefaultComboBoxModel<String> cbCargoModel = new DefaultComboBoxModel<>();
-		for (int i = 0; i < new DAOCargo().listaCargo().size(); i++) {
-			cbCargoModel.addElement(new DAOCargo().listaCargo().get(i).getNome());
+		for (int i = 0; i < new DAOCargo().listaCargos().size(); i++) {
+			cbCargoModel.addElement(new DAOCargo().listaCargos().get(i).getNome());
 		}
 		
 		cbCargo.setModel(cbCargoModel);
@@ -307,7 +307,7 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 
 		cbEstado = new JComboBox();
 		cbEstado.setEnabled(false);
-		cbEstado.setModel(new DefaultComboBoxModel(new String[] {"AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO", "", ""}));
+		cbEstado.setModel(new DefaultComboBoxModel(new String[] {"AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"}));
 		cbEstado.setSelectedItem(null);
 		cbEstado.setBounds(603, 139, 165, 28);
 		pnlInformacaoFuncionario.add(cbEstado);
@@ -547,7 +547,7 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 	private void btnAlterar_click() {
 		FuncoesGlobais.ativaCampos(pnlInformacaoFuncionario);
 
-		if (cbCargo.getSelectedItem().toString().equals("Professor")) {
+		if (cbCargo.getSelectedItem().toString().replace("(a)", "").equals("Professor")) {
 			FuncoesGlobais.ativaCampos(pnlInformacaoDeProfessores);
 		}
 
@@ -575,7 +575,7 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 
 	private void btnCancelar_click() {
 
-		if (JOptionPane.showConfirmDialog(this, "Deseja realmente cancelar o novo cadastrado?", "Sistema",
+		if (JOptionPane.showConfirmDialog(this, "Deseja realmente cancelar o cadastrado?", "Sistema",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 
 			FuncoesGlobais.limpaCampos(pnlInformacaoFuncionario);
@@ -628,7 +628,7 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 
 			} else {
 
-				if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o novo cadastrado?", "Sistema",
+				if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o cadastrado?", "Sistema",
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 					// Salvando o registro
 					Funcionario funcionario = new Funcionario();
@@ -714,7 +714,6 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 	}
 
 	private void btnExcluir_click() throws NumberFormatException, SQLException {
-
 		if (JOptionPane.showConfirmDialog(this, "Deseja realmente excluir o cadastro?", "Sistema",
 				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 			DAOFuncionario daoFuncionario = new DAOFuncionario();

@@ -3,17 +3,60 @@ package model;
 import java.util.Date;
 
 public class Aluno {
-	
+
 	private int Registro;
 	
 	private Date Data_de_Nascimento;
-	private int Numero_da_Casa;
+	private int Numero_da_Casa, idPai, idMae;
 	
 	private String Nome, RG, Orgao_Emissor, CPF, Sexo,
-	Cor, Raca, Logradouro, endereco, Tel_Residencial, Tel_Comercial, Celular, Email,
+	Cor, Raca, Logradouro, endereco, bairro, Tel_Residencial, Tel_Comercial, Celular, Email,
 	Local_de_Origem_do_Aluno, Rede_Estabelecimento_de_Ordem_do_aluno,
-	Situacao_do_Aluno_no_Ano_Anterior, Observacoes_do_Aluno;
+	Situacao_do_Aluno_no_Ano_Anterior, Observacoes_do_Aluno, Cidade, Estado, local_origem_aluno;
 
+	public Aluno() {};
+	
+	public Aluno(int Registro, String Nome, String RG, String CPF) {
+		this.Registro = Registro;
+		this.Nome = Nome;
+		this.RG = RG;
+		this.CPF = CPF;
+	};
+
+	public Aluno(int registro, Date data_de_Nascimento, int numero_da_Casa, int idPai, int idMae, String nome,
+			String rG, String orgao_Emissor, String cPF, String sexo, String cor, String raca, String logradouro,
+			String endereco, String bairro, String tel_Residencial, String tel_Comercial, String celular, String email,
+			String local_de_Origem_do_Aluno, String rede_Estabelecimento_de_Ordem_do_aluno,
+			String situacao_do_Aluno_no_Ano_Anterior, String observacoes_do_Aluno, String cidade, String estado,
+			String local_origem_aluno) {
+		Registro = registro;
+		Data_de_Nascimento = data_de_Nascimento;
+		Numero_da_Casa = numero_da_Casa;
+		this.idPai = idPai;
+		this.idMae = idMae;
+		Nome = nome;
+		RG = rG;
+		Orgao_Emissor = orgao_Emissor;
+		CPF = cPF;
+		Sexo = sexo;
+		Cor = cor;
+		Raca = raca;
+		Logradouro = logradouro;
+		this.endereco = endereco;
+		this.bairro = bairro;
+		Tel_Residencial = tel_Residencial;
+		Tel_Comercial = tel_Comercial;
+		Celular = celular;
+		Email = email;
+		Local_de_Origem_do_Aluno = local_de_Origem_do_Aluno;
+		Rede_Estabelecimento_de_Ordem_do_aluno = rede_Estabelecimento_de_Ordem_do_aluno;
+		Situacao_do_Aluno_no_Ano_Anterior = situacao_do_Aluno_no_Ano_Anterior;
+		Observacoes_do_Aluno = observacoes_do_Aluno;
+		Cidade = cidade;
+		Estado = estado;
+		this.local_origem_aluno = local_origem_aluno;
+	}
+	
 	public String getLogradouro() {
 		return Logradouro;
 	}
@@ -188,8 +231,53 @@ public class Aluno {
 
 	public void setObservacoes_do_Aluno(String observacoes_do_Aluno) {
 		Observacoes_do_Aluno = observacoes_do_Aluno;
+	}
+
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getCidade() {
+		return Cidade;
+	}
+
+	public void setCidade(String cidade) {
+		Cidade = cidade;
+	}
+
+	public String getEstado() {
+		return Estado;
+	}
+
+	public void setEstado(String estado) {
+		Estado = estado;
+	}
+
+	public int getIdPai() {
+		return idPai;
+	}
+
+	public void setIdPai(int idPai) {
+		this.idPai = idPai;
+	}
+
+	public int getIdMae() {
+		return idMae;
+	}
+
+	public void setIdMae(int idMae) {
+		this.idMae = idMae;
+	}
+
+	public String getLocal_origem_aluno() {
+		return local_origem_aluno;
+	}
+
+	public void setLocal_origem_aluno(String local_origem_aluno) {
+		this.local_origem_aluno = local_origem_aluno;
 	}    
-	
-	
-	
 }

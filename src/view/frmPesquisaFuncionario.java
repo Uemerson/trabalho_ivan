@@ -32,6 +32,8 @@ import controler.FuncoesGlobais;
 import dao.DAOFuncionario;
 import tableModel.FuncionarioTableModel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -137,6 +139,13 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 		btnConfirma.setBounds(578, 446, 204, 28);
 		btnConfirma.setVisible(false);
 		getContentPane().add(btnConfirma);
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				txtBuscarPor.requestFocus();
+			}
+		});
 	}
 
 	public void focusLost(FocusEvent e) {

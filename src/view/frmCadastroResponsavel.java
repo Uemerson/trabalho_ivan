@@ -456,70 +456,81 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 
 	private void btnSalvar_click() {
 
-		if (txtRegistro.getText() == "NOVO") {
-			ArrayList<Component> listaComp = new ArrayList<>();
-			listaComp.add(txtNumero);
+		ArrayList<Component> listaComp = new ArrayList<>();
+		listaComp.add(txtNumero);
 
-			if (FuncoesGlobais.verificaCampos(pnlCadastroResponsavel)
-					| FuncoesGlobais.verificaCampos(pnlPerfilSocioEconomico)
-					| FuncoesGlobais.verificaCampos(pnlLocalDeTrabalho, listaComp)) {
-				JOptionPane.showMessageDialog(this, "Erro - Os campos em vermelho devem ser preenchidos!", "Sistema",
-						JOptionPane.ERROR_MESSAGE);
-			}
+		if (FuncoesGlobais.verificaCampos(pnlCadastroResponsavel)
+				| FuncoesGlobais.verificaCampos(pnlPerfilSocioEconomico)
+				| FuncoesGlobais.verificaCampos(pnlLocalDeTrabalho, listaComp)) {
+			JOptionPane.showMessageDialog(this, "Erro - Os campos em vermelho devem ser preenchidos!", "Sistema",
+					JOptionPane.ERROR_MESSAGE);
+		}
 
-			else {
-				if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o novo cadastrado?", "Sistema",
-						JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
+		else {
+			if (JOptionPane.showConfirmDialog(this, "Deseja realmente salvar o cadastrado?", "Sistema",
+					JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
 
-					try {
-						Responsavel responsavel = new Responsavel();
+				try {
+					Responsavel responsavel = new Responsavel();
 
-						responsavel.setCPF(txtCPF.getText().replace(".", ""));
-						responsavel.setNome_do_Responsavel(txtNome.getText());
-						responsavel.setGrau_de_Intrucao(cbGrauInstrucao.getSelectedItem().toString());
-						responsavel.setRG(txtRG.getText());
-						responsavel.setProfissao(txtProfissao.getText());
-						responsavel.setData_de_Nascimento(
-								new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeNascimento.getText()));
-						responsavel.setLocal_de_Trabalho(txtNomeDoLocal.getText());
-						Time horarioTrabalho = new Time(
-								new SimpleDateFormat("HH:mm").parse(txtHorario.getText()).getTime());
-						responsavel.setHorario_de_Trabalho(horarioTrabalho);
-						responsavel.setLogradouro(cbLogradouro.getSelectedItem().toString());
-						responsavel.setEndereco(txtEndereco.getText());
-						responsavel.setNumeroCasa(
-								txtNumero.getText().isEmpty() ? 0 : Integer.parseInt(txtNumero.getText()));
-						responsavel.setRenda(Double.parseDouble(txtRenda.getText()));
-						responsavel.setCasa_Propria(cbCasaPropria.getSelectedItem().toString() == "Sim" ? true : false);
-						responsavel.setNumero_de_Filhos(Integer.parseInt(txtNumeroFilho.getText()));
-						responsavel.setNumero_de_Pessoas_que_Residem_na_Casa(
-								Integer.parseInt(txtNumeroPessoasCasa.getText()));
+					responsavel.setCPF(txtCPF.getText().replace(".", ""));
+					responsavel.setNome_do_Responsavel(txtNome.getText());
+					responsavel.setGrau_de_Intrucao(cbGrauInstrucao.getSelectedItem().toString());
+					responsavel.setRG(txtRG.getText());
+					responsavel.setProfissao(txtProfissao.getText());
+					responsavel.setData_de_Nascimento(
+							new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDeNascimento.getText()));
+					responsavel.setLocal_de_Trabalho(txtNomeDoLocal.getText());
+					Time horarioTrabalho = new Time(
+							new SimpleDateFormat("HH:mm").parse(txtHorario.getText()).getTime());
+					responsavel.setHorario_de_Trabalho(horarioTrabalho);
+					responsavel.setLogradouro(cbLogradouro.getSelectedItem().toString());
+					responsavel.setEndereco(txtEndereco.getText());
+					responsavel
+							.setNumeroCasa(txtNumero.getText().isEmpty() ? 0 : Integer.parseInt(txtNumero.getText()));
+					responsavel.setRenda(Double.parseDouble(txtRenda.getText()));
+					responsavel.setCasa_Propria(cbCasaPropria.getSelectedItem().toString() == "Sim" ? true : false);
+					responsavel.setNumero_de_Filhos(Integer.parseInt(txtNumeroFilho.getText()));
+					responsavel
+							.setNumero_de_Pessoas_que_Residem_na_Casa(Integer.parseInt(txtNumeroPessoasCasa.getText()));
 
-						DAOResponsavel daoResponsavel = new DAOResponsavel();
+					DAOResponsavel daoResponsavel = new DAOResponsavel();
+
+					if (txtRegistro.getText().equals("NOVO")) {
 						daoResponsavel.novoResponsavel(responsavel);
+					} else {
+						responsavel.setRegistro(Integer.parseInt(txtRegistro.getText()));
+						daoResponsavel.atualizaResponsavel(responsavel);
+					}
 
-						FuncoesGlobais.limpaCampos(pnlCadastroResponsavel);
-						FuncoesGlobais.limpaCampos(pnlPerfilSocioEconomico);
-						FuncoesGlobais.limpaCampos(pnlLocalDeTrabalho);
-						FuncoesGlobais.desativaCampos(pnlCadastroResponsavel);
-						FuncoesGlobais.desativaCampos(pnlPerfilSocioEconomico);
-						FuncoesGlobais.desativaCampos(pnlLocalDeTrabalho);
-						FuncoesGlobais.desativaCampos(pnlBotoes);
+					FuncoesGlobais.limpaCampos(pnlCadastroResponsavel);
+					FuncoesGlobais.limpaCampos(pnlPerfilSocioEconomico);
+					FuncoesGlobais.limpaCampos(pnlLocalDeTrabalho);
+					FuncoesGlobais.desativaCampos(pnlCadastroResponsavel);
+					FuncoesGlobais.desativaCampos(pnlPerfilSocioEconomico);
+					FuncoesGlobais.desativaCampos(pnlLocalDeTrabalho);
+					FuncoesGlobais.desativaCampos(pnlBotoes);
 
-						btnNovo.setEnabled(true);
-						btnPesquisar.setEnabled(true);
+					btnNovo.setEnabled(true);
+					btnPesquisar.setEnabled(true);
 
+					if (txtRegistro.getText().equals("NOVO")) {
 						JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
 								JOptionPane.INFORMATION_MESSAGE);
-					} catch (ParseException | SQLException e) {
-						e.printStackTrace();
+					} else {
+						JOptionPane.showMessageDialog(this, "Cadastro atualizado com sucesso!", "Sistema",
+								JOptionPane.INFORMATION_MESSAGE);
 
-						JOptionPane.showMessageDialog(this, "Erro ao tentar salvar o cadastro!", "Sistema",
-								JOptionPane.ERROR_MESSAGE);
 					}
+				} catch (ParseException | SQLException e) {
+					e.printStackTrace();
+
+					JOptionPane.showMessageDialog(this, "Erro ao tentar salvar o cadastro!", "Sistema",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		}
+
 	}
 
 	private void btnExcluir_click() throws NumberFormatException, SQLException {
@@ -559,7 +570,7 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 	}
 
 	private void btnCancelar_click() {
-		if (JOptionPane.showConfirmDialog(this, "Deseja realmente cancelar o novo cadastrado?", "Sistema",
+		if (JOptionPane.showConfirmDialog(this, "Deseja realmente cancelar o cadastrado?", "Sistema",
 				JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE) == JOptionPane.YES_OPTION) {
 
 			FuncoesGlobais.limpaCampos(pnlCadastroResponsavel);
