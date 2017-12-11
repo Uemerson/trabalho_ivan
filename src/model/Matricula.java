@@ -6,23 +6,36 @@ public class Matricula {
 
 	private int Registro, Aluno, Secretario, Responsavel, Mensalidade, VencimentoDia;
 	private Date Data_de_Matricula;
-	private String ano, Nivel_Em_Que__Esta_Sendo_Matriculado,
-	serie, turno, Pai_Responsavel;
+	private String Nivel_Em_Que__Esta_Sendo_Matriculado,
+	serie, turno, NomeAluno, NomeResponsavel, NomeSecretario, TituloMensalidade;
 
+	public Matricula() {}
+	
+	public Matricula(int registro, int aluno, int secretario, int responsavel, int mensalidade, int vencimentoDia,
+			Date data_de_Matricula, String nivel_Em_Que__Esta_Sendo_Matriculado, String serie, String turno,
+			String nomeAluno, String nomeResponsavel, String nomeSecretario, String TituloMensalidade) {
+		Registro = registro;
+		Aluno = aluno;
+		Secretario = secretario;
+		Responsavel = responsavel;
+		Mensalidade = mensalidade;
+		VencimentoDia = vencimentoDia;
+		Data_de_Matricula = data_de_Matricula;
+		Nivel_Em_Que__Esta_Sendo_Matriculado = nivel_Em_Que__Esta_Sendo_Matriculado;
+		this.serie = serie;
+		this.turno = turno;
+		NomeAluno = nomeAluno;
+		NomeResponsavel = nomeResponsavel;
+		NomeSecretario = nomeSecretario;
+		this.TituloMensalidade = TituloMensalidade;
+	}
+	
 	public int getRegistro() {
 		return Registro;
 	}
 
 	public void setRegistro(int registro) {
 		Registro = registro;
-	}
-
-	public String getAno() {
-		return ano;
-	}
-
-	public void setAno(String ano) {
-		this.ano = ano;
 	}
 
 	public Date getData_de_Matricula() {
@@ -56,15 +69,7 @@ public class Matricula {
 	public void setTurno(String turno) {
 		this.turno = turno;
 	}
-
-	public String getPai_Responsavel() {
-		return Pai_Responsavel;
-	}
-
-	public void setPai_Responsavel(String pai_Responsavel) {
-		Pai_Responsavel = pai_Responsavel;
-	}
-
+	
 	public int getAluno() {
 		return Aluno;
 	}
@@ -103,5 +108,37 @@ public class Matricula {
 
 	public int getSecretario() {
 		return Secretario;
+	}
+
+	public String getNomeAluno() {
+		return NomeAluno;
+	}
+
+	public void setNomeAluno(String nomeAluno) {
+		NomeAluno = nomeAluno;
+	}
+
+	public String getNomeResponsavel() {
+		return NomeResponsavel;
+	}
+
+	public void setNomeResponsavel(String nomeResponsavel) {
+		NomeResponsavel = nomeResponsavel;
+	}
+
+	public String getNomeSecretario() {
+		return NomeSecretario;
+	}
+
+	public void setNomeSecretario(String nomeSecretario) {
+		NomeSecretario = nomeSecretario;
+	}
+
+	public String getTituloMensalidade() {
+		return TituloMensalidade;
+	}
+
+	public void setTituloMensalidade(String tituloMatricula) {
+		TituloMensalidade = tituloMatricula;
 	} 
 }

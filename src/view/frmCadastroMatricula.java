@@ -1,11 +1,29 @@
 package view;
 
-import java.awt.EventQueue;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyVetoException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.InternalFrameListener;
 import javax.swing.text.MaskFormatter;
 
 import controler.FuncoesGlobais;
@@ -19,28 +37,6 @@ import model.Funcionario;
 import model.Matricula;
 import model.Mensalidade;
 import model.Responsavel;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.Color;
-import javax.swing.ImageIcon;
-import javax.swing.UIManager;
-import java.awt.event.ActionListener;
-import java.beans.PropertyVetoException;
-import java.sql.SQLException;
-import java.awt.event.ActionEvent;
-import javax.swing.event.InternalFrameListener;
-import javax.swing.event.InternalFrameEvent;
 
 public class frmCadastroMatricula extends JInternalFrame implements ActionListener, InternalFrameListener {
 	private JPanel pnlBotoes;
@@ -78,7 +74,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 	private JButton btnPesquisarSecretario;
 	private JComboBox cbMensalidade;
 	private JButton btnPesquisarMensalidade;
-	
+
 	public static frmCadastroMatricula getInstance() throws ParseException {
 		if (singleton == null) {
 			singleton = new frmCadastroMatricula();
@@ -108,6 +104,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		pnlBotoes.add(btnNovo);
 
 		btnExcluir = new JButton("Excluir");
+		btnExcluir.addActionListener(this);
 		btnExcluir.setIcon(new ImageIcon(frmCadastroMatricula.class.getResource("/imagens/excluir 48x48.png")));
 		btnExcluir.setEnabled(false);
 		btnExcluir.setBounds(100, 11, 80, 79);
@@ -116,6 +113,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		pnlBotoes.add(btnExcluir);
 
 		btnAlterar = new JButton("Alterar");
+		btnAlterar.addActionListener(this);
 		btnAlterar.setIcon(new ImageIcon(frmCadastroMatricula.class.getResource("/imagens/editar 48x48.png")));
 		btnAlterar.setEnabled(false);
 		btnAlterar.setBounds(190, 11, 80, 79);
@@ -191,7 +189,8 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		pnlCadastroDeMatricula.add(txtDataDaMatricula);
 
 		cbNivelQueEstaSendoMatriculado = new JComboBox();
-		cbNivelQueEstaSendoMatriculado.setModel(new DefaultComboBoxModel(new String[] {"Educa\u00E7\u00E3o infantil", "Fundamental 1", "Fundamental 2", "Ensino m\u00E9dio"}));
+		cbNivelQueEstaSendoMatriculado.setModel(new DefaultComboBoxModel(
+				new String[] { "Educa\u00E7\u00E3o infantil", "Fundamental 1", "Fundamental 2", "Ensino m\u00E9dio" }));
 		cbNivelQueEstaSendoMatriculado.setEnabled(false);
 		cbNivelQueEstaSendoMatriculado.setBounds(541, 64, 221, 28);
 		cbNivelQueEstaSendoMatriculado.setSelectedItem(null);
@@ -262,44 +261,45 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		btnPesquisarAluno.setEnabled(false);
 		btnPesquisarAluno.setBounds(585, 23, 28, 28);
 		pnlCadastroDeMatricula.add(btnPesquisarAluno);
-		
+
 		btnPesquisarSecretario = new JButton("");
 		btnPesquisarSecretario.addActionListener(this);
 		btnPesquisarSecretario.setIcon(new ImageIcon(frmCadastroMatricula.class.getResource("/imagens/pesquisar.png")));
 		btnPesquisarSecretario.setEnabled(false);
 		btnPesquisarSecretario.setBounds(734, 101, 28, 28);
 		pnlCadastroDeMatricula.add(btnPesquisarSecretario);
-		
+
 		btnPesquisarMensalidade = new JButton("");
 		btnPesquisarMensalidade.addActionListener(this);
-		btnPesquisarMensalidade.setIcon(new ImageIcon(frmCadastroMatricula.class.getResource("/imagens/pesquisar.png")));
+		btnPesquisarMensalidade
+				.setIcon(new ImageIcon(frmCadastroMatricula.class.getResource("/imagens/pesquisar.png")));
 		btnPesquisarMensalidade.setEnabled(false);
 		btnPesquisarMensalidade.setBounds(734, 138, 28, 28);
 		pnlCadastroDeMatricula.add(btnPesquisarMensalidade);
-		
+
 		cbMensalidade = new JComboBox();
 		cbMensalidade.setEnabled(false);
 		cbMensalidade.setBounds(430, 138, 294, 28);
 		pnlCadastroDeMatricula.add(cbMensalidade);
-		
+
 		JLabel lblMensalidade = new JLabel("Mensalidade");
 		lblMensalidade.setHorizontalAlignment(SwingConstants.LEFT);
 		lblMensalidade.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblMensalidade.setBounds(330, 138, 92, 28);
 		pnlCadastroDeMatricula.add(lblMensalidade);
-		
+
 		lblNvelEmQue = new JLabel("N\u00EDvel em que est\u00E1 matr\u00EDculado");
 		lblNvelEmQue.setBounds(330, 64, 201, 28);
 		pnlCadastroDeMatricula.add(lblNvelEmQue);
 		lblNvelEmQue.setHorizontalAlignment(SwingConstants.LEFT);
 		lblNvelEmQue.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		
+
 		txtVencimentoDia = new JTextField();
 		txtVencimentoDia.setEnabled(false);
 		txtVencimentoDia.setColumns(10);
 		txtVencimentoDia.setBounds(141, 177, 139, 28);
 		pnlCadastroDeMatricula.add(txtVencimentoDia);
-		
+
 		lblVencimentoDia = new JLabel("Vencimento dia");
 		lblVencimentoDia.setHorizontalAlignment(SwingConstants.LEFT);
 		lblVencimentoDia.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -318,6 +318,8 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 				btnCancelar_click();
 			} else if (e.getSource() == btnPesquisar) {
 				btnPesquisar_click();
+			} else if (e.getSource() == btnPesquisar) {
+				btnPesquisar_click();
 			} else if (e.getSource() == btnPesquisarResponsavel) {
 				btnPesquisarResponsavel_click();
 			} else if (e.getSource() == btnPesquisarAluno) {
@@ -326,26 +328,63 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 				btnPesquisarSecretario_click();
 			} else if (e.getSource() == btnPesquisarMensalidade) {
 				btnPesquisarMensalidade_click();
+			} else if (e.getSource() == btnAlterar) {
+				btnAlterar_click();
+			} else if (e.getSource() == btnExcluir) {
+				btnExcluir_click();
 			}
-			
+
 		} catch (PropertyVetoException | ParseException | SQLException ex) {
-			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema",
+					JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void btnAlterar_click() {
+		FuncoesGlobais.ativaCampos(pnlCadastroDeMatricula);
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+
+		btnSalvar.setEnabled(true);
+		btnCancelar.setEnabled(true);
+		txtRegistro.setEnabled(false);
+
+		cbAluno.setEnabled(false);
+		cbResponsavel.setEnabled(false);
+		cbSecretario.setEnabled(false);
+		cbMensalidade.setEnabled(false);
+
+		cbTurno.requestFocusInWindow();
+	}
+
+	private void btnPesquisar_click() throws ParseException, SQLException, PropertyVetoException {
+		if (frmPesquisaMatricula.getInstance().isVisible()) {
+			frmPesquisaMatricula.getInstance().atualizaDados(); // Atualiza os dados do formulario
+			frmPesquisaMatricula.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaMatricula.getInstance().getBtnConfirma().setText("Abrir cadastro de matrícula");
+			frmPesquisaMatricula.getInstance().setSelected(true);
+		} else {
+			frmPesquisaMatricula.getInstance().atualizaDados(); // Atualiza os dados do formulario
+			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaMatricula.getInstance());
+			frmPesquisaMatricula.getInstance().getBtnConfirma().setVisible(true);
+			frmPesquisaMatricula.getInstance().getBtnConfirma().setText("Abrir cadastro de matrícula");
+			frmPesquisaMatricula.getInstance().setVisible(true);
+			frmPesquisaMatricula.getInstance().setSelected(true);
 		}
 	}
 
 	private void btnPesquisarResponsavel_click() throws ParseException, SQLException, PropertyVetoException {
 		idResponsavel = 0;
-		
-		//Limpa os dados da Combobox
+
+		// Limpa os dados da Combobox
 		cbResponsavel.removeAll();
 		DefaultComboBoxModel<String> cbResponsavelModel = new DefaultComboBoxModel<>();
 		for (int i = 0; i < new DAOResponsavel().listaResponsavel().size(); i++) {
 			cbResponsavelModel.addElement(new DAOResponsavel().listaResponsavel().get(i).getNome_do_Responsavel());
 		}
-		
+
 		cbResponsavel.setModel(cbResponsavelModel);
 		cbResponsavel.setSelectedItem(null);
-		
+
 		if (frmPesquisaResponsavel.getInstance().isVisible()) {
 			frmPesquisaResponsavel.getInstance().atualizaDados(); // Atualiza os dados do formulario
 			frmPesquisaResponsavel.getInstance().getBtnConfirma().setVisible(true);
@@ -360,20 +399,20 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 			frmPesquisaResponsavel.getInstance().setSelected(true);
 		}
 	}
-	
+
 	private void btnPesquisarAluno_click() throws SQLException, ParseException, PropertyVetoException {
 		idAluno = 0;
-		
-		//Limpa os dados da Combobox
+
+		// Limpa os dados da Combobox
 		cbAluno.removeAll();
 		DefaultComboBoxModel<String> cbAlunoModel = new DefaultComboBoxModel<>();
 		for (int i = 0; i < new DAOAluno().listaAluno().size(); i++) {
 			cbAlunoModel.addElement(new DAOAluno().listaAluno().get(i).getNome());
 		}
-		
+
 		cbAluno.setModel(cbAlunoModel);
 		cbAluno.setSelectedItem(null);
-		
+
 		if (frmPesquisaAluno.getInstance().isVisible()) {
 			frmPesquisaAluno.getInstance().atualizaDados(); // Atualiza os dados do formulario
 			frmPesquisaAluno.getInstance().getBtnConfirma().setVisible(true);
@@ -388,20 +427,20 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 			frmPesquisaAluno.getInstance().setSelected(true);
 		}
 	}
-	
+
 	private void btnPesquisarSecretario_click() throws SQLException, ParseException, PropertyVetoException {
 		idSecretario = 0;
-		
-		//Limpa os dados da Combobox
+
+		// Limpa os dados da Combobox
 		cbSecretario.removeAll();
 		DefaultComboBoxModel<String> cbSecretarioModel = new DefaultComboBoxModel<>();
 		for (int i = 0; i < new DAOFuncionario().listaFuncionario().size(); i++) {
 			cbSecretarioModel.addElement(new DAOFuncionario().listaFuncionario().get(i).getNome());
 		}
-		
+
 		cbSecretario.setModel(cbSecretarioModel);
 		cbSecretario.setSelectedItem(null);
-		
+
 		if (frmPesquisaFuncionario.getInstance().isVisible()) {
 			frmPesquisaFuncionario.getInstance().atualizaDados(); // Atualiza os dados do formulario
 			frmPesquisaFuncionario.getInstance().getBtnConfirma().setVisible(true);
@@ -416,20 +455,21 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 			frmPesquisaFuncionario.getInstance().setSelected(true);
 		}
 	}
-	
+
 	private void btnPesquisarMensalidade_click() throws SQLException, ParseException, PropertyVetoException {
 		idMensalidade = 0;
-		
-		//Limpa os dados da Combobox
+
+		// Limpa os dados da Combobox
 		cbMensalidade.removeAll();
 		DefaultComboBoxModel<String> cbMensalidadeModel = new DefaultComboBoxModel<>();
 		for (int i = 0; i < new DAOMensalidade().listaMensalidade().size(); i++) {
-			cbMensalidadeModel.addElement("Mensalidade n° " + new DAOMensalidade().listaMensalidade().get(i).getRegistro());
+			cbMensalidadeModel
+					.addElement("Mensalidade n° " + new DAOMensalidade().listaMensalidade().get(i).getRegistro());
 		}
-		
+
 		cbMensalidade.setModel(cbMensalidadeModel);
 		cbMensalidade.setSelectedItem(null);
-		
+
 		if (frmPesquisaMensalidade.getInstance().isVisible()) {
 			frmPesquisaMensalidade.getInstance().atualizaDados(); // Atualiza os dados do formulario
 			frmPesquisaMensalidade.getInstance().getBtnConfirma().setVisible(true);
@@ -444,27 +484,94 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 			frmPesquisaMensalidade.getInstance().setSelected(true);
 		}
 	}
-	
+
 	public void preencheResponsavel(Responsavel responsavel) throws SQLException {
 		this.idResponsavel = responsavel.getRegistro();
 		cbResponsavel.setSelectedItem(responsavel.getNome_do_Responsavel());
 	}
-	
+
 	public void preencheAluno(Aluno aluno) {
 		this.idAluno = aluno.getRegistro();
 		cbAluno.setSelectedItem(aluno.getNome());
 	}
-	
+
 	public void preencheSecretario(Funcionario funcionario) {
 		this.idSecretario = funcionario.getRegistro();
 		cbSecretario.setSelectedItem(funcionario.getNome());
 	}
-	
+
 	public void preencheMensalidade(Mensalidade mensalidade) {
 		this.idMensalidade = mensalidade.getRegistro();
 		cbMensalidade.setSelectedItem("Mensalidade n° " + mensalidade.getRegistro());
 	}
-	
+
+	public void preencheCadastro(Matricula matricula) throws SQLException {
+
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+		FuncoesGlobais.limpaCampos(pnlCadastroDeMatricula);
+		FuncoesGlobais.resetaBordaPadrao(pnlCadastroDeMatricula);
+		FuncoesGlobais.desativaCampos(pnlCadastroDeMatricula);
+
+		// Preenche todas as combobox
+		cbResponsavel.removeAll();
+		DefaultComboBoxModel<String> cbResponsavelModel = new DefaultComboBoxModel<>();
+		for (int i = 0; i < new DAOResponsavel().listaResponsavel().size(); i++) {
+			cbResponsavelModel.addElement(new DAOResponsavel().listaResponsavel().get(i).getNome_do_Responsavel());
+		}
+
+		cbResponsavel.setModel(cbResponsavelModel);
+		cbResponsavel.setSelectedItem(null);
+
+		cbAluno.removeAll();
+		DefaultComboBoxModel<String> cbAlunoModel = new DefaultComboBoxModel<>();
+		for (int i = 0; i < new DAOAluno().listaAluno().size(); i++) {
+			cbAlunoModel.addElement(new DAOAluno().listaAluno().get(i).getNome());
+		}
+
+		cbAluno.setModel(cbAlunoModel);
+		cbAluno.setSelectedItem(null);
+
+		cbSecretario.removeAll();
+		DefaultComboBoxModel<String> cbSecretarioModel = new DefaultComboBoxModel<>();
+		for (int i = 0; i < new DAOFuncionario().listaFuncionario().size(); i++) {
+			cbSecretarioModel.addElement(new DAOFuncionario().listaFuncionario().get(i).getNome());
+		}
+
+		cbSecretario.setModel(cbSecretarioModel);
+		cbSecretario.setSelectedItem(null);
+
+		cbMensalidade.removeAll();
+		DefaultComboBoxModel<String> cbMensalidadeModel = new DefaultComboBoxModel<>();
+		for (int i = 0; i < new DAOMensalidade().listaMensalidade().size(); i++) {
+			cbMensalidadeModel
+					.addElement("Mensalidade n° " + new DAOMensalidade().listaMensalidade().get(i).getRegistro());
+		}
+
+		cbMensalidade.setModel(cbMensalidadeModel);
+		cbMensalidade.setSelectedItem(null);
+
+		txtRegistro.setText(Integer.toString(matricula.getRegistro()));
+		cbAluno.setSelectedItem(matricula.getNomeAluno());
+		cbTurno.setSelectedItem(matricula.getTurno());
+		txtDataDaMatricula.setValue(new SimpleDateFormat("dd/MM/yyyy").format(matricula.getData_de_Matricula()));
+		cbNivelQueEstaSendoMatriculado.setSelectedItem(matricula.getNivel_Em_Que__Esta_Sendo_Matriculado());
+		cbSerie.setSelectedItem(matricula.getSerie());
+		cbSecretario.setSelectedItem(matricula.getNomeSecretario());
+		cbResponsavel.setSelectedItem(matricula.getNomeResponsavel());
+		cbMensalidade.setSelectedItem(matricula.getTituloMensalidade());
+		txtVencimentoDia.setText(Integer.toString(matricula.getVencimentoDia()));
+
+		idAluno = matricula.getAluno();
+		idMensalidade = matricula.getMensalidade();
+		idResponsavel = matricula.getResponsavel();
+		idSecretario = matricula.getSecretario();
+
+		btnNovo.setEnabled(true);
+		btnAlterar.setEnabled(true);
+		btnExcluir.setEnabled(true);
+		btnPesquisar.setEnabled(true);
+	}
+
 	private void btnNovo_click() {
 		FuncoesGlobais.limpaCampos(pnlCadastroDeMatricula);
 		FuncoesGlobais.ativaCampos(pnlCadastroDeMatricula);
@@ -474,14 +581,14 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		btnCancelar.setEnabled(true);
 		txtRegistro.setText("NOVO");
 		txtRegistro.setEnabled(false);
-		
+
 		idAluno = idSecretario = idResponsavel = idMensalidade = 0;
-		
+
 		cbResponsavel.setEnabled(false);
 		cbAluno.setEnabled(false);
 		cbSecretario.setEnabled(false);
 		cbMensalidade.setEnabled(false);
-		
+
 	}
 
 	private void btnCancelar_click() {
@@ -517,18 +624,23 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 				matricula.setAluno(idAluno);
 				matricula.setTurno(cbTurno.getSelectedItem().toString());
 				matricula.setData_de_Matricula(new SimpleDateFormat("dd/MM/yyyy").parse(txtDataDaMatricula.getText()));
-				matricula.setNivel_Em_Que__Esta_Sendo_Matriculado(cbNivelQueEstaSendoMatriculado.getSelectedItem().toString());
+				matricula.setNivel_Em_Que__Esta_Sendo_Matriculado(
+						cbNivelQueEstaSendoMatriculado.getSelectedItem().toString());
 				matricula.setSerie(cbSerie.getSelectedItem().toString());
 				matricula.setSecretario(idSecretario);
 				matricula.setResponsavel(idResponsavel);
 				matricula.setMensalidade(idMensalidade);
 				matricula.setVencimentoDia(Integer.parseInt(txtVencimentoDia.getText()));
-				
+
 				DAOMatricula daoMatricula = new DAOMatricula();
+
 				if (txtRegistro.getText().equals("NOVO")) {
 					daoMatricula.novoMatricula(matricula);
+				} else {
+					matricula.setRegistro(Integer.parseInt(txtRegistro.getText()));
+					daoMatricula.atualizaMatricula(matricula);
 				}
-				
+
 				FuncoesGlobais.limpaCampos(pnlCadastroDeMatricula);
 				FuncoesGlobais.desativaCampos(pnlCadastroDeMatricula);
 				FuncoesGlobais.desativaCampos(pnlBotoes);
@@ -536,27 +648,41 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 				btnNovo.setEnabled(true);
 				btnPesquisar.setEnabled(true);
 
-				JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
-						JOptionPane.INFORMATION_MESSAGE);
+				if (txtRegistro.getText().equals("NOVO")) {
+					JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
+							JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(this, "Cadastro atualizado com sucesso!", "Sistema",
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 			}
 		}
 
 	}
 
-	private void btnPesquisar_click() throws PropertyVetoException, ParseException, SQLException {
-		if (frmPesquisaMatricula.getInstance().isVisible()) {
-			frmPesquisaMatricula.getInstance().setSelected(true);
-		} else {
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaMatricula.getInstance());
-			frmPesquisaMatricula.getInstance().setVisible(true);
-			frmPesquisaMatricula.getInstance().setSelected(true);
+	private void btnExcluir_click() throws NumberFormatException, SQLException {
+		if (JOptionPane.showConfirmDialog(this, "Deseja realmente excluir o cadastro?", "Sistema",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+			DAOMatricula daoMatricula = new DAOMatricula();
+
+			daoMatricula.excluirMatricula(Integer.parseInt(txtRegistro.getText()));
+			JOptionPane.showMessageDialog(this, "Registro excluido com sucesso!", "Sistema",
+					JOptionPane.INFORMATION_MESSAGE);
+
+			FuncoesGlobais.limpaCampos(pnlCadastroDeMatricula);
+			FuncoesGlobais.desativaCampos(pnlCadastroDeMatricula);
+			FuncoesGlobais.desativaCampos(pnlBotoes);
+
+			btnNovo.setEnabled(true);
+			btnPesquisar.setEnabled(true);
+			btnNovo.requestFocus();
 		}
 	}
 
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
-	
-	//Limpa a memoria
+
+	// Limpa a memoria
 	public void internalFrameClosed(InternalFrameEvent e) {
 		this.singleton = null;
 	}

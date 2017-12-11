@@ -60,7 +60,7 @@ public class frmPesquisaMensalidade extends JInternalFrame
 	public frmPesquisaMensalidade() throws SQLException {
 		addInternalFrameListener(this);
 		setClosable(true);
-		setTitle("Pesquisar Mensaldiade");
+		setTitle("Pesquisar Mensalidade");
 		setBounds(100, 100, 719, 396);
 		getContentPane().setLayout(null);
 
