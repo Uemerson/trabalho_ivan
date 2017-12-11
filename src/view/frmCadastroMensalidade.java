@@ -23,6 +23,7 @@ import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 
+import controler.ComboKeyHandler;
 import controler.FuncoesGlobais;
 import dao.DAOMensalidade;
 import dao.DAOMensalidade;
@@ -159,6 +160,11 @@ public class frmCadastroMensalidade extends JInternalFrame implements ActionList
 		cbSerie.setModel(new DefaultComboBoxModel(new String[] {"1\u00BA ano", "2\u00BA ano", "3\u00BA ano", "4\u00BA ano", "5\u00BA ano", "6\u00BA ano", "7\u00BA ano", "8\u00BA ano", "9\u00BA ano", "1\u00BA colegial", "2\u00BA colegial", "3\u00BA colegial"}));
 		cbSerie.setBounds(168, 62, 112, 28);
 		cbSerie.setSelectedItem(null);
+		
+		cbSerie.setEditable(true);
+		JTextField edtCbSerie = (JTextField) cbSerie.getEditor().getEditorComponent();
+		edtCbSerie.addKeyListener(new ComboKeyHandler(cbSerie));
+		
 		pnlCadastroDeMensalidade.add(cbSerie);
 
 		lblValorDaMensalidade = new JLabel("Valor da Mensalidade");
@@ -181,11 +187,15 @@ public class frmCadastroMensalidade extends JInternalFrame implements ActionList
 
 		cbFormaPagamento = new JComboBox();
 		cbFormaPagamento.setEnabled(false);
-		cbFormaPagamento.setModel(new DefaultComboBoxModel(new String[] { "Cheque", "Avista", "Cart\u00E3o" }));
+		cbFormaPagamento.setModel(new DefaultComboBoxModel(new String[] {"Cheque", "\u00C0 vista", "Cart\u00E3o"}));
 		cbFormaPagamento.setBounds(168, 99, 112, 28);
 		cbFormaPagamento.setSelectedItem(null);
+		
+		cbFormaPagamento.setEditable(true);
+		JTextField edtCbFormaPagamento = (JTextField) cbFormaPagamento.getEditor().getEditorComponent();
+		edtCbFormaPagamento.addKeyListener(new ComboKeyHandler(cbFormaPagamento));
+		
 		pnlCadastroDeMensalidade.add(cbFormaPagamento);
-
 	}
 
 	public void actionPerformed(ActionEvent e) {

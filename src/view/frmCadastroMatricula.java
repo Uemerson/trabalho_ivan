@@ -28,6 +28,7 @@ import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.text.MaskFormatter;
 
+import controler.ComboKeyHandler;
 import controler.FuncoesGlobais;
 import dao.DAOAluno;
 import dao.DAOFuncionario;
@@ -205,6 +206,11 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		cbNivelQueEstaSendoMatriculado.setEnabled(false);
 		cbNivelQueEstaSendoMatriculado.setBounds(541, 64, 221, 28);
 		cbNivelQueEstaSendoMatriculado.setSelectedItem(null);
+		
+		cbNivelQueEstaSendoMatriculado.setEditable(true);
+		JTextField edtCbNivelQueEstaSendoMatriculado = (JTextField) cbNivelQueEstaSendoMatriculado.getEditor().getEditorComponent();
+		edtCbNivelQueEstaSendoMatriculado.addKeyListener(new ComboKeyHandler(cbNivelQueEstaSendoMatriculado));
+		
 		pnlCadastroDeMatricula.add(cbNivelQueEstaSendoMatriculado);
 
 		lblSerie = new JLabel("S\u00E9rie");
@@ -221,6 +227,11 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 				"1\u00BA colegial", "2\u00BA colegial", "3\u00BA colegial" }));
 		cbSerie.setBounds(141, 101, 139, 28);
 		cbSerie.setSelectedItem(null);
+		
+		cbSerie.setEditable(true);
+		JTextField edtCbSerie = (JTextField) cbSerie.getEditor().getEditorComponent();
+		edtCbSerie.addKeyListener(new ComboKeyHandler(cbSerie));
+		
 		pnlCadastroDeMatricula.add(cbSerie);
 
 		lblTurno = new JLabel("Turno");
@@ -234,6 +245,11 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		cbTurno.setModel(new DefaultComboBoxModel(new String[] { "Matutino", "Vespetino" }));
 		cbTurno.setBounds(672, 23, 90, 28);
 		cbTurno.setSelectedItem(null);
+		
+		cbTurno.setEditable(true);
+		JTextField edtCbTurno = (JTextField) cbTurno.getEditor().getEditorComponent();
+		edtCbTurno.addKeyListener(new ComboKeyHandler(cbTurno));
+		
 		pnlCadastroDeMatricula.add(cbTurno);
 
 		lblPaiOuResponsavel = new JLabel("Pai ou Respons\u00E1vel");

@@ -30,6 +30,7 @@ import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.text.MaskFormatter;
 
+import controler.ComboKeyHandler;
 import controler.FuncoesGlobais;
 import dao.DAOFuncionario;
 import dao.DAOResponsavel;
@@ -232,6 +233,11 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 				"Ensino M\u00E9dio Completo", "Ensino Superior Incompleto", "Ensino Superior Completo" }));
 		cbGrauInstrucao.setBounds(597, 56, 197, 28);
 		cbGrauInstrucao.setSelectedItem(null);
+		
+		cbGrauInstrucao.setEditable(true);
+		JTextField edtCbGrauInstrucao = (JTextField) cbGrauInstrucao.getEditor().getEditorComponent();
+		edtCbGrauInstrucao.addKeyListener(new ComboKeyHandler(cbGrauInstrucao));
+		
 		pnlCadastroResponsavel.add(cbGrauInstrucao);
 
 		lblProfissao = new JLabel("Profiss\u00E3o");
@@ -287,6 +293,11 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 		cbLogradouro.setModel(new DefaultComboBoxModel(new String[] { "Avenida", "Rua", "Pra\u00E7a", "Zona Rural" }));
 		cbLogradouro.setBounds(112, 61, 142, 28);
 		cbLogradouro.setSelectedItem(null);
+		
+		cbLogradouro.setEditable(true);
+		JTextField edtCbLogradouro = (JTextField) cbLogradouro.getEditor().getEditorComponent();
+		edtCbLogradouro.addKeyListener(new ComboKeyHandler(cbLogradouro));
+		
 		pnlLocalDeTrabalho.add(cbLogradouro);
 
 		lblEndereco = new JLabel("Endere\u00E7o");
@@ -350,6 +361,11 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 		cbCasaPropria.setModel(new DefaultComboBoxModel(new String[] { "Sim", "N\u00E3o" }));
 		cbCasaPropria.setBounds(293, 21, 58, 28);
 		cbCasaPropria.setSelectedItem(null);
+		
+		cbCasaPropria.setEditable(true);
+		JTextField edtCbCasaPropria = (JTextField) cbCasaPropria.getEditor().getEditorComponent();
+		edtCbCasaPropria.addKeyListener(new ComboKeyHandler(cbCasaPropria));
+		
 		pnlPerfilSocioEconomico.add(cbCasaPropria);
 
 		lblNumeroDeFilhos = new JLabel("Numero de Filhos");

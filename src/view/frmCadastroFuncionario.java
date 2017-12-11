@@ -314,6 +314,11 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		cbEstado.setModel(new DefaultComboBoxModel(new String[] {"AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"}));
 		cbEstado.setSelectedItem(null);
 		cbEstado.setBounds(603, 139, 165, 28);
+		
+		cbEstado.setEditable(true);
+		JTextField edtCbEstado = (JTextField) cbEstado.getEditor().getEditorComponent();
+		edtCbEstado.addKeyListener(new ComboKeyHandler(cbEstado));
+		
 		pnlInformacaoFuncionario.add(cbEstado);
 
 		lblTelefoneComercial = new JLabel("Tel Comercial");
@@ -363,6 +368,11 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		cbLogradouro.setEnabled(false);
 		cbLogradouro.setModel(new DefaultComboBoxModel(new String[] { "Avenida", "Rua", "Pra\u00E7a", "Zona Rural" }));
 		cbLogradouro.setBounds(118, 217, 108, 28);
+		
+		cbLogradouro.setEditable(true);
+		JTextField edtCbLogradouro = (JTextField) cbLogradouro.getEditor().getEditorComponent();
+		edtCbLogradouro.addKeyListener(new ComboKeyHandler(cbLogradouro));
+		
 		cbLogradouro.setSelectedItem(null);
 
 		pnlInformacaoFuncionario.add(cbLogradouro);
@@ -566,7 +576,8 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 	private void cbCargo_click() {
 
 		if (cbCargo.getSelectedIndex() > -1) {
-			if (cbCargo.getSelectedItem().toString().replace("(a)", "").equals("Professor")) {
+			if (cbCargo.getSelectedItem().toString().replace("(a)", "").equals("Professor") || 
+					cbCargo.getSelectedItem().toString().replace("(a)", "").equals("Diretor")) {
 				FuncoesGlobais.limpaCampos(pnlInformacaoDeProfessores);
 				FuncoesGlobais.ativaCampos(pnlInformacaoDeProfessores);
 			} else {

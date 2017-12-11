@@ -29,6 +29,7 @@ import javax.swing.event.InternalFrameListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.text.MaskFormatter;
 
+import controler.ComboKeyHandler;
 import controler.FuncoesGlobais;
 import dao.DAOAluno;
 import dao.DAOFuncionario;
@@ -245,6 +246,11 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		cbSexo.setModel(new DefaultComboBoxModel(new String[] { "Masculino", "Feminino" }));
 		cbSexo.setSelectedItem(null);
 		cbSexo.setBounds(288, 216, 80, 28);
+		
+		cbSexo.setEditable(true);
+		JTextField edtCbSexo = (JTextField) cbSexo.getEditor().getEditorComponent();
+		edtCbSexo.addKeyListener(new ComboKeyHandler(cbSexo));
+		
 		pnlInformacoesAluno.add(cbSexo);
 
 		lblSexo = new JLabel("Sexo");
@@ -264,6 +270,11 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		cbCor.setModel(new DefaultComboBoxModel(new String[] { "Branco", "Moreno", "Negro", "Pardo" }));
 		cbCor.setBounds(762, 175, 72, 28);
 		cbCor.setSelectedItem(null);
+		
+		cbCor.setEditable(true);
+		JTextField edtCbCor = (JTextField) cbCor.getEditor().getEditorComponent();
+		edtCbCor.addKeyListener(new ComboKeyHandler(cbCor));
+		
 		pnlInformacoesAluno.add(cbCor);
 
 		lblRaca = new JLabel("Ra\u00E7a");
@@ -273,10 +284,15 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		pnlInformacoesAluno.add(lblRaca);
 
 		cbRaca = new JComboBox();
-		cbRaca.setModel(new DefaultComboBoxModel(new String[] { "Ind\u00EDgina", "Afrodescendente" }));
+		cbRaca.setModel(new DefaultComboBoxModel(new String[] {"Ind\u00EDgina", "Afrodescendente", "Negra", "Branca", "Amarela", "Nenhum"}));
 		cbRaca.setEnabled(false);
 		cbRaca.setBounds(100, 214, 100, 28);
 		cbRaca.setSelectedItem(null);
+		
+		cbRaca.setEditable(true);
+		JTextField edtCbRaca = (JTextField) cbRaca.getEditor().getEditorComponent();
+		edtCbRaca.addKeyListener(new ComboKeyHandler(cbRaca));
+		
 		pnlInformacoesAluno.add(cbRaca);
 
 		lblEndereco = new JLabel("Endere\u00E7o");
@@ -313,7 +329,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		lblEmail = new JLabel("Email");
 		lblEmail.setHorizontalAlignment(SwingConstants.LEFT);
 		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblEmail.setBounds(370, 175, 47, 28);
+		lblEmail.setBounds(379, 177, 47, 28);
 		pnlInformacoesAluno.add(lblEmail);
 
 		txtEmail = new JTextField();
@@ -333,6 +349,11 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		cbLogradouro.setModel(new DefaultComboBoxModel(new String[] { "Avenida", "Rua", "Pra\u00E7a", "Zona Rural" }));
 		cbLogradouro.setBounds(100, 136, 69, 28);
 		cbLogradouro.setSelectedItem(null);
+		
+		cbLogradouro.setEditable(true);
+		JTextField edtCbLogradouro = (JTextField) cbLogradouro.getEditor().getEditorComponent();
+		edtCbLogradouro.addKeyListener(new ComboKeyHandler(cbLogradouro));
+		
 		pnlInformacoesAluno.add(cbLogradouro);
 
 		lblNumero = new JLabel(",");
@@ -449,8 +470,13 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 				new String[] { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB",
 						"PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO" }));
 		cbEstado.setEnabled(false);
-		cbEstado.setBounds(288, 177, 70, 28);
+		cbEstado.setBounds(288, 177, 80, 28);
 		cbEstado.setSelectedItem(null);
+		
+		cbEstado.setEditable(true);
+		JTextField edtCbEstado = (JTextField) cbEstado.getEditor().getEditorComponent();
+		edtCbEstado.addKeyListener(new ComboKeyHandler(cbEstado));
+		
 		pnlInformacoesAluno.add(cbEstado);
 
 		label = new JLabel("Estado");
@@ -537,7 +563,9 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 				btnAlterar_click();
 			}
 		} catch (ParseException | SQLException | PropertyVetoException ex) {
-			ex.printStackTrace();
+			// ex.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
