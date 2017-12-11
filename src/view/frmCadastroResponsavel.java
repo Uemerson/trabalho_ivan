@@ -90,7 +90,11 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 
 		return singleton;
 	}
-
+	
+	public static void setInstance(frmCadastroResponsavel estado) {
+		singleton = estado;
+	}
+	
 	public frmCadastroResponsavel() throws ParseException {
 		// Hack para remover icone do nimbus
 		Container pane = ((BasicInternalFrameUI) this.getUI()).getNorthPane();
@@ -601,7 +605,7 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 			frmPesquisaResponsavel.getInstance().setSelected(true);
 		} else {
 			frmPesquisaResponsavel.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaResponsavel.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaResponsavel.getInstance());
 			frmPesquisaResponsavel.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaResponsavel.getInstance().getBtnConfirma().setText("Abrir cadastro de responsável");
 			frmPesquisaResponsavel.getInstance().setVisible(true);

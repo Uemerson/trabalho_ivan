@@ -55,7 +55,11 @@ public class frmCadastroMensalidade extends JInternalFrame implements ActionList
 
 		return singleton;
 	}
-
+	
+	public static void setInstance(frmCadastroMensalidade estado) {
+		singleton = estado;
+	}
+	
 	public frmCadastroMensalidade() {
 		// Hack para remover icone do nimbus
 		Container pane = ((BasicInternalFrameUI) this.getUI()).getNorthPane();
@@ -323,7 +327,7 @@ public class frmCadastroMensalidade extends JInternalFrame implements ActionList
 			frmPesquisaMensalidade.getInstance().setSelected(true);
 		} else {
 			frmPesquisaMensalidade.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaMensalidade.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaMensalidade.getInstance());
 			frmPesquisaMensalidade.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaMensalidade.getInstance().getBtnConfirma().setText("Abrir cadastro de mensalidade");
 			frmPesquisaMensalidade.getInstance().setVisible(true);

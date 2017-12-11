@@ -33,7 +33,6 @@ import javax.swing.table.TableRowSorter;
 
 import dao.DAOMensalidade;
 import tableModel.MensalidadeTableModel;
-import tableModel.MensalidadeTableModel;
 
 public class frmPesquisaMensalidade extends JInternalFrame
 		implements ActionListener, InternalFrameListener, DocumentListener, KeyListener {
@@ -56,7 +55,11 @@ public class frmPesquisaMensalidade extends JInternalFrame
 
 		return singleton;
 	}
-
+	
+	public static void setInstance(frmPesquisaMensalidade estado) {
+		singleton = estado;
+	}
+	
 	public frmPesquisaMensalidade() throws SQLException {
 		addInternalFrameListener(this);
 		setClosable(true);
@@ -197,7 +200,7 @@ public class frmPesquisaMensalidade extends JInternalFrame
 				} else {
 	
 					frmCadastroMensalidade.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroMensalidade.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroMensalidade.getInstance());
 					frmCadastroMensalidade.getInstance().setSelected(true);
 					frmCadastroMensalidade.getInstance().preencheCadastro(new DAOMensalidade().buscaMensalidade(mensalidadeTableModel.getMensalidade(tbTabelaMensalidade.getSelectedRow()).getRegistro()));
 				}
@@ -219,7 +222,7 @@ public class frmPesquisaMensalidade extends JInternalFrame
 				} else {
 	
 					frmCadastroMatricula.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroMatricula.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroMatricula.getInstance());
 					frmCadastroMatricula.getInstance().setSelected(true);
 					frmCadastroMatricula.getInstance().preencheMensalidade(new DAOMensalidade().buscaMensalidade(mensalidadeTableModel.getMensalidade(tbTabelaMensalidade.getSelectedRow()).getRegistro()));
 				}

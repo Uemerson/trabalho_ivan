@@ -69,7 +69,11 @@ public class frmPesquisaCargo extends JInternalFrame
 
 		return singleton;
 	}
-
+	
+	public static void setInstance(frmPesquisaCargo estado) {
+		singleton = estado;
+	}
+	
 	public frmPesquisaCargo() throws SQLException {
 		addInternalFrameListener(this);
 		setClosable(true);
@@ -198,7 +202,7 @@ public class frmPesquisaCargo extends JInternalFrame
 				} else {
 	
 					frmCadastroCargo.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroCargo.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroCargo.getInstance());
 					frmCadastroCargo.getInstance().setSelected(true);
 					frmCadastroCargo.getInstance().preencheCadastro(new DAOCargo().buscaCargo(cargoTableModel.getCargo(tbTabelaCargo.getSelectedRow()).getRegistro()));
 				}

@@ -62,6 +62,10 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 		return singleton;
 	}
 
+	public static void setInstance(frmCadastroUsuario estado) {
+		singleton = estado;
+	}
+	
 	public frmCadastroUsuario() throws SQLException {
 		idFuncionario = 0;
 		addInternalFrameListener(this);
@@ -332,7 +336,7 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 			frmPesquisaUsuario.getInstance().setSelected(true);
 		} else {
 			frmPesquisaUsuario.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaUsuario.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaUsuario.getInstance());
 			frmPesquisaUsuario.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaUsuario.getInstance().getBtnConfirma().setText("Abrir cadastro de usuário");
 			frmPesquisaUsuario.getInstance().setVisible(true);
@@ -365,7 +369,7 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 				frmPesquisaFuncionario.getInstance().setSelected(true);
 			} else {
 				frmPesquisaFuncionario.getInstance().atualizaDados(); // Atualiza os dados do formulario
-				frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaFuncionario.getInstance());
+				frmMenu.getInstance().getDskPrincipal().add(frmPesquisaFuncionario.getInstance());
 				frmPesquisaFuncionario.getInstance().getBtnConfirma().setVisible(true);
 				frmPesquisaFuncionario.getInstance().getBtnConfirma().setText("Abrir cadastro de usuário");
 				frmPesquisaFuncionario.getInstance().setVisible(true);

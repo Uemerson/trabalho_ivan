@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import model.Cargo;
 import model.Funcionario;
 
 public class DAOFuncionario {
@@ -180,5 +181,13 @@ public class DAOFuncionario {
 		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
 		preparedStatement.setInt(1, ID);
 		preparedStatement.executeUpdate();
+	}
+
+	public Cargo buscaCargo(Funcionario funcionario) {
+		SQL = "SELECT USUARIO.*, FUNCIONARIO.CARGO, CARGO.NOME AS NOME_CARGO FROM\r\n" + 
+				"USUARIO LEFT JOIN FUNCIONARIO ON USUARIO.ID_FUNC = FUNCIONARIO.ID\r\n" + 
+				"LEFT JOIN CARGO ON CARGO.ID = FUNCIONARIO.CARGO";
+		
+		return null;
 	}
 }

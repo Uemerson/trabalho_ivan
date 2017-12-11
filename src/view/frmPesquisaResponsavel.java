@@ -69,7 +69,11 @@ public class frmPesquisaResponsavel extends JInternalFrame
 
 		return singleton;
 	}
-
+	
+	public static void setInstance(frmPesquisaResponsavel estado) {
+		singleton = estado;
+	}
+	
 	public frmPesquisaResponsavel() throws SQLException {
 		addInternalFrameListener(this);
 		setClosable(true);
@@ -224,7 +228,7 @@ public class frmPesquisaResponsavel extends JInternalFrame
 				} else {
 	
 					frmCadastroResponsavel.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroResponsavel.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroResponsavel.getInstance());
 					frmCadastroResponsavel.getInstance().setSelected(true);
 					frmCadastroResponsavel.getInstance().preencheCadastro(new DAOResponsavel()
 							.buscaResponsavel(responsavelTableModel.getResponsavel(tbTabelaResponsavel.getSelectedRow()).getRegistro()));
@@ -247,7 +251,7 @@ public class frmPesquisaResponsavel extends JInternalFrame
 				} else {
 	
 					frmCadastroMatricula.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroMatricula.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroMatricula.getInstance());
 					frmCadastroMatricula.getInstance().setSelected(true);
 					frmCadastroMatricula.getInstance().preencheResponsavel(new DAOResponsavel()
 							.buscaResponsavel(responsavelTableModel.getResponsavel(tbTabelaResponsavel.getSelectedRow()).getRegistro()));

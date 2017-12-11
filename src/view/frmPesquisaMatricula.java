@@ -55,7 +55,11 @@ public class frmPesquisaMatricula extends JInternalFrame
 
 		return singleton;
 	}
-
+	
+	public static void setInstance(frmPesquisaMatricula estado) {
+		singleton = estado;
+	}
+	
 	public frmPesquisaMatricula() throws SQLException {
 		addInternalFrameListener(this);
 		setClosable(true);
@@ -197,7 +201,7 @@ public class frmPesquisaMatricula extends JInternalFrame
 				} else {
 	
 					frmCadastroMatricula.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroMatricula.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroMatricula.getInstance());
 					frmCadastroMatricula.getInstance().setSelected(true);
 					frmCadastroMatricula.getInstance().preencheCadastro(new DAOMatricula()
 							.buscaMatricula(matriculaTableModel.getMatricula(tbTabelaMatricula.getSelectedRow()).getRegistro()));

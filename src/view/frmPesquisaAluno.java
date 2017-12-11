@@ -69,7 +69,11 @@ public class frmPesquisaAluno extends JInternalFrame
 
 		return singleton;
 	}
-
+	
+	public static void setInstance(frmPesquisaAluno estado) {
+		singleton = estado;
+	}
+	
 	public frmPesquisaAluno() throws SQLException {
 		addInternalFrameListener(this);
 		setClosable(true);
@@ -223,7 +227,7 @@ public class frmPesquisaAluno extends JInternalFrame
 				} else {
 	
 					frmCadastroAluno.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroAluno.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroAluno.getInstance());
 					frmCadastroAluno.getInstance().setSelected(true);
 					frmCadastroAluno.getInstance().preencheCadastro(new DAOAluno()
 							.buscaAluno(alunoTableModel.getAluno(tbTabelaAluno.getSelectedRow()).getRegistro()));
@@ -246,7 +250,7 @@ public class frmPesquisaAluno extends JInternalFrame
 				} else {
 	
 					frmCadastroMatricula.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroMatricula.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroMatricula.getInstance());
 					frmCadastroMatricula.getInstance().setSelected(true);
 					frmCadastroMatricula.getInstance().preencheAluno(new DAOAluno()
 							.buscaAluno(alunoTableModel.getAluno(tbTabelaAluno.getSelectedRow()).getRegistro()));

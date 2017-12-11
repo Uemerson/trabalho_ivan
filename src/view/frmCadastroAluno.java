@@ -105,7 +105,11 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 
 		return singleton;
 	}
-
+	
+	public static void setInstance(frmCadastroAluno estado) {
+		singleton = estado;
+	}
+	
 	public frmCadastroAluno() throws ParseException, SQLException {
 		// Hack para remover icone do nimbus
 		Container pane = ((BasicInternalFrameUI) this.getUI()).getNorthPane();
@@ -570,7 +574,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		} else {
 			frmPesquisaPais.getInstance().setTitle("Pesquisar por Pai");
 			frmPesquisaPais.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaPais.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaPais.getInstance());
 			frmPesquisaPais.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaPais.getInstance().getBtnConfirma().setText("Abrir cadastro de aluno");
 			frmPesquisaPais.getInstance().setVisible(true);
@@ -598,7 +602,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		} else {
 			frmPesquisaPais.getInstance().setTitle("Pesquisar por Mãe");
 			frmPesquisaPais.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaPais.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaPais.getInstance());
 			frmPesquisaPais.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaPais.getInstance().getBtnConfirma().setText("Abrir cadastro de aluno");
 			frmPesquisaPais.getInstance().setVisible(true);
@@ -779,7 +783,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 			frmPesquisaAluno.getInstance().setSelected(true);
 		} else {
 			frmPesquisaAluno.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaAluno.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaAluno.getInstance());
 			frmPesquisaAluno.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaAluno.getInstance().getBtnConfirma().setText("Abrir cadastro de aluno");
 			frmPesquisaAluno.getInstance().setVisible(true);

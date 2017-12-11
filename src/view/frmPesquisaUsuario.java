@@ -69,6 +69,10 @@ public class frmPesquisaUsuario extends JInternalFrame
 
 		return singleton;
 	}
+	
+	public static void setInstance(frmPesquisaUsuario estado) {
+		singleton = estado;
+	}
 
 	public frmPesquisaUsuario() throws SQLException {
 		addInternalFrameListener(this);
@@ -210,7 +214,7 @@ public class frmPesquisaUsuario extends JInternalFrame
 				} else {
 	
 					frmCadastroUsuario.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroUsuario.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroUsuario.getInstance());
 					frmCadastroUsuario.getInstance().setSelected(true);
 					frmCadastroUsuario.getInstance().preencheCadastro(new DAOUsuario().buscaUsuario(usuarioTableModel.getUsuario(tbTabelaUsuario.getSelectedRow()).getRegistro()));
 				}

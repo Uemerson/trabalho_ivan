@@ -60,7 +60,11 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 
 		return singleton;
 	}
-
+	
+	public static void setInstance(frmPesquisaFuncionario estado) {
+		singleton = estado;
+	}
+	
 	public frmPesquisaFuncionario() throws SQLException {
 		addInternalFrameListener(this);
 		setClosable(true);
@@ -226,7 +230,7 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 	}
 	
 	private void btnConfirma_click() throws ParseException, SQLException, PropertyVetoException {
-		if (btnConfirma.getText().equals("Abrir cadastro de funcionario")) {
+		if (btnConfirma.getText().equals("Abrir cadastro de funcionário")) {
 			if (tbTabelaFuncionario.getSelectedRow() > -1) {
 				frmCadastroFuncionario.getInstance();
 	
@@ -237,7 +241,7 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 				} else {
 	
 					frmCadastroFuncionario.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroFuncionario.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroFuncionario.getInstance());
 					frmCadastroFuncionario.getInstance().setSelected(true);
 					frmCadastroFuncionario.getInstance().preencheCadastro(new DAOFuncionario()
 							.buscaFuncionario(funcionarioTableModel.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
@@ -258,7 +262,7 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 					frmCadastroUsuario.getInstance().setSelected(true);
 				} else {
 					frmCadastroUsuario.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroUsuario.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroUsuario.getInstance());
 					frmCadastroUsuario.getInstance().setSelected(true);
 					frmCadastroUsuario.getInstance().preencheFuncionario(funcionarioTableModel.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro());
 				}
@@ -279,7 +283,7 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 					frmCadastroMatricula.getInstance().setSelected(true);
 				} else {
 					frmCadastroMatricula.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroMatricula.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroMatricula.getInstance());
 					frmCadastroMatricula.getInstance().setSelected(true);
 					frmCadastroMatricula.getInstance().preencheSecretario(new DAOFuncionario().buscaFuncionario(funcionarioTableModel.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
 				}

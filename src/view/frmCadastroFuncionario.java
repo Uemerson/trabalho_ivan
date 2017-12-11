@@ -100,7 +100,11 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 
 		return singleton;
 	}
-
+	
+	public static void setInstance(frmCadastroFuncionario estado) {
+		singleton = estado;
+	}
+	
 	public frmCadastroFuncionario() throws ParseException, SQLException {
 		addInternalFrameListener(this);
 		getContentPane().setLayout(null);
@@ -475,7 +479,7 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		pnlInformacaoDeProfessores.add(txtDataDeAutorizacaoDaSER);
 		setBounds(100, 100, 821, 631);
 		setClosable(true);
-		setTitle("Cadastro de Funcionario");
+		setTitle("Cadastro de Funcion\u00E1rio");
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -519,13 +523,13 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 		if (frmPesquisaFuncionario.getInstance().isVisible()) {
 			frmPesquisaFuncionario.getInstance().atualizaDados(); // Atualiza os dados do formulario
 			frmPesquisaFuncionario.getInstance().getBtnConfirma().setVisible(true);
-			frmPesquisaFuncionario.getInstance().getBtnConfirma().setText("Abrir cadastro de funcionario");
+			frmPesquisaFuncionario.getInstance().getBtnConfirma().setText("Abrir cadastro de funcionário");
 			frmPesquisaFuncionario.getInstance().setSelected(true);
 		} else {
 			frmPesquisaFuncionario.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaFuncionario.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaFuncionario.getInstance());
 			frmPesquisaFuncionario.getInstance().getBtnConfirma().setVisible(true);
-			frmPesquisaFuncionario.getInstance().getBtnConfirma().setText("Abrir cadastro de funcionario");
+			frmPesquisaFuncionario.getInstance().getBtnConfirma().setText("Abrir cadastro de funcionário");
 			frmPesquisaFuncionario.getInstance().setVisible(true);
 			frmPesquisaFuncionario.getInstance().setSelected(true);
 		}
@@ -801,7 +805,8 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 
 	public void internalFrameActivated(InternalFrameEvent e) {
 	}
-
+	
+	//Limpa buffer de memória
 	public void internalFrameClosed(InternalFrameEvent e) {
 		this.singleton = null;
 	}

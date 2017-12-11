@@ -57,6 +57,10 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 		return singleton;
 	}
 
+	public static void setInstance(frmCadastroCargo estado) {
+		singleton = estado;
+	}
+	
 	public frmCadastroCargo() {
 		addInternalFrameListener(this);
 		setBounds(100, 100, 585, 379);
@@ -309,7 +313,7 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 			frmPesquisaCargo.getInstance().setSelected(true);
 		} else {
 			frmPesquisaCargo.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaCargo.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaCargo.getInstance());
 			frmPesquisaCargo.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaCargo.getInstance().getBtnConfirma().setText("Abrir cadastro de cargo");
 			frmPesquisaCargo.getInstance().setVisible(true);

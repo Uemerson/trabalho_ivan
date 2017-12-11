@@ -91,6 +91,11 @@ public class frmLogin extends JFrame implements ActionListener, KeyListener, Win
 	
 	private void btnEntrar_click() throws SQLException{
 		
+		if (cbLogin.getSelectedIndex() <= -1) {
+			JOptionPane.showMessageDialog(this, "Erro - Selecione um login", "Sistema", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		DAOUsuario dao = new DAOUsuario();
 		
 		if (dao.verificaLogin(new Usuario(cbLogin.getSelectedIndex(), cbLogin.getSelectedItem().toString(), txtSenha.getText())) != null) {
@@ -98,8 +103,25 @@ public class frmLogin extends JFrame implements ActionListener, KeyListener, Win
            
            dispose();
            
-           frmMenu.getFrmMenu(new Usuario(cbLogin.getSelectedIndex(), cbLogin.getSelectedItem().toString(), txtSenha.getText())).setVisible(true);;
+           frmMenu.setInstance(null);
+           frmMenu.getInstance(new Usuario(cbLogin.getSelectedIndex(), cbLogin.getSelectedItem().toString(), txtSenha.getText())).setVisible(true);;
            
+           //Limpa buffer de todos os menus abertos
+           frmCadastroAluno.setInstance(null);
+           frmCadastroCargo.setInstance(null);
+           frmCadastroFuncionario.setInstance(null);
+           frmCadastroMatricula.setInstance(null);
+           frmCadastroMensalidade.setInstance(null);
+           frmCadastroResponsavel.setInstance(null);
+           frmCadastroUsuario.setInstance(null);
+           frmPesquisaAluno.setInstance(null);
+           frmPesquisaCargo.setInstance(null);
+           frmPesquisaFuncionario.setInstance(null);
+           frmPesquisaMatricula.setInstance(null);
+           frmPesquisaMensalidade.setInstance(null);
+           frmPesquisaPais.setInstance(null);
+           frmPesquisaResponsavel.setInstance(null);
+           frmPesquisaUsuario.setInstance(null);
            
 		}else {
 			JOptionPane.showMessageDialog(null,"Acesso Negado!", "Sistema", JOptionPane.ERROR_MESSAGE);

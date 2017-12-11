@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +25,7 @@ import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.InternalFrameEvent;
 import javax.swing.event.InternalFrameListener;
+import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.text.MaskFormatter;
 
 import controler.FuncoesGlobais;
@@ -83,7 +85,16 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 		return singleton;
 	}
 
+	public static void setInstance(frmCadastroMatricula estado) {
+		singleton = estado;
+	}
+	
 	public frmCadastroMatricula() throws ParseException {
+		// Hack para remover icone do nimbus
+		Container pane = ((BasicInternalFrameUI) this.getUI()).getNorthPane();
+		// pane.remove(0);
+		pane.getComponent(0).setVisible(false);
+		
 		addInternalFrameListener(this);
 		setBounds(100, 100, 807, 382);
 		setClosable(true);
@@ -364,7 +375,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 			frmPesquisaMatricula.getInstance().setSelected(true);
 		} else {
 			frmPesquisaMatricula.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaMatricula.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaMatricula.getInstance());
 			frmPesquisaMatricula.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaMatricula.getInstance().getBtnConfirma().setText("Abrir cadastro de matrícula");
 			frmPesquisaMatricula.getInstance().setVisible(true);
@@ -392,7 +403,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 			frmPesquisaResponsavel.getInstance().setSelected(true);
 		} else {
 			frmPesquisaResponsavel.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaResponsavel.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaResponsavel.getInstance());
 			frmPesquisaResponsavel.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaResponsavel.getInstance().getBtnConfirma().setText("Abrir cadastro de matrícula");
 			frmPesquisaResponsavel.getInstance().setVisible(true);
@@ -420,7 +431,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 			frmPesquisaAluno.getInstance().setSelected(true);
 		} else {
 			frmPesquisaAluno.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaAluno.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaAluno.getInstance());
 			frmPesquisaAluno.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaAluno.getInstance().getBtnConfirma().setText("Abrir cadastro de matrícula");
 			frmPesquisaAluno.getInstance().setVisible(true);
@@ -448,7 +459,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 			frmPesquisaFuncionario.getInstance().setSelected(true);
 		} else {
 			frmPesquisaFuncionario.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaFuncionario.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaFuncionario.getInstance());
 			frmPesquisaFuncionario.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaFuncionario.getInstance().getBtnConfirma().setText("Abrir cadastro de matrícula");
 			frmPesquisaFuncionario.getInstance().setVisible(true);
@@ -477,7 +488,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 			frmPesquisaMensalidade.getInstance().setSelected(true);
 		} else {
 			frmPesquisaMensalidade.getInstance().atualizaDados(); // Atualiza os dados do formulario
-			frmMenu.getFrmMenu().getDskPrincipal().add(frmPesquisaMensalidade.getInstance());
+			frmMenu.getInstance().getDskPrincipal().add(frmPesquisaMensalidade.getInstance());
 			frmPesquisaMensalidade.getInstance().getBtnConfirma().setVisible(true);
 			frmPesquisaMensalidade.getInstance().getBtnConfirma().setText("Abrir cadastro de matrícula");
 			frmPesquisaMensalidade.getInstance().setVisible(true);

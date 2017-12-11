@@ -69,7 +69,11 @@ public class frmPesquisaPais extends JInternalFrame
 
 		return singleton;
 	}
-
+	
+	public static void setInstance(frmPesquisaPais estado) {
+		singleton = estado;
+	}
+	
 	public frmPesquisaPais() throws SQLException {
 		addInternalFrameListener(this);
 		setClosable(true);
@@ -227,7 +231,7 @@ public class frmPesquisaPais extends JInternalFrame
 				} else {
 	
 					frmCadastroAluno.getInstance().setVisible(true);
-					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroAluno.getInstance());
+					frmMenu.getInstance().getDskPrincipal().add(frmCadastroAluno.getInstance());
 					frmCadastroAluno.getInstance().setSelected(true);
 					
 					if (this.getTitle() == "Pesquisar por Pai")

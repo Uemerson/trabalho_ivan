@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import dao.DAOConexaoMySQL;
+import dao.DAOFuncionario;
 import model.Usuario;
 
 public class frmMenu extends JFrame implements ActionListener, WindowListener {
@@ -43,19 +44,27 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 	private JMenuItem mntmPesquisarMatricula;
 	private JMenuItem mntmPesquisarMensalidade;
 	//Nao esquecer de limapr buffer 
-	public static frmMenu getFrmMenu(Usuario usuario) {
+	public static frmMenu getInstance(Usuario usuario) {
 		if (singleton == null) {
 			singleton = new frmMenu(usuario);
 		}
 		
 		return singleton;
 	}
-
-	public static frmMenu getFrmMenu() {
+	
+	public static void setInstance(frmMenu estado) {
+		singleton = estado;
+	}
+	
+	public static frmMenu getInstance() {
 		return singleton;
 	}
 
 	public frmMenu(Usuario usuario) {
+		//Libera os menus de acordo com o cargo do usuário
+		
+		//if (new DAOFuncionario().buscaCargo()) {}
+		
 		addWindowListener(this);
 		setTitle("Menu Principal");
 
