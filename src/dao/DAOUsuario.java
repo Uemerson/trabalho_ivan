@@ -146,4 +146,15 @@ public class DAOUsuario {
 
 		System.out.println("Cadastro de usuario alterado com sucesso!");
 	}
+
+	public int idUsuario(String nome) throws SQLException {
+		SQL = "SELECT * FROM USUARIO WHERE USUARIO.LOGIN = ?";
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setString(1, nome);
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		rs.next();
+		
+		return rs.getInt("ID");
+	}
 }

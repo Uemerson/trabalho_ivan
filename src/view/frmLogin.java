@@ -104,7 +104,9 @@ public class frmLogin extends JFrame implements ActionListener, KeyListener, Win
            dispose();
            
            frmMenu.setInstance(null);
-           frmMenu.getInstance(new Usuario(cbLogin.getSelectedIndex(), cbLogin.getSelectedItem().toString(), txtSenha.getText())).setVisible(true);;
+           frmMenu.getInstance(new Usuario(new DAOUsuario().idUsuario(cbLogin.getSelectedItem().toString()), 
+        		   			cbLogin.getSelectedItem().toString(), 
+        		   			txtSenha.getText())).setVisible(true);;
            
            //Limpa buffer de todos os menus abertos
            frmCadastroAluno.setInstance(null);

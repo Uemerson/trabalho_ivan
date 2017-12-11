@@ -43,28 +43,71 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 	private JMenuItem mntmPesquisarResponsavel;
 	private JMenuItem mntmPesquisarMatricula;
 	private JMenuItem mntmPesquisarMensalidade;
-	//Nao esquecer de limapr buffer 
-	public static frmMenu getInstance(Usuario usuario) {
+
+	// Nao esquecer de limapr buffer
+	public static frmMenu getInstance(Usuario usuario) throws SQLException {
 		if (singleton == null) {
 			singleton = new frmMenu(usuario);
 		}
-		
+
 		return singleton;
 	}
-	
+
 	public static void setInstance(frmMenu estado) {
 		singleton = estado;
 	}
-	
+
 	public static frmMenu getInstance() {
 		return singleton;
 	}
 
-	public frmMenu(Usuario usuario) {
-		//Libera os menus de acordo com o cargo do usuário
-		
-		//if (new DAOFuncionario().buscaCargo()) {}
-		
+	private void liberaMenuAdministrador() {
+		mntmCadastroUsuario.setVisible(true);
+		mntmPesquisaUsuario.setVisible(true);
+
+		mntmCadastroFuncionario.setVisible(true);
+		mntmPesquisarFuncionario.setVisible(true);
+
+		mntmCadastroCargo.setVisible(true);
+		mntmPesquisarCargo.setVisible(true);
+
+		mntmCadastroAluno.setVisible(true);
+		mntmPesquisarAluno.setVisible(true);
+
+		mntmCadastroResponsavel.setVisible(true);
+		mntmPesquisarResponsavel.setVisible(true);
+
+		mntmCadastroMatricula.setVisible(true);
+		mntmPesquisarMatricula.setVisible(true);
+
+		mntmCadastroMensalidade.setVisible(true);
+		mntmPesquisarMensalidade.setVisible(true);
+	}
+
+	private void liberaMenuSecretario() {
+		mntmCadastroUsuario.setVisible(false);
+		mntmPesquisaUsuario.setVisible(false);
+
+		mntmCadastroFuncionario.setVisible(false);
+		mntmPesquisarFuncionario.setVisible(false);
+
+		mntmCadastroCargo.setVisible(false);
+		mntmPesquisarCargo.setVisible(false);
+
+		mntmCadastroAluno.setVisible(true);
+		mntmPesquisarAluno.setVisible(true);
+
+		mntmCadastroResponsavel.setVisible(true);
+		mntmPesquisarResponsavel.setVisible(true);
+
+		mntmCadastroMatricula.setVisible(true);
+		mntmPesquisarMatricula.setVisible(true);
+
+		mntmCadastroMensalidade.setVisible(false);
+		mntmPesquisarMensalidade.setVisible(false);
+	}
+
+	public frmMenu(Usuario usuario) throws SQLException {
 		addWindowListener(this);
 		setTitle("Menu Principal");
 
@@ -116,23 +159,23 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 		mntmPesquisaUsuario.addActionListener(this);
 		mnPesquisar.add(mntmPesquisaUsuario);
 		mnPesquisar.add(mntmPesquisarFuncionario);
-		
+
 		mntmPesquisarAluno = new JMenuItem("Aluno");
 		mntmPesquisarAluno.addActionListener(this);
-		
+
 		mntmPesquisarCargo = new JMenuItem("Cargo");
 		mntmPesquisarCargo.addActionListener(this);
 		mnPesquisar.add(mntmPesquisarCargo);
 		mnPesquisar.add(mntmPesquisarAluno);
-		
+
 		mntmPesquisarResponsavel = new JMenuItem("Respons\u00E1vel");
 		mntmPesquisarResponsavel.addActionListener(this);
 		mnPesquisar.add(mntmPesquisarResponsavel);
-		
+
 		mntmPesquisarMatricula = new JMenuItem("Matr\u00EDcula");
 		mntmPesquisarMatricula.addActionListener(this);
 		mnPesquisar.add(mntmPesquisarMatricula);
-		
+
 		mntmPesquisarMensalidade = new JMenuItem("Mensalidade");
 		mntmPesquisarMensalidade.addActionListener(this);
 		mnPesquisar.add(mntmPesquisarMensalidade);
@@ -150,6 +193,14 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 
 		pnlPrincipal.add(dskPrincipal);
 
+		// Libera os menus de acordo com o cargo do usuário
+		if (new DAOFuncionario().buscaCargo(usuario).getNome().equals("Administrador")) {
+			liberaMenuAdministrador();
+		} else if (new DAOFuncionario().buscaCargo(usuario).getNome().replace("(a)", "").equals("Secretario")) {
+			liberaMenuSecretario();
+		} else if (new DAOFuncionario().buscaCargo(usuario).getNome().replace("(a)", "").equals("Diretor")) {
+			liberaMenuAdministrador();
+		}
 	}
 
 	public JDesktopPane getDskPrincipal() {
@@ -180,7 +231,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 				mntmPesquisarAluno_click();
 			} else if (e.getSource() == mntmPesquisarCargo) {
 				mntmPesquisarCargo_click();
-			}  else if (e.getSource() == mntmPesquisarResponsavel) {
+			} else if (e.getSource() == mntmPesquisarResponsavel) {
 				mntmPesquisarResponsavel_click();
 			} else if (e.getSource() == mntmPesquisarMatricula) {
 				mntmPesquisarMatricula_click();
@@ -273,7 +324,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			frmPesquisaFuncionario.getInstance().setSelected(true);
 		}
 	}
-	
+
 	private void mntmPesquisarAluno_click() throws ParseException, SQLException, PropertyVetoException {
 		if (frmPesquisaAluno.getInstance().isVisible()) {
 			frmPesquisaAluno.getInstance().setSelected(true);
@@ -283,7 +334,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			frmPesquisaAluno.getInstance().setSelected(true);
 		}
 	}
-	
+
 	private void mntmPesquisarUsuario_click() throws ParseException, PropertyVetoException, SQLException {
 		if (frmPesquisaUsuario.getInstance().isVisible()) {
 			frmPesquisaUsuario.getInstance().setSelected(true);
@@ -293,7 +344,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			frmPesquisaUsuario.getInstance().setSelected(true);
 		}
 	}
-	
+
 	private void mntmPesquisarCargo_click() throws ParseException, SQLException, PropertyVetoException {
 		if (frmPesquisaCargo.getInstance().isVisible()) {
 			frmPesquisaCargo.getInstance().setSelected(true);
@@ -303,7 +354,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			frmPesquisaCargo.getInstance().setSelected(true);
 		}
 	}
-	
+
 	private void mntmPesquisarResponsavel_click() throws ParseException, SQLException, PropertyVetoException {
 		if (frmPesquisaResponsavel.getInstance().isVisible()) {
 			frmPesquisaResponsavel.getInstance().setSelected(true);
@@ -313,7 +364,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			frmPesquisaResponsavel.getInstance().setSelected(true);
 		}
 	}
-	
+
 	private void mntmPesquisarMatricula_click() throws ParseException, SQLException, PropertyVetoException {
 		if (frmPesquisaMatricula.getInstance().isVisible()) {
 			frmPesquisaMatricula.getInstance().setSelected(true);
@@ -323,7 +374,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			frmPesquisaMatricula.getInstance().setSelected(true);
 		}
 	}
-	
+
 	private void mntmPesquisarMensalidade_click() throws ParseException, SQLException, PropertyVetoException {
 		if (frmPesquisaMensalidade.getInstance().isVisible()) {
 			frmPesquisaMensalidade.getInstance().setSelected(true);
@@ -333,7 +384,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			frmPesquisaMensalidade.getInstance().setSelected(true);
 		}
 	}
-	
+
 	public void windowActivated(WindowEvent e) {
 	}
 
@@ -368,7 +419,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 				frmLogin form = new frmLogin();
 				form = new frmLogin();
 				form.setVisible(true);
-				//this.singleton = null;	
+				// this.singleton = null;
 			} catch (SQLException ex) {
 				ex.printStackTrace();
 			}

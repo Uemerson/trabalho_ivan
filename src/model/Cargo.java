@@ -13,6 +13,10 @@ public class Cargo {
 		this.Descricao = Descricao;
 	}
 	
+	public Cargo(String Nome) {
+		this.Nome = Nome;
+	}
+	
 	public int getRegistro() {
 		return Registro;
 	}

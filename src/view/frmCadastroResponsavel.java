@@ -436,7 +436,9 @@ public class frmCadastroResponsavel extends JInternalFrame implements ActionList
 				btnPesquisar_click();
 			}
 		} catch (ParseException | SQLException | PropertyVetoException ex) {
-			ex.printStackTrace();
+			// ex.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import model.Cargo;
 import model.Funcionario;
+import model.Usuario;
 
 public class DAOFuncionario {
 	private String SQL;
@@ -183,11 +184,19 @@ public class DAOFuncionario {
 		preparedStatement.executeUpdate();
 	}
 
-	public Cargo buscaCargo(Funcionario funcionario) {
+	public Cargo buscaCargo(Usuario usuario) throws SQLException {
 		SQL = "SELECT USUARIO.*, FUNCIONARIO.CARGO, CARGO.NOME AS NOME_CARGO FROM\r\n" + 
 				"USUARIO LEFT JOIN FUNCIONARIO ON USUARIO.ID_FUNC = FUNCIONARIO.ID\r\n" + 
-				"LEFT JOIN CARGO ON CARGO.ID = FUNCIONARIO.CARGO";
+				"LEFT JOIN CARGO ON CARGO.ID = FUNCIONARIO.CARGO WHERE USUARIO.ID = ?";
 		
-		return null;
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setInt(1, usuario.getRegistro());
+		
+		ResultSet rs = preparedStatement.executeQuery();
+		rs.next();
+		
+		return rs.getString("LOGIN").equals("Administrador") ? 
+				new Cargo("Administrador") : 
+					new Cargo(rs.getString("NOME_CARGO"));
 	}
 }
