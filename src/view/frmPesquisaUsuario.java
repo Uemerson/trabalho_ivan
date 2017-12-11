@@ -203,6 +203,12 @@ public class frmPesquisaUsuario extends JInternalFrame
 	}
 	
 	private void btnConfirma_click() throws ParseException, SQLException, PropertyVetoException {
+		
+		if (usuarioTableModel.getUsuario(tbTabelaUsuario.getSelectedRow()).getLogin().equals("Administrador")) {
+			JOptionPane.showMessageDialog(this, "Esse usuário não pode ser editado e nem excluido!", "Sistema", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+		
 		if (btnConfirma.getText() == "Abrir cadastro de usuário") {
 		
 			if (tbTabelaUsuario.getSelectedRow() > -1) {
