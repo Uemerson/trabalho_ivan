@@ -268,7 +268,29 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 				JOptionPane.showMessageDialog(this, "Selecione um registro para abrir o cadastro de usuário!",
 						"Sistema", JOptionPane.ERROR_MESSAGE);
 			}
+		}else if (btnConfirma.getText() == "Abrir cadastro de matrícula") {
+			
+			if (tbTabelaFuncionario.getSelectedRow() > -1) {
+				
+				frmCadastroMatricula.getInstance();
+	
+				if (frmCadastroMatricula.getInstance().isVisible()) {
+					frmCadastroMatricula.getInstance().preencheSecretario(new DAOFuncionario().buscaFuncionario(funcionarioTableModel.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
+					frmCadastroMatricula.getInstance().setSelected(true);
+				} else {
+					frmCadastroMatricula.getInstance().setVisible(true);
+					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroMatricula.getInstance());
+					frmCadastroMatricula.getInstance().setSelected(true);
+					frmCadastroMatricula.getInstance().preencheSecretario(new DAOFuncionario().buscaFuncionario(funcionarioTableModel.getFuncionario(tbTabelaFuncionario.getSelectedRow()).getRegistro()));
+				}
+	
+				dispose();
+			} else {
+				JOptionPane.showMessageDialog(this, "Selecione um registro para abrir o cadastro de usuário!",
+						"Sistema", JOptionPane.ERROR_MESSAGE);
+			}
 		}
+		
 	}
 
 	private void rdbtnFiltrarPorCargo_click() {

@@ -31,6 +31,7 @@ import javax.swing.text.MaskFormatter;
 
 import controler.FuncoesGlobais;
 import dao.DAOAluno;
+import dao.DAOFuncionario;
 import dao.DAOResponsavel;
 import model.Aluno;
 import model.Responsavel;
@@ -131,6 +132,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		pnlBotoes.add(btnNovo);
 
 		btnExcluir = new JButton("Excluir");
+		btnExcluir.addActionListener(this);
 		btnExcluir.setIcon(new ImageIcon(frmCadastroAluno.class.getResource("/imagens/excluir 48x48.png")));
 		btnExcluir.setBounds(100, 11, 80, 79);
 		btnExcluir.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -139,6 +141,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		pnlBotoes.add(btnExcluir);
 
 		btnAlterar = new JButton("Alterar");
+		btnAlterar.addActionListener(this);
 		btnAlterar.setIcon(new ImageIcon(frmCadastroAluno.class.getResource("/imagens/editar 48x48.png")));
 		btnAlterar.setBounds(190, 11, 80, 79);
 		btnAlterar.setEnabled(false);
@@ -369,13 +372,13 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		cbPai = new JComboBox();
 		cbPai.setEnabled(false);
 		cbPai.setBounds(100, 58, 258, 28);
-		
+
 		DefaultComboBoxModel<String> cbPaiModel = new DefaultComboBoxModel<>();
-		
+
 		for (int i = 0; i < new DAOResponsavel().listaResponsavel().size(); i++) {
 			cbPaiModel.addElement(new DAOResponsavel().listaResponsavel().get(i).getNome_do_Responsavel());
 		}
-		
+
 		cbPai.setModel(cbPaiModel);
 		cbPai.setSelectedItem(null);
 		pnlInformacoesAluno.add(cbPai);
@@ -397,12 +400,12 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		cbMae = new JComboBox();
 		cbMae.setEnabled(false);
 		cbMae.setBounds(538, 58, 258, 28);
-		
+
 		DefaultComboBoxModel<String> cbMaeModel = new DefaultComboBoxModel<>();
 		for (int i = 0; i < new DAOResponsavel().listaResponsavel().size(); i++) {
 			cbMaeModel.addElement(new DAOResponsavel().listaResponsavel().get(i).getNome_do_Responsavel());
 		}
-		
+
 		cbMae.setModel(cbMaeModel);
 		cbMae.setSelectedItem(null);
 		pnlInformacoesAluno.add(cbMae);
@@ -412,38 +415,40 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		lblMae.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblMae.setBounds(492, 56, 36, 28);
 		pnlInformacoesAluno.add(lblMae);
-		
+
 		txtBairro = new JTextField();
 		txtBairro.setEnabled(false);
 		txtBairro.setColumns(10);
 		txtBairro.setBounds(672, 136, 162, 28);
 		pnlInformacoesAluno.add(txtBairro);
-		
+
 		JLabel lblBairro = new JLabel("Bairro");
 		lblBairro.setHorizontalAlignment(SwingConstants.LEFT);
 		lblBairro.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblBairro.setBounds(615, 136, 47, 28);
 		pnlInformacoesAluno.add(lblBairro);
-		
+
 		lblCidade = new JLabel("Cidade");
 		lblCidade.setHorizontalAlignment(SwingConstants.LEFT);
 		lblCidade.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblCidade.setBounds(10, 175, 80, 28);
 		pnlInformacoesAluno.add(lblCidade);
-		
+
 		txtCidade = new JTextField();
 		txtCidade.setEnabled(false);
 		txtCidade.setColumns(10);
 		txtCidade.setBounds(100, 177, 100, 28);
 		pnlInformacoesAluno.add(txtCidade);
-		
+
 		cbEstado = new JComboBox();
-		cbEstado.setModel(new DefaultComboBoxModel(new String[] {"AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"}));
+		cbEstado.setModel(new DefaultComboBoxModel(
+				new String[] { "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB",
+						"PE", "PI", "PR", "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO" }));
 		cbEstado.setEnabled(false);
 		cbEstado.setBounds(288, 177, 70, 28);
 		cbEstado.setSelectedItem(null);
 		pnlInformacoesAluno.add(cbEstado);
-		
+
 		label = new JLabel("Estado");
 		label.setHorizontalAlignment(SwingConstants.LEFT);
 		label.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -503,7 +508,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		edpObservacoesAluno.setEnabled(false);
 		edpObservacoesAluno.setBounds(303, 128, 538, 76);
 		pnlInformacoesPessoaisDoAluno.add(edpObservacoesAluno);
-		
+
 		this.idPai = 0;
 		this.idMae = 0;
 	}
@@ -512,6 +517,8 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		try {
 			if (e.getSource() == btnNovo) {
 				btnNovo_click();
+			} else if (e.getSource() == btnExcluir) {
+				btnExcluir_click();
 			} else if (e.getSource() == btnCancelar) {
 				btnCancelar_click();
 			} else if (e.getSource() == btnSalvar) {
@@ -522,23 +529,38 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 				btnPesquisaPai_click();
 			} else if (e.getSource() == btnPesquisaMae) {
 				btnPesquisaMae_click();
+			} else if (e.getSource() == btnAlterar) {
+				btnAlterar_click();
 			}
 		} catch (ParseException | SQLException | PropertyVetoException ex) {
 			ex.printStackTrace();
 		}
 	}
-	
+
+	private void btnAlterar_click() {
+		FuncoesGlobais.ativaCampos(pnlInformacoesAluno);
+		FuncoesGlobais.ativaCampos(pnlInformacoesPessoaisDoAluno);
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+
+		btnSalvar.setEnabled(true);
+		btnCancelar.setEnabled(true);
+		txtRegistro.setEnabled(false);
+		cbPai.setEnabled(false);
+		cbMae.setEnabled(false);
+		txtDataDeNascimento.requestFocusInWindow();
+	}
+
 	private void btnPesquisaPai_click() throws ParseException, SQLException, PropertyVetoException {
 		DefaultComboBoxModel<String> cbPaiModel = new DefaultComboBoxModel<>();
-		
+
 		for (int i = 0; i < new DAOResponsavel().listaResponsavel().size(); i++) {
 			cbPaiModel.addElement(new DAOResponsavel().listaResponsavel().get(i).getNome_do_Responsavel());
 		}
-		
+
 		cbPai.setModel(cbPaiModel);
 		cbPai.setSelectedItem(null);
 		idPai = 0;
-		
+
 		if (frmPesquisaPais.getInstance().isVisible()) {
 			frmPesquisaPais.getInstance().setTitle("Pesquisar por Pai");
 			frmPesquisaPais.getInstance().atualizaDados(); // Atualiza os dados do formulario
@@ -555,18 +577,18 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 			frmPesquisaPais.getInstance().setSelected(true);
 		}
 	}
-	
+
 	private void btnPesquisaMae_click() throws ParseException, SQLException, PropertyVetoException {
 		DefaultComboBoxModel<String> cbMaeModel = new DefaultComboBoxModel<>();
-		
+
 		for (int i = 0; i < new DAOResponsavel().listaResponsavel().size(); i++) {
 			cbMaeModel.addElement(new DAOResponsavel().listaResponsavel().get(i).getNome_do_Responsavel());
 		}
-		
+
 		cbMae.setModel(cbMaeModel);
 		cbMae.setSelectedItem(null);
 		idMae = 0;
-		
+
 		if (frmPesquisaPais.getInstance().isVisible()) {
 			frmPesquisaPais.getInstance().setTitle("Pesquisar por Mãe");
 			frmPesquisaPais.getInstance().atualizaDados(); // Atualiza os dados do formulario
@@ -583,17 +605,38 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 			frmPesquisaPais.getInstance().setSelected(true);
 		}
 	}
-	
+
 	public void preenchePai(Responsavel responsavel) {
 		this.idPai = responsavel.getRegistro();
 		cbPai.setSelectedItem(responsavel.getNome_do_Responsavel());
 	}
-	
+
 	public void preencheMae(Responsavel responsavel) {
 		this.idMae = responsavel.getRegistro();
 		cbMae.setSelectedItem(responsavel.getNome_do_Responsavel());
 	}
-	
+
+	private void btnExcluir_click() throws NumberFormatException, SQLException {
+		if (JOptionPane.showConfirmDialog(this, "Deseja realmente excluir o cadastro?", "Sistema",
+				JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+			DAOAluno daoAluno = new DAOAluno();
+
+			daoAluno.excluirAluno(Integer.parseInt(txtRegistro.getText()));
+			JOptionPane.showMessageDialog(this, "Registro excluido com sucesso!", "Sistema",
+					JOptionPane.INFORMATION_MESSAGE);
+
+			FuncoesGlobais.limpaCampos(pnlInformacoesAluno);
+			FuncoesGlobais.limpaCampos(pnlInformacoesPessoaisDoAluno);
+			FuncoesGlobais.desativaCampos(pnlInformacoesAluno);
+			FuncoesGlobais.desativaCampos(pnlInformacoesPessoaisDoAluno);
+			FuncoesGlobais.desativaCampos(pnlBotoes);
+
+			btnNovo.setEnabled(true);
+			btnPesquisar.setEnabled(true);
+			btnNovo.requestFocus();
+		}
+	}
+
 	private void btnNovo_click() {
 		FuncoesGlobais.limpaCampos(pnlInformacoesAluno);
 		FuncoesGlobais.limpaCampos(pnlInformacoesPessoaisDoAluno);
@@ -606,10 +649,10 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		txtRegistro.setText("NOVO");
 		txtRegistro.setEnabled(false);
 		txtCPF.requestFocus();
-		
+
 		cbPai.setEnabled(false);
 		cbMae.setEnabled(false);
-		
+
 		idPai = 0;
 		idMae = 0;
 	}
@@ -638,7 +681,7 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 		listaCompInfoAluno.add(txtTelResidencial);
 		listaCompInfoAluno.add(txtEmail);
 		listaCompInfoAluno.add(txtNumeroCasa);
-		
+
 		listaCompInfoPessoais.add(txtLocalOrigem);
 		listaCompInfoPessoais.add(txtRedeEstabelecimentoDeOrdemDoAluno);
 		listaCompInfoPessoais.add(txtSituacaoAnoAnterior);
@@ -668,7 +711,8 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 					aluno.setOrgao_Emissor(txtOrgaoEmissor.getText());
 					aluno.setLogradouro(cbLogradouro.getSelectedItem().toString());
 					aluno.setEnderco(txtEndereco.getText());
-					aluno.setNumero_da_Casa(txtNumeroCasa.getText().isEmpty() ? 0 : Integer.parseInt(txtNumeroCasa.getText()));
+					aluno.setNumero_da_Casa(
+							txtNumeroCasa.getText().isEmpty() ? 0 : Integer.parseInt(txtNumeroCasa.getText()));
 					aluno.setCor(cbCor.getSelectedItem().toString());
 					aluno.setEmail(txtEmail.getText().isEmpty() ? null : txtEmail.getText());
 					aluno.setRaca(cbRaca.getSelectedItem().toString());
@@ -686,25 +730,39 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 					aluno.setObservacoes_do_Aluno(
 							edpObservacoesAluno.getText().isEmpty() ? null : edpObservacoesAluno.getText());
 					aluno.setBairro(txtBairro.getText());
-					aluno.setLocal_de_Origem_do_Aluno(txtLocalOrigem.getText().isEmpty() ? null : txtLocalOrigem.getText());
+					aluno.setLocal_de_Origem_do_Aluno(
+							txtLocalOrigem.getText().isEmpty() ? null : txtLocalOrigem.getText());
 					aluno.setCidade(txtCidade.getText());
 					aluno.setEstado(cbEstado.getSelectedItem().toString());
-					
+
 					DAOAluno daoAluno = new DAOAluno();
-					
+
 					if (txtRegistro.getText().equals("NOVO")) {
 						daoAluno.novoAluno(aluno);
+					}else {
+						aluno.setRegistro(Integer.parseInt(txtRegistro.getText()));
+						daoAluno.atualizaAluno(aluno);
 					}
-					
+
 					FuncoesGlobais.limpaCampos(pnlInformacoesAluno);
 					FuncoesGlobais.limpaCampos(pnlInformacoesPessoaisDoAluno);
+					FuncoesGlobais.desativaCampos(pnlInformacoesAluno);
+					FuncoesGlobais.desativaCampos(pnlInformacoesPessoaisDoAluno);
 					FuncoesGlobais.desativaCampos(pnlBotoes);
 
 					btnNovo.setEnabled(true);
 					btnPesquisar.setEnabled(true);
 
-					JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
-							JOptionPane.INFORMATION_MESSAGE);
+					idPai = 0;
+					idMae = 0;
+
+					if (txtRegistro.getText().equals("NOVO")) {
+						JOptionPane.showMessageDialog(this, "Cadastro realizado com sucesso!", "Sistema",
+								JOptionPane.INFORMATION_MESSAGE);
+					}else {
+						JOptionPane.showMessageDialog(this, "Cadastro atualizado com sucesso!", "Sistema",
+								JOptionPane.INFORMATION_MESSAGE);
+					}
 
 				} catch (ParseException ex) {
 					ex.printStackTrace();
@@ -727,6 +785,55 @@ public class frmCadastroAluno extends JInternalFrame implements ActionListener, 
 			frmPesquisaAluno.getInstance().setVisible(true);
 			frmPesquisaAluno.getInstance().setSelected(true);
 		}
+	}
+
+	public void preencheCadastro(Aluno aluno) throws ParseException {
+		FuncoesGlobais.desativaCampos(pnlBotoes);
+		FuncoesGlobais.limpaCampos(pnlInformacoesAluno);
+		FuncoesGlobais.limpaCampos(pnlInformacoesPessoaisDoAluno);
+		FuncoesGlobais.resetaBordaPadrao(pnlInformacoesAluno);
+		FuncoesGlobais.resetaBordaPadrao(pnlInformacoesPessoaisDoAluno);
+		FuncoesGlobais.desativaCampos(pnlInformacoesAluno);
+		FuncoesGlobais.desativaCampos(pnlInformacoesPessoaisDoAluno);
+
+		btnNovo.setEnabled(true);
+		btnAlterar.setEnabled(true);
+		btnExcluir.setEnabled(true);
+		btnPesquisar.setEnabled(true);
+
+		txtRegistro.setText(Integer.toString(aluno.getRegistro()));
+		txtDataDeNascimento.setValue(new SimpleDateFormat("dd/MM/yyyy").format(aluno.getData_de_Nascimento()));
+
+		MaskFormatter mask = new MaskFormatter("###.###.###.##");
+		mask.setValueContainsLiteralCharacters(false);
+
+		txtCPF.setValue(mask.valueToString(aluno.getCPF()));
+		cbPai.setSelectedItem(aluno.getNome_Pai());
+		cbMae.setSelectedItem(aluno.getNome_Mae());
+		txtNome.setText(aluno.getNome());
+		txtRG.setText(aluno.getRG());
+		txtOrgaoEmissor.setText(aluno.getOrgao_Emissor());
+		cbLogradouro.setSelectedItem(aluno.getLogradouro());
+		txtEndereco.setText(aluno.getEnderco());
+		txtNumeroCasa.setText(aluno.getNumero_da_Casa() == 0 ? null : Integer.toString(aluno.getNumero_da_Casa()));
+		txtBairro.setText(aluno.getBairro());
+		txtCidade.setText(aluno.getCidade());
+		cbEstado.setSelectedItem(aluno.getEstado());
+		txtEmail.setText(aluno.getEmail());
+		cbCor.setSelectedItem(aluno.getCor());
+		cbRaca.setSelectedItem(aluno.getRaca());
+		cbSexo.setSelectedItem(aluno.getSexo());
+		mask.setMask("(##)####-####");
+		txtTelResidencial.setValue(mask.valueToString(aluno.getTel_Residencial()));
+		mask.setMask("(##)####-####");
+		txtCelular.setValue(mask.valueToString(aluno.getCelular()));
+		txtLocalOrigem.setText(aluno.getLocal_de_Origem_do_Aluno());
+		txtRedeEstabelecimentoDeOrdemDoAluno.setText(aluno.getRede_Estabelecimento_de_Ordem_do_aluno());
+		txtSituacaoAnoAnterior.setText(aluno.getSituacao_do_Aluno_no_Ano_Anterior());
+		edpObservacoesAluno.setText(aluno.getObservacoes_do_Aluno());
+		
+		idPai = aluno.getIdPai();
+		idMae = aluno.getIdMae();
 	}
 
 	public void internalFrameActivated(InternalFrameEvent e) {

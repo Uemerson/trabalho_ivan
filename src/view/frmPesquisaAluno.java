@@ -73,7 +73,7 @@ public class frmPesquisaAluno extends JInternalFrame
 	public frmPesquisaAluno() throws SQLException {
 		addInternalFrameListener(this);
 		setClosable(true);
-		setTitle("Pesquisar Respons\u00E1vel");
+		setTitle("Pesquisar Aluno");
 		setBounds(100, 100, 719, 396);
 		getContentPane().setLayout(null);
 
@@ -186,7 +186,6 @@ public class frmPesquisaAluno extends JInternalFrame
 				btnConfirma_click();
 			} 
 		} catch (ParseException | SQLException | PropertyVetoException ex) {
-			System.out.println(ex.getMessage());
 			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação!", "Sistema", JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -212,8 +211,9 @@ public class frmPesquisaAluno extends JInternalFrame
 	}
 
 	private void btnConfirma_click() throws ParseException, SQLException, PropertyVetoException {
-		/*if (btnConfirma.getText() == "Abrir cadastro de Aluno") {
-		
+	
+		if (btnConfirma.getText().equals("Abrir cadastro de aluno")) {
+			
 			if (tbTabelaAluno.getSelectedRow() > -1) {
 				frmCadastroAluno.getInstance();
 	
@@ -235,7 +235,30 @@ public class frmPesquisaAluno extends JInternalFrame
 						"Sistema", JOptionPane.ERROR_MESSAGE);
 			}
 		
-		}*/
+		} else if (btnConfirma.getText().equals("Abrir cadastro de matrícula")){
+			
+			if (tbTabelaAluno.getSelectedRow() > -1) {
+				frmCadastroMatricula.getInstance();
+	
+				if (frmCadastroMatricula.getInstance().isVisible()) {
+					frmCadastroMatricula.getInstance().preencheAluno(new DAOAluno().buscaAluno(alunoTableModel.getAluno(tbTabelaAluno.getSelectedRow()).getRegistro()));
+					frmCadastroMatricula.getInstance().setSelected(true);
+				} else {
+	
+					frmCadastroMatricula.getInstance().setVisible(true);
+					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroMatricula.getInstance());
+					frmCadastroMatricula.getInstance().setSelected(true);
+					frmCadastroMatricula.getInstance().preencheAluno(new DAOAluno()
+							.buscaAluno(alunoTableModel.getAluno(tbTabelaAluno.getSelectedRow()).getRegistro()));
+				}
+	
+				dispose();
+			} else {
+				JOptionPane.showMessageDialog(this, "Selecione um registro para abrir o cadastro de matrícula!",
+						"Sistema", JOptionPane.ERROR_MESSAGE);
+			}
+		
+		}
 	}
 
 	public JButton getBtnConfirma() {

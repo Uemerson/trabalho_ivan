@@ -137,7 +137,55 @@ public class DAOAluno {
 		ResultSet rs = preparedStatement.executeQuery();
 		rs.next();
 		
-		return new Aluno();
-		//return new Aluno(rs.getInt("ID"), rs.getDate("DATA_NASCIMENTO"), rs.getInt("NUMERO"), rs.getInt("ID_PAI"), rs.getInt("ID_MAE"), nome, rG, orgao_Emissor, cPF, sexo, cor, raca, logradouro, endereco, bairro, tel_Residencial, tel_Comercial, celular, email, local_de_Origem_do_Aluno, rede_Estabelecimento_de_Ordem_do_aluno, situacao_do_Aluno_no_Ano_Anterior, observacoes_do_Aluno, cidade, estado, local_origem_aluno)
+		return new Aluno(rs.getInt("ID"), rs.getDate("DATA_NASCIMENTO"), rs.getInt("NUMERO"), rs.getInt("ID_PAI"), 
+				rs.getInt("ID_MAE"), rs.getString("NOME"), rs.getString("RG"), rs.getString("ORGAO_EMISSOR"), rs.getString("CPF"),
+				rs.getString("SEXO"), rs.getString("COR"), rs.getString("RACA"), rs.getString("LOGRADOURO"), rs.getString("ENDERECO"),
+				rs.getString("BAIRRO"), rs.getString("TELEFONE_RESIDENCIAL"), rs.getString("CELULAR"), rs.getString("EMAIL"),
+				rs.getString("LOCAL_ORIGEM"), rs.getString("ORDEM_ALUNO"), rs.getString("SITUACAO_ALUNO"),
+				rs.getString("OBSERVACOES"), rs.getString("CIDADE"), rs.getString("ESTADO"), rs.getString("NOME_PAI"), rs.getString("NOME_MAE"));
+	}
+	
+	public void excluirAluno(int ID) throws SQLException {
+		SQL = "DELETE FROM ALUNO WHERE ALUNO.ID = ?";
+		
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setInt(1, ID);
+		preparedStatement.executeUpdate();
+	}
+	
+	public void atualizaAluno(Aluno aluno) throws SQLException {
+		SQL = "UPDATE ALUNO SET NOME = ?, RG = ?, ORGAO_EMISSOR = ?, CPF = ?, DATA_NASCIMENTO = ?, SEXO = ?, COR = ?, RACA = ?,"
+				+ "LOGRADOURO = ?, ENDERECO = ?, NUMERO = ?, BAIRRO = ?, CIDADE = ?, ESTADO = ?, TELEFONE_RESIDENCIAL = ?,"
+				+ "CELULAR = ?, EMAIL = ?, ORDEM_ALUNO = ?, SITUACAO_ALUNO = ?, OBSERVACOES = ?, ID_PAI = ?,"
+				+ "ID_MAE = ?, LOCAL_ORIGEM = ? WHERE ALUNO.ID = ?";
+		
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		preparedStatement.setString(1, aluno.getNome());
+		preparedStatement.setString(2, aluno.getRG());
+		preparedStatement.setString(3, aluno.getOrgao_Emissor());
+		preparedStatement.setString(4, aluno.getCPF());
+		preparedStatement.setDate(5, new java.sql.Date(aluno.getData_de_Nascimento().getTime()));
+		preparedStatement.setString(6, aluno.getSexo());
+		preparedStatement.setString(7, aluno.getCor());
+		preparedStatement.setString(8, aluno.getRaca());
+		preparedStatement.setString(9, aluno.getLogradouro());
+		preparedStatement.setString(10, aluno.getEndereco());
+		preparedStatement.setInt(11, aluno.getNumero_da_Casa());
+		preparedStatement.setString(12, aluno.getBairro());
+		preparedStatement.setString(13, aluno.getCidade());
+		preparedStatement.setString(14, aluno.getEstado());
+		preparedStatement.setString(15, aluno.getTel_Residencial());
+		preparedStatement.setString(16, aluno.getCelular());
+		preparedStatement.setString(17, aluno.getEmail());
+		preparedStatement.setString(18, aluno.getRede_Estabelecimento_de_Ordem_do_aluno());
+		preparedStatement.setString(19, aluno.getSituacao_do_Aluno_no_Ano_Anterior());
+		preparedStatement.setString(20, aluno.getObservacoes_do_Aluno());
+		preparedStatement.setInt(21, aluno.getIdPai());
+		preparedStatement.setInt(22, aluno.getIdMae());
+		preparedStatement.setString(23, aluno.getLocal_de_Origem_do_Aluno());
+		preparedStatement.setInt(24, aluno.getRegistro());
+		
+		preparedStatement.execute();
+		System.out.println("Cadastro de aluno atualizado com sucesso!");
 	}
 }

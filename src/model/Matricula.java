@@ -1,11 +1,13 @@
 package model;
 
+import java.util.Date;
+
 public class Matricula {
 
-	private int Registro;
-	
-	private String ano, Data_de_Matricula, Nivel_Em_Que__Esta_Sendo_Matriculado,
-	serie, turno, Pai_Responsavel, secretario;
+	private int Registro, Aluno, Secretario, Responsavel, Mensalidade, VencimentoDia;
+	private Date Data_de_Matricula;
+	private String ano, Nivel_Em_Que__Esta_Sendo_Matriculado,
+	serie, turno, Pai_Responsavel;
 
 	public int getRegistro() {
 		return Registro;
@@ -23,11 +25,11 @@ public class Matricula {
 		this.ano = ano;
 	}
 
-	public String getData_de_Matricula() {
+	public Date getData_de_Matricula() {
 		return Data_de_Matricula;
 	}
 
-	public void setData_de_Matricula(String data_de_Matricula) {
+	public void setData_de_Matricula(Date data_de_Matricula) {
 		Data_de_Matricula = data_de_Matricula;
 	}
 
@@ -63,14 +65,43 @@ public class Matricula {
 		Pai_Responsavel = pai_Responsavel;
 	}
 
-	public String getSecretario() {
-		return secretario;
+	public int getAluno() {
+		return Aluno;
 	}
 
-	public void setSecretario(String secretario) {
-		this.secretario = secretario;
+	public void setAluno(int aluno) {
+		Aluno = aluno;
+	}
+
+	public int getResponsavel() {
+		return Responsavel;
+	}
+
+	public void setResponsavel(int responsavel) {
+		Responsavel = responsavel;
+	}
+
+	public int getMensalidade() {
+		return Mensalidade;
+	}
+
+	public void setMensalidade(int mensalidade) {
+		Mensalidade = mensalidade;
+	}
+
+	public void setSecretario(int secretario) {
+		Secretario = secretario;
+	}
+
+	public int getVencimentoDia() {
+		return VencimentoDia;
+	}
+
+	public void setVencimentoDia(int vencimentoDia) {
+		VencimentoDia = vencimentoDia;
+	}
+
+	public int getSecretario() {
+		return Secretario;
 	} 
-	
-	
-	
 }

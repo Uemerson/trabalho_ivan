@@ -212,7 +212,6 @@ public class frmPesquisaResponsavel extends JInternalFrame
 		txtBuscarPor.requestFocus();
 	}
 
-	
 	private void btnConfirma_click() throws ParseException, SQLException, PropertyVetoException {
 		if (btnConfirma.getText() == "Abrir cadastro de responsável") {
 		
@@ -237,6 +236,29 @@ public class frmPesquisaResponsavel extends JInternalFrame
 						"Sistema", JOptionPane.ERROR_MESSAGE);
 			}
 		
+		}else if (btnConfirma.getText() == "Abrir cadastro de matrícula") {
+			
+			if (tbTabelaResponsavel.getSelectedRow() > -1) {
+				frmCadastroMatricula.getInstance();
+	
+				if (frmCadastroMatricula.getInstance().isVisible()) {
+					frmCadastroMatricula.getInstance().preencheResponsavel(new DAOResponsavel().buscaResponsavel(responsavelTableModel.getResponsavel(tbTabelaResponsavel.getSelectedRow()).getRegistro()));
+					frmCadastroMatricula.getInstance().setSelected(true);
+				} else {
+	
+					frmCadastroMatricula.getInstance().setVisible(true);
+					frmMenu.getFrmMenu().getDskPrincipal().add(frmCadastroMatricula.getInstance());
+					frmCadastroMatricula.getInstance().setSelected(true);
+					frmCadastroMatricula.getInstance().preencheResponsavel(new DAOResponsavel()
+							.buscaResponsavel(responsavelTableModel.getResponsavel(tbTabelaResponsavel.getSelectedRow()).getRegistro()));
+				}
+	
+				dispose();
+			} else {
+				JOptionPane.showMessageDialog(this, "Selecione um registro para abrir o cadastro de matrícula!",
+						"Sistema", JOptionPane.ERROR_MESSAGE);
+			}
+			
 		}
 	}
 

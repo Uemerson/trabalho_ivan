@@ -191,7 +191,6 @@ public class frmPesquisaPais extends JInternalFrame
 		}
 	}
 	
-
 	private void rdbtnFiltrarPorRG_click() {
 		txtBuscarPor.setText(null);
 		txtBuscarPor.requestFocus();
@@ -212,7 +211,6 @@ public class frmPesquisaPais extends JInternalFrame
 		txtBuscarPor.requestFocus();
 	}
 
-	
 	private void btnConfirma_click() throws ParseException, SQLException, PropertyVetoException {
 		if (btnConfirma.getText() == "Abrir cadastro de aluno") {
 		

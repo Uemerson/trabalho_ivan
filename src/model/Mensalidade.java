@@ -3,9 +3,18 @@ package model;
 public class Mensalidade {
 
 	private int Registro;
-	
-	private String Serie, Valor_da_Mensalidade, Forma_de_Pagamento;
+	private double Valor_da_Mensalidade;
+	private String Serie, Forma_de_Pagamento;
 
+	public Mensalidade() {}
+	
+	public Mensalidade(int Registro, double Valor_da_Mensalidade, String Serie, String Forma_de_Pagamento) {
+		this.Registro = Registro;
+		this.Valor_da_Mensalidade = Valor_da_Mensalidade;
+		this.Serie = Serie;
+		this.Forma_de_Pagamento = Forma_de_Pagamento;
+	}
+	
 	public int getRegistro() {
 		return Registro;
 	}
@@ -22,11 +31,11 @@ public class Mensalidade {
 		Serie = serie;
 	}
 
-	public String getValor_da_Mensalidade() {
+	public double getValor_da_Mensalidade() {
 		return Valor_da_Mensalidade;
 	}
 
-	public void setValor_da_Mensalidade(String valor_da_Mensalidade) {
+	public void setValor_da_Mensalidade(double valor_da_Mensalidade) {
 		Valor_da_Mensalidade = valor_da_Mensalidade;
 	}
 
@@ -37,6 +46,5 @@ public class Mensalidade {
 	public void setForma_de_Pagamento(String forma_de_Pagamento) {
 		Forma_de_Pagamento = forma_de_Pagamento;
 	}
-	
 	
 }

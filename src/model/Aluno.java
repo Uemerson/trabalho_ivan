@@ -10,9 +10,9 @@ public class Aluno {
 	private int Numero_da_Casa, idPai, idMae;
 	
 	private String Nome, RG, Orgao_Emissor, CPF, Sexo,
-	Cor, Raca, Logradouro, endereco, bairro, Tel_Residencial, Tel_Comercial, Celular, Email,
+	Cor, Raca, Logradouro, endereco, bairro, Tel_Residencial, Celular, Email,
 	Local_de_Origem_do_Aluno, Rede_Estabelecimento_de_Ordem_do_aluno,
-	Situacao_do_Aluno_no_Ano_Anterior, Observacoes_do_Aluno, Cidade, Estado, local_origem_aluno;
+	Situacao_do_Aluno_no_Ano_Anterior, Observacoes_do_Aluno, Cidade, Estado, local_origem_aluno, Nome_Pai, Nome_Mae;
 
 	public Aluno() {};
 	
@@ -25,10 +25,10 @@ public class Aluno {
 
 	public Aluno(int registro, Date data_de_Nascimento, int numero_da_Casa, int idPai, int idMae, String nome,
 			String rG, String orgao_Emissor, String cPF, String sexo, String cor, String raca, String logradouro,
-			String endereco, String bairro, String tel_Residencial, String tel_Comercial, String celular, String email,
+			String endereco, String bairro, String tel_Residencial, String celular, String email,
 			String local_de_Origem_do_Aluno, String rede_Estabelecimento_de_Ordem_do_aluno,
 			String situacao_do_Aluno_no_Ano_Anterior, String observacoes_do_Aluno, String cidade, String estado,
-			String local_origem_aluno) {
+			String Nome_pai, String Nome_mae) {
 		Registro = registro;
 		Data_de_Nascimento = data_de_Nascimento;
 		Numero_da_Casa = numero_da_Casa;
@@ -45,7 +45,6 @@ public class Aluno {
 		this.endereco = endereco;
 		this.bairro = bairro;
 		Tel_Residencial = tel_Residencial;
-		Tel_Comercial = tel_Comercial;
 		Celular = celular;
 		Email = email;
 		Local_de_Origem_do_Aluno = local_de_Origem_do_Aluno;
@@ -55,6 +54,8 @@ public class Aluno {
 		Cidade = cidade;
 		Estado = estado;
 		this.local_origem_aluno = local_origem_aluno;
+		this.Nome_Pai = Nome_pai;
+		this.Nome_Mae = Nome_mae;
 	}
 	
 	public String getLogradouro() {
@@ -177,14 +178,6 @@ public class Aluno {
 		Tel_Residencial = tel_Residencial;
 	}
 
-	public String getTel_Comercial() {
-		return Tel_Comercial;
-	}
-
-	public void setTel_Comercial(String tel_Comercial) {
-		Tel_Comercial = tel_Comercial;
-	}
-
 	public String getCelular() {
 		return Celular;
 	}
@@ -279,5 +272,23 @@ public class Aluno {
 
 	public void setLocal_origem_aluno(String local_origem_aluno) {
 		this.local_origem_aluno = local_origem_aluno;
+	}
+
+	public String getNome_Pai() {
+		return Nome_Pai;
+	}
+
+	public void setNome_Pai(String nome_Pai) {
+		Nome_Pai = nome_Pai;
+	}
+
+	public String getNome_Mae() {
+		return Nome_Mae;
+	}
+
+	public void setNome_Mae(String nome_Mae) {
+		Nome_Mae = nome_Mae;
 	}    
+
+	
 }
