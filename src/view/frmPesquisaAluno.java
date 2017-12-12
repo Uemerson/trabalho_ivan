@@ -189,8 +189,8 @@ public class frmPesquisaAluno extends JInternalFrame
 			} else if (e.getSource() == btnConfirma) {
 				btnConfirma_click();
 			} 
-		} catch (ParseException | SQLException | PropertyVetoException ex) {
-			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação!", "Sistema", JOptionPane.ERROR_MESSAGE);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

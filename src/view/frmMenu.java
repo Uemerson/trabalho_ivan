@@ -238,8 +238,9 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			} else if (e.getSource() == mntmPesquisarMensalidade) {
 				mntmPesquisarMensalidade_click();
 			}
-		} catch (ParseException | PropertyVetoException | SQLException ex) {
-			ex.printStackTrace();
+		} catch (Exception ex) {
+			//ex.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

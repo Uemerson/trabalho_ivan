@@ -226,7 +226,7 @@ public class frmCadastroUsuario extends JInternalFrame implements ActionListener
 				btnAlterar_click();
 			}
 
-		} catch (ParseException | SQLException | PropertyVetoException ex) {
+		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema",
 					JOptionPane.ERROR_MESSAGE);
 			ex.printStackTrace();

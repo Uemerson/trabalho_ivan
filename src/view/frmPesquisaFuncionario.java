@@ -223,9 +223,9 @@ public class frmPesquisaFuncionario extends JInternalFrame implements DocumentLi
 			} else if (e.getSource() == btnConfirma) {
 				btnConfirma_click();
 			} 
-		} catch (ParseException | SQLException | PropertyVetoException ex) {
+		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
-			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação!", "Sistema", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

@@ -213,8 +213,8 @@ public class frmCadastroMensalidade extends JInternalFrame implements ActionList
 			} else if (e.getSource() == btnAlterar) {
 				btnAlterar_click();
 			}
-		} catch (ParseException | SQLException | PropertyVetoException ex) {
-			JOptionPane.showMessageDialog(this, "Não foi possivel concluir ação, tente novamente!", "Sistema", JOptionPane.ERROR_MESSAGE);
+		} catch (Exception ex) {
+			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

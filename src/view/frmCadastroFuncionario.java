@@ -522,8 +522,9 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 				btnPesquisar_click();
 			}
 
-		} catch (ParseException | SQLException | PropertyVetoException ex) {
+		} catch (Exception ex) {
 			// ex.printStackTrace();
+			System.out.println(ex.getMessage());
 			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema",
 					JOptionPane.ERROR_MESSAGE);
 		}
@@ -577,7 +578,8 @@ public class frmCadastroFuncionario extends JInternalFrame implements ActionList
 
 		if (cbCargo.getSelectedIndex() > -1) {
 			if (cbCargo.getSelectedItem().toString().replace("(a)", "").equals("Professor") || 
-					cbCargo.getSelectedItem().toString().replace("(a)", "").equals("Diretor")) {
+				cbCargo.getSelectedItem().toString().replace("(a)", "").equals("Diretor") ||
+				cbCargo.getSelectedItem().toString().replace("(a)", "").equals("Coordenador") ) {
 				FuncoesGlobais.limpaCampos(pnlInformacaoDeProfessores);
 				FuncoesGlobais.ativaCampos(pnlInformacaoDeProfessores);
 			} else {

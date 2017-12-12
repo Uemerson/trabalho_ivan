@@ -189,7 +189,7 @@ public class frmCadastroCargo extends JInternalFrame implements ActionListener, 
 			} else if (e.getSource() == btnExcluir) {
 				btnExcluir_click();
 			}
-		} catch (ParseException | SQLException | PropertyVetoException ex) {
+		} catch (Exception ex) {
 			// ex.printStackTrace();
 			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema",
 					JOptionPane.ERROR_MESSAGE);

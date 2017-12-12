@@ -361,7 +361,7 @@ public class frmCadastroMatricula extends JInternalFrame implements ActionListen
 				btnExcluir_click();
 			}
 
-		} catch (PropertyVetoException | ParseException | SQLException ex) {
+		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema",
 					JOptionPane.ERROR_MESSAGE);
 		}
