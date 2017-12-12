@@ -188,4 +188,27 @@ public class DAOAluno {
 		preparedStatement.execute();
 		System.out.println("Cadastro de aluno atualizado com sucesso!");
 	}
+
+	public ArrayList<Aluno> listaAlunoRelatorio() throws SQLException{
+		SQL = "SELECT * FROM ALUNO";
+		
+		ArrayList<Aluno> lista = new ArrayList<>();
+		
+		preparedStatement = DAOConexaoMySQL.getInstance().prepareStatement(SQL);
+		ResultSet rs = preparedStatement.executeQuery();
+		
+		while (rs.next()) {
+			Aluno aluno = new Aluno();
+			
+			aluno.setRegistro(rs.getInt("ID"));
+			aluno.setNome(rs.getString("NOME"));
+			aluno.setCidade(rs.getString("CIDADE"));
+			aluno.setEstado(rs.getString("ESTADO"));
+			aluno.setCelular(rs.getString("CELULAR"));
+			
+			lista.add(aluno);
+		}
+		
+		return lista;
+	}
 }

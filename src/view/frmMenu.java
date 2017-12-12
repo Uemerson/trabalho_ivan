@@ -8,6 +8,7 @@ import java.awt.event.WindowListener;
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -17,10 +18,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.MaskFormatter;
 
+import dao.DAOAluno;
 import dao.DAOConexaoMySQL;
 import dao.DAOFuncionario;
+import model.AlunoRelatorio;
 import model.Usuario;
+import net.sf.jasperreports.engine.JRException;
+import relatorio.Relatorio;
 
 public class frmMenu extends JFrame implements ActionListener, WindowListener {
 
@@ -43,6 +49,7 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 	private JMenuItem mntmPesquisarResponsavel;
 	private JMenuItem mntmPesquisarMatricula;
 	private JMenuItem mntmPesquisarMensalidade;
+	private JMenuItem mntmRelatorioAlunosCadastrados;
 
 	// Nao esquecer de limapr buffer
 	public static frmMenu getInstance(Usuario usuario) throws SQLException {
@@ -82,6 +89,8 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 
 		mntmCadastroMensalidade.setVisible(true);
 		mntmPesquisarMensalidade.setVisible(true);
+		
+		mntmRelatorioAlunosCadastrados.setVisible(true);
 	}
 
 	private void liberaMenuSecretario() {
@@ -105,6 +114,8 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 
 		mntmCadastroMensalidade.setVisible(false);
 		mntmPesquisarMensalidade.setVisible(false);
+		
+		mntmRelatorioAlunosCadastrados.setVisible(true);
 	}
 
 	public frmMenu(Usuario usuario) throws SQLException {
@@ -179,6 +190,13 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 		mntmPesquisarMensalidade = new JMenuItem("Mensalidade");
 		mntmPesquisarMensalidade.addActionListener(this);
 		mnPesquisar.add(mntmPesquisarMensalidade);
+		
+		JMenu mnRelatrio = new JMenu("Relat\u00F3rio");
+		mnbPrincipal.add(mnRelatrio);
+		
+		mntmRelatorioAlunosCadastrados = new JMenuItem("Alunos Cadastrados");
+		mntmRelatorioAlunosCadastrados.addActionListener(this);
+		mnRelatrio.add(mntmRelatorioAlunosCadastrados);
 		// setUndecorated(true);
 
 		pnlPrincipal = new JPanel();
@@ -200,6 +218,8 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 			liberaMenuSecretario();
 		} else if (new DAOFuncionario().buscaCargo(usuario).getNome().replace("(a)", "").equals("Diretor")) {
 			liberaMenuAdministrador();
+		} else {
+			liberaMenuSecretario();
 		}
 	}
 
@@ -237,13 +257,44 @@ public class frmMenu extends JFrame implements ActionListener, WindowListener {
 				mntmPesquisarMatricula_click();
 			} else if (e.getSource() == mntmPesquisarMensalidade) {
 				mntmPesquisarMensalidade_click();
+			} else if (e.getSource() == mntmRelatorioAlunosCadastrados) {
+				mntmRelatorioAlunosCadastrados_click();
 			}
 		} catch (Exception ex) {
 			//ex.printStackTrace();
 			JOptionPane.showMessageDialog(this, "Erro ao tentar concluir ação, tente novamente!", "Sistema", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-
+	
+	private void mntmRelatorioAlunosCadastrados_click() throws SQLException, ParseException {
+		//Gera a lista de alunos cadastrados
+		ArrayList<AlunoRelatorio> lista = new ArrayList<>();
+		
+		DAOAluno daoAluno = new DAOAluno();
+		
+		for (int i = 0; i < daoAluno.listaAluno().size(); i++) {
+			
+			MaskFormatter mask = new MaskFormatter("(##)####-####");
+			mask.setValueContainsLiteralCharacters(false);
+			
+			lista.add(new AlunoRelatorio(
+					daoAluno.listaAlunoRelatorio().get(i).getRegistro(),
+					daoAluno.listaAlunoRelatorio().get(i).getNome(),
+					daoAluno.listaAlunoRelatorio().get(i).getCidade(),
+					daoAluno.listaAlunoRelatorio().get(i).getEstado(),
+					mask.valueToString(daoAluno.listaAlunoRelatorio().get(i).getCelular()).toString()
+					));
+		}
+		
+		Relatorio r = new Relatorio();
+		try {
+			r.gerarRelatorio(lista);
+		} catch (JRException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(this, "Erro ao gerar relatório de alunos cadastrados!", "Sistema", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
 	private void mntmCadastroUsuarios_click() throws ParseException, PropertyVetoException, SQLException {
 		if (frmCadastroUsuario.getInstance().isVisible()) {
 			frmCadastroUsuario.getInstance().setSelected(true);
